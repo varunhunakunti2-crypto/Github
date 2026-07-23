@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
+import request from "supertest";
+import { AppModule } from "../src/app.module";
 
-describe('AppController (e2e)', () => {
+describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -12,7 +12,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.setGlobalPrefix('api/v1');
+    app.setGlobalPrefix("api/v1");
     await app.init();
   });
 
@@ -20,13 +20,13 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/api/v1/status (GET)', () => {
+  it("/api/v1/status (GET)", () => {
     return request(app.getHttpServer())
-      .get('/api/v1/status')
+      .get("/api/v1/status")
       .expect(200)
       .expect((res) => {
-        expect(res.body.status).toBe('healthy');
-        expect(res.body.service).toBe('GitForge API');
+        expect(res.body.status).toBe("healthy");
+        expect(res.body.service).toBe("GitForge API");
       });
   });
 });

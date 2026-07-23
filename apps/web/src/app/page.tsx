@@ -1,6 +1,12 @@
-import React from 'react';
-import { Button, Card } from '@gitforge/ui';
-import { GitBranch, GitPullRequest, Shield, Terminal, ArrowRight } from 'lucide-react';
+import React from "react";
+import { Button, Card } from "@gitforge/ui";
+import {
+  GitBranch,
+  GitPullRequest,
+  Shield,
+  Terminal,
+  ArrowRight,
+} from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -12,12 +18,29 @@ export default function HomePage() {
           <div className="w-6 h-6 bg-primary rounded-xs flex items-center justify-center text-on-primary font-mono text-[14px] font-bold">
             F
           </div>
-          <span className="font-sans font-semibold text-[16px] tracking-tight">GitForge</span>
+          <span className="font-sans font-semibold text-[16px] tracking-tight">
+            GitForge
+          </span>
         </div>
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#" className="font-sans text-[14px] text-body hover:text-ink transition-colors">Features</a>
-          <a href="#" className="font-sans text-[14px] text-body hover:text-ink transition-colors">Docs</a>
-          <a href="#" className="font-sans text-[14px] text-body hover:text-ink transition-colors">Pricing</a>
+          <a
+            href="#"
+            className="font-sans text-[14px] text-body hover:text-ink transition-colors"
+          >
+            Features
+          </a>
+          <a
+            href="#"
+            className="font-sans text-[14px] text-body hover:text-ink transition-colors"
+          >
+            Docs
+          </a>
+          <a
+            href="#"
+            className="font-sans text-[14px] text-body hover:text-ink transition-colors"
+          >
+            Pricing
+          </a>
         </nav>
         <div className="flex items-center gap-3">
           <Button variant="secondary-sm">Log In</Button>
@@ -42,7 +65,9 @@ export default function HomePage() {
           </h1>
 
           <p className="font-sans text-[16px] md:text-[18px] text-body max-w-[550px] leading-relaxed">
-            GitForge provides the speed of Vercel with high-performance repository hosting, collaborative reviews, and sub-100ms repository loads.
+            GitForge provides the speed of Vercel with high-performance
+            repository hosting, collaborative reviews, and sub-100ms repository
+            loads.
           </p>
 
           <div className="flex items-center gap-4 mt-4">
@@ -58,40 +83,60 @@ export default function HomePage() {
       <section className="border-t border-hairline py-20 px-6 md:px-8 bg-canvas">
         <div className="max-w-[1200px] mx-auto flex flex-col gap-12">
           <div className="text-center md:text-left max-w-[500px] flex flex-col gap-3">
-            <span className="font-mono text-[12px] text-link-blue uppercase tracking-widest">Platform Core</span>
+            <span className="font-mono text-[12px] text-link-blue uppercase tracking-widest">
+              Platform Core
+            </span>
             <h2 className="font-sans text-[28px] md:text-[36px] font-semibold tracking-tight text-ink">
               Speed and isolation, built for modern builders.
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <Card elevation={3} className="flex flex-col gap-4 border border-hairline">
+            <Card
+              elevation={3}
+              className="flex flex-col gap-4 border border-hairline"
+            >
               <div className="w-10 h-10 rounded-sm bg-canvas-soft-2 flex items-center justify-center text-ink border border-hairline">
                 <Terminal className="w-5 h-5" />
               </div>
-              <h3 className="font-sans text-[18px] font-semibold text-ink">Smart SSH Engine</h3>
+              <h3 className="font-sans text-[18px] font-semibold text-ink">
+                Smart SSH Engine
+              </h3>
               <p className="font-sans text-[14px] text-body leading-relaxed">
-                Connect your git operations seamlessly via local SSH keys, providing blazing-fast repo clones and pushes.
+                Connect your git operations seamlessly via local SSH keys,
+                providing blazing-fast repo clones and pushes.
               </p>
             </Card>
 
-            <Card elevation={3} className="flex flex-col gap-4 border border-hairline">
+            <Card
+              elevation={3}
+              className="flex flex-col gap-4 border border-hairline"
+            >
               <div className="w-10 h-10 rounded-sm bg-canvas-soft-2 flex items-center justify-center text-ink border border-hairline">
                 <GitPullRequest className="w-5 h-5" />
               </div>
-              <h3 className="font-sans text-[18px] font-semibold text-ink">Stark Code Reviews</h3>
+              <h3 className="font-sans text-[18px] font-semibold text-ink">
+                Stark Code Reviews
+              </h3>
               <p className="font-sans text-[14px] text-body leading-relaxed">
-                Review branch differences line by line in our sleek, distraction-free pull request panel.
+                Review branch differences line by line in our sleek,
+                distraction-free pull request panel.
               </p>
             </Card>
 
-            <Card elevation={3} className="flex flex-col gap-4 border border-hairline">
+            <Card
+              elevation={3}
+              className="flex flex-col gap-4 border border-hairline"
+            >
               <div className="w-10 h-10 rounded-sm bg-canvas-soft-2 flex items-center justify-center text-ink border border-hairline">
                 <Shield className="w-5 h-5" />
               </div>
-              <h3 className="font-sans text-[18px] font-semibold text-ink">RBAC Key Protection</h3>
+              <h3 className="font-sans text-[18px] font-semibold text-ink">
+                RBAC Key Protection
+              </h3>
               <p className="font-sans text-[14px] text-body leading-relaxed">
-                Block force pushes and lock down main branches with granular permission controls for teams.
+                Block force pushes and lock down main branches with granular
+                permission controls for teams.
               </p>
             </Card>
           </div>
@@ -106,12 +151,20 @@ export default function HomePage() {
               F
             </div>
             <span className="font-sans font-semibold text-ink">GitForge</span>
-            <span className="text-[12px] text-mute">&copy; 2026 GitForge. All rights reserved.</span>
+            <span className="text-[12px] text-mute">
+              &copy; 2026 GitForge. All rights reserved.
+            </span>
           </div>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-ink transition-colors">Privacy</a>
-            <a href="#" className="hover:text-ink transition-colors">Terms</a>
-            <a href="#" className="hover:text-ink transition-colors">GitHub</a>
+            <a href="#" className="hover:text-ink transition-colors">
+              Privacy
+            </a>
+            <a href="#" className="hover:text-ink transition-colors">
+              Terms
+            </a>
+            <a href="#" className="hover:text-ink transition-colors">
+              GitHub
+            </a>
           </div>
         </div>
       </footer>

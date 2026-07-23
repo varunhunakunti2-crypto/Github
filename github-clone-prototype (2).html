@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="HubClone — a Git hosting and collaboration platform UI prototype">
+<meta name="color-scheme" content="light dark">
+<title>HubClone — UI Prototype</title>
+<style>
+:root{
+  --canvas-default:#ffffff; --canvas-subtle:#f6f8fa; --canvas-inset:#f6f8fa;
+  --border-default:#d1d9e0; --border-muted:#d1d9e0;
+  --fg-default:#1f2328; --fg-muted:#59636e; --fg-subtle:#6e7781;
+  --accent-fg:#0969da; --accent-emphasis:#0969da; --accent-subtle:#ddf4ff;
+  --success-fg:#1a7f37; --success-emphasis:#1f883d; --success-subtle:#dafbe1;
+  --danger-fg:#d1242f; --danger-emphasis:#cf222e; --danger-subtle:#ffebe9;
+  --done-fg:#8250df; --done-emphasis:#8250df; --done-subtle:#fbefff;
+  --attention-fg:#9a6700; --attention-subtle:#fff8c5;
+  --btn-primary-bg:#1f883d; --btn-primary-hover:#1a7f37;
+  --shadow-sm:0 1px 0 rgba(31,35,40,0.04);
+  --header-bg:#24292f;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+html[data-theme="dark"]{
+  --canvas-default:#0d1117; --canvas-subtle:#161b22; --canvas-inset:#010409;
+  --border-default:#3d444d; --border-muted:#3d444d;
+  --fg-default:#f0f6fc; --fg-muted:#9198a1; --fg-subtle:#7d8590;
+  --accent-fg:#4493f8; --accent-emphasis:#1f6feb; --accent-subtle:#132e46;
+  --success-fg:#3fb950; --success-emphasis:#238636; --success-subtle:#122117;
+  --danger-fg:#f85149; --danger-emphasis:#da3633; --danger-subtle:#2d1211;
+  --done-fg:#a371f7; --done-emphasis:#8957e5; --done-subtle:#2a1b3d;
+  --attention-fg:#d29922; --attention-subtle:#2b2111;
+  --btn-primary-bg:#238636; --btn-primary-hover:#2ea043;
+  --header-bg:#010409;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--font);background:var(--canvas-subtle);color:var(--fg-default);font-size:14px;-webkit-font-smoothing:antialiased;}
+a{color:var(--accent-fg);text-decoration:none;}
+a:hover{text-decoration:underline;}
+h1,h2,h3{letter-spacing:-0.015em;}
+::selection{background:var(--accent-subtle);}
+.card{transition:box-shadow .15s ease, border-color .15s ease;}
+.card:hover{box-shadow:0 3px 8px rgba(0,0,0,0.06);}
+.list-item{transition:background .12s ease;}
+.list-item:hover{background:var(--canvas-inset);}
+.btn{transition:background .12s ease, box-shadow .12s ease, transform .08s ease;}
+.btn:active{transform:translateY(1px);}
+.btn-primary{box-shadow:0 1px 0 rgba(0,0,0,0.1);}
+.tab{transition:color .12s ease, border-color .12s ease;}
+.tab:hover{color:var(--fg-default);cursor:pointer;}
+input[type=text],input[type=password],input[type=email],textarea{transition:border-color .12s ease, box-shadow .12s ease;}
+input[type=text]:focus,input[type=password]:focus,input[type=email]:focus,textarea:focus{outline:none;border-color:var(--accent-emphasis);box-shadow:0 0 0 3px var(--accent-subtle);}
+.avatar{transition:box-shadow .12s ease;}
+.avatar:hover{box-shadow:0 0 0 3px var(--accent-subtle);}
+#proto-bar select,#proto-bar button{transition:background .12s ease;}
+
+/* Accessibility: visible keyboard focus everywhere */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--accent-emphasis); outline-offset:2px; border-radius:4px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important;}
+}
+
+/* Responsive: collapse two-column layouts to a single column below 900px */
+@media (max-width: 900px){
+  .container{padding:16px !important;}
+  .container[style*="display:flex"], .row.container{flex-direction:column !important;}
+  .container[style*="display:flex"] > div{width:100% !important;}
+  .gh-header input.search{width:140px !important;}
+  .gh-header nav{display:none;}
+  #proto-bar .label{display:none;}
+}
+@media (max-width: 600px){
+  .container{padding:12px !important;}
+  h1{font-size:22px !important;}
+}
+
+/* ===== PROTOTYPE CHROME (not part of the cloned product) ===== */
+#proto-bar{position:fixed;top:0;left:0;right:0;height:52px;background:#000;color:#fff;display:flex;align-items:center;gap:6px;padding:0 12px;z-index:1000;font-family:var(--font);overflow-x:auto;}
+#proto-bar .label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#9198a1;margin-right:8px;white-space:nowrap;}
+#proto-bar select{background:#21262d;color:#fff;border:1px solid #3d444d;border-radius:6px;padding:6px 10px;font-size:13px;}
+#proto-bar button{background:#21262d;color:#fff;border:1px solid #3d444d;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap;}
+#proto-bar button:hover{background:#30363d;}
+#proto-bar .spacer{flex:1;}
+.screen{display:none;padding-top:52px;}
+.screen.active{display:block;}
+
+/* ===== SHARED GITHUB-STYLE HEADER ===== */
+.gh-header{background:var(--header-bg);color:#fff;display:flex;align-items:center;padding:0 16px;height:62px;gap:16px;}
+.gh-header .logo{width:32px;height:32px;}
+.gh-header input.search{background:#0d1117;border:1px solid #3d444d;color:#fff;border-radius:6px;padding:6px 12px;width:280px;font-size:14px;}
+html[data-theme="dark"] .gh-header input.search{background:#010409;}
+.gh-header nav{display:flex;gap:16px;font-size:14px;margin-left:8px;}
+.gh-header nav a{color:#fff;}
+.gh-header .spacer{flex:1;}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0969da,#8250df);display:inline-block;}
+
+/* ===== COMMON COMPONENTS ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;border-radius:6px;border:1px solid var(--border-default);background:var(--canvas-subtle);color:var(--fg-default);font-size:14px;font-weight:500;cursor:pointer;}
+.btn:hover{background:var(--canvas-inset);text-decoration:none;}
+.btn-primary{background:var(--btn-primary-bg);border-color:rgba(0,0,0,0.15);color:#fff;}
+.btn-primary:hover{background:var(--btn-primary-hover);}
+.btn-danger-outline{color:var(--danger-fg);}
+.card{background:var(--canvas-default);border:1px solid var(--border-default);border-radius:6px;}
+.container{max-width:1280px;margin:0 auto;padding:24px 32px;}
+.container-md{max-width:544px;margin:0 auto;padding:32px 16px;}
+input[type=text],input[type=password],input[type=email],textarea,select.input{width:100%;padding:5px 12px;border:1px solid var(--border-default);border-radius:6px;background:var(--canvas-default);color:var(--fg-default);font-size:14px;}
+label{font-weight:600;font-size:14px;display:block;margin:16px 0 4px;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:2em;font-size:12px;font-weight:500;}
+.pill-open{background:var(--success-subtle);color:var(--success-fg);}
+.pill-closed{background:var(--done-subtle);color:var(--done-fg);}
+.pill-merged{background:var(--done-subtle);color:var(--done-fg);}
+.tab-row{border-bottom:1px solid var(--border-default);display:flex;gap:4px;}
+.tab{padding:12px 16px;font-size:14px;color:var(--fg-muted);border-bottom:2px solid transparent;cursor:pointer;}
+.tab.active{color:var(--fg-default);border-bottom-color:#fd8c73;font-weight:600;}
+h1,h2,h3{margin:0 0 8px;}
+.muted{color:var(--fg-muted);}
+.mono{font-family:var(--mono);}
+hr{border:none;border-top:1px solid var(--border-default);}
+.row{display:flex;gap:24px;}
+.col{flex:1;min-width:0;}
+.list-item{padding:16px;border-bottom:1px solid var(--border-default);}
+.list-item:last-child{border-bottom:none;}
+.badge-count{background:var(--canvas-inset);border-radius:2em;padding:0 8px;font-size:12px;color:var(--fg-muted);}
+.sidebar-nav a{display:block;padding:6px 8px;border-radius:6px;color:var(--fg-default);font-size:14px;margin-bottom:2px;}
+.sidebar-nav a.active{background:var(--accent-subtle);color:var(--accent-fg);font-weight:600;}
+.sidebar-nav a:hover{background:var(--canvas-inset);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div id="proto-bar" role="toolbar" aria-label="Prototype navigation">
+  <span class="label">HubClone Prototype</span>
+  <label for="screenSelect" style="position:absolute;left:-9999px;">Choose screen</label>
+  <select id="screenSelect" onchange="showScreen(this.value)" aria-label="Choose screen to preview">
+    <option value="landing">Landing</option>
+    <option value="login">Login</option>
+    <option value="signup">Signup</option>
+    <option value="dashboard">Dashboard</option>
+    <option value="repository">Repository</option>
+    <option value="issues">Issues</option>
+    <option value="pulls">Pull Requests</option>
+    <option value="settings">Settings</option>
+    <option value="org">Organization</option>
+    <option value="profile">Profile</option>
+    <option value="search">Search</option>
+    <option value="notifications">Notifications</option>
+    <option value="admin">Admin</option>
+  </select>
+  <div class="spacer"></div>
+  <button onclick="toggleTheme()" id="themeBtn" aria-pressed="false" aria-label="Toggle dark mode">🌙 Dark mode</button>
+</div>
+
+<!-- ===================== LANDING ===================== -->
+<section class="screen active" id="landing">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div>
+    <a href="#" onclick="showScreen('login');return false;" style="color:#fff;">Sign in</a>
+    <button class="btn btn-primary" onclick="showScreen('signup')">Sign up</button>
+  </div>
+  <div style="background:linear-gradient(180deg,var(--header-bg) 0%, var(--canvas-subtle) 100%);color:#fff;padding:80px 32px 60px;text-align:center;">
+    <h1 style="font-size:52px;line-height:1.1;max-width:780px;margin:0 auto 16px;">Where the world builds software</h1>
+    <p style="font-size:20px;color:#9198a1;max-width:560px;margin:0 auto 32px;">Millions of developers and companies build, ship, and maintain their software on HubClone — the largest and most advanced platform for version control and collaboration.</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <input class="search" placeholder="Email address" style="width:260px;">
+      <button class="btn btn-primary" style="padding:8px 20px;" onclick="showScreen('signup')">Sign up for HubClone</button>
+    </div>
+  </div>
+  <div class="container" style="padding-top:64px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <div class="card" style="padding:24px;"><h3>🔧 Automate any workflow</h3><p class="muted">Simple, powerful CI/CD pipelines that build, test and deploy your code right from your repository.</p></div>
+      <div class="card" style="padding:24px;"><h3>🐛 Track every issue</h3><p class="muted">Plan, discuss, and track your work with issues and project boards, tailored to your team.</p></div>
+      <div class="card" style="padding:24px;"><h3>🔒 Secure by default</h3><p class="muted">Find and fix vulnerabilities before they reach production with built-in code scanning.</p></div>
+    </div>
+  </div>
+  <div class="container" style="text-align:center;color:var(--fg-muted);padding-top:0;padding-bottom:48px;">© 2026 HubClone, Inc.</div>
+</section>
+
+<!-- ===================== LOGIN ===================== -->
+<section class="screen" id="login">
+  <div class="container-md" style="padding-top:60px;">
+    <div style="text-align:center;margin-bottom:24px;">
+      <svg width="48" height="48" viewBox="0 0 16 16" fill="var(--fg-default)"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </div>
+    <div class="card" style="padding:16px;">
+      <label>Username or email address</label>
+      <input type="text">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <label>Password</label><a href="#" style="font-size:12px;">Forgot password?</a>
+      </div>
+      <input type="password">
+      <button class="btn btn-primary" style="width:100%;margin-top:20px;justify-content:center;" onclick="showScreen('dashboard')">Sign in</button>
+    </div>
+    <div class="card" style="padding:16px;margin-top:16px;text-align:center;">
+      New to HubClone? <a href="#" onclick="showScreen('signup');return false;">Create an account</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SIGNUP ===================== -->
+<section class="screen" id="signup">
+  <div class="container-md" style="padding-top:48px;">
+    <h1 style="text-align:center;font-size:24px;">Join HubClone</h1>
+    <div class="card" style="padding:24px;margin-top:16px;">
+      <label>Email address</label><input type="email">
+      <label>Password</label><input type="password">
+      <p class="muted" style="font-size:12px;margin-top:4px;">At least 15 characters, or 8 characters including a number and a lowercase letter.</p>
+      <label>Username</label><input type="text" value="octo-dev">
+      <p class="muted" style="font-size:12px;margin-top:4px;">Your username is how others see you on HubClone.</p>
+      <div style="margin-top:16px;display:flex;align-items:flex-start;gap:8px;">
+        <input type="checkbox" style="margin-top:3px;"> <span class="muted" style="font-size:12px;">I'd like to receive occasional product updates and announcements via email.</span>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:20px;justify-content:center;" onclick="showScreen('dashboard')">Create account</button>
+    </div>
+    <p class="muted" style="text-align:center;margin-top:16px;">Already have an account? <a href="#" onclick="showScreen('login');return false;">Sign in</a></p>
+  </div>
+</section>
+
+<!-- ===================== DASHBOARD ===================== -->
+<section class="screen" id="dashboard">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <nav>
+      <a href="#" onclick="showScreen('repository');return false;">Repositories</a>
+      <a href="#">Projects</a>
+      <a href="#" onclick="showScreen('org');return false;">Organizations</a>
+    </nav>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div>
+    <a href="#" onclick="showScreen('notifications');return false;" style="color:#fff;font-size:18px;">🔔</a>
+    <button class="btn btn-primary" onclick="alert('New repository form')">New</button>
+    <span class="avatar" onclick="showScreen('profile')" style="cursor:pointer;"></span>
+  </div>
+  <div class="container" style="display:flex;gap:32px;">
+    <div style="width:296px;flex-shrink:0;">
+      <h3 style="font-size:16px;margin-bottom:12px;">Top repositories</h3>
+      <input type="text" placeholder="Find a repository..." style="margin-bottom:12px;">
+      <div class="card">
+        <div class="list-item" style="cursor:pointer;" onclick="showScreen('repository')"><a href="#" onclick="showScreen('repository');return false;">octo-dev / <b>hubclone-api</b></a><br><span class="muted" style="font-size:12px;">Updated 2 hours ago</span></div>
+        <div class="list-item"><a href="#">octo-dev / <b>design-tokens</b></a><br><span class="muted" style="font-size:12px;">Updated yesterday</span></div>
+        <div class="list-item"><a href="#">acme-org / <b>mobile-app</b></a><br><span class="muted" style="font-size:12px;">Updated 3 days ago</span></div>
+      </div>
+      <a href="#" style="display:block;margin-top:8px;font-size:14px;">Show more</a>
+      <hr style="margin:20px 0;">
+      <h3 style="font-size:16px;">Recent activity</h3>
+      <p class="muted" style="font-size:13px;">You pushed to <a href="#">hubclone-api</a> 2 hours ago</p>
+      <p class="muted" style="font-size:13px;">You opened <a href="#" onclick="showScreen('pulls');return false;">PR #142</a> yesterday</p>
+    </div>
+    <div class="col">
+      <div class="tab-row">
+        <div class="tab active">Overview</div>
+        <div class="tab">For you</div>
+      </div>
+      <h2 style="margin-top:20px;">Home</h2>
+      <div class="card" style="padding:16px;margin-bottom:16px;">
+        <b>octo-dev</b> starred <a href="#">vercel/next.js</a>
+        <p class="muted" style="font-size:13px;">The React Framework for the Web · 3h ago</p>
+      </div>
+      <div class="card" style="padding:16px;margin-bottom:16px;">
+        <b>jane-doe</b> opened <span class="pill pill-open">Open</span> <a href="#" onclick="showScreen('issues');return false;">Issue #88: Fix pagination bug</a> in <a href="#">acme-org/mobile-app</a>
+        <p class="muted" style="font-size:13px;">5h ago</p>
+      </div>
+      <div class="card" style="padding:16px;">
+        <b>octo-dev</b> merged <span class="pill pill-merged">Merged</span> <a href="#" onclick="showScreen('pulls');return false;">PR #141: Add dark mode toggle</a>
+        <p class="muted" style="font-size:13px;">Yesterday</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REPOSITORY ===================== -->
+<section class="screen" id="repository">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div>
+    <span class="avatar"></span>
+  </div>
+  <div class="container" style="padding-bottom:0;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:20px;margin-bottom:12px;">
+      📁 <a href="#">octo-dev</a> / <b><a href="#">hubclone-api</a></b>
+      <span class="pill" style="background:var(--canvas-inset);border:1px solid var(--border-default);color:var(--fg-muted);">Public</span>
+      <div class="spacer"></div>
+      <button class="btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg> Star <span class="badge-count">312</span></button>
+      <button class="btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 4A1.75 1.75 0 105 5.732v1.336a3 3 0 001.5 2.598v2.867a1.75 1.75 0 101.5 0V9.666a3 3 0 001.5-2.598V5.732A1.75 1.75 0 1010 4a1.75 1.75 0 00-.998 3.192v1.276a1.5 1.5 0 01-3.004 0V7.192A1.75 1.75 0 003.5 4zM11.25 3.25a.75.75 0 100 1.5.75.75 0 000-1.5zM8 12.25a.75.75 0 100 1.5.75.75 0 000-1.5z"/></svg> Fork <span class="badge-count">48</span></button>
+    </div>
+    <div class="tab-row">
+      <div class="tab active" onclick="showScreen('repository')">&lt;&gt; Code</div>
+      <div class="tab" onclick="showScreen('issues')">◉ Issues <span class="badge-count">23</span></div>
+      <div class="tab" onclick="showScreen('pulls')">⑂ Pull requests <span class="badge-count">4</span></div>
+      <div class="tab">Actions</div>
+      <div class="tab">Projects</div>
+      <div class="tab" onclick="showScreen('settings')">⚙ Settings</div>
+    </div>
+  </div>
+  <div class="container" style="display:flex;gap:24px;padding-top:16px;">
+    <div class="col">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="btn">🌿 main <span style="margin-left:4px;">▾</span></button>
+        <span class="muted">14 branches · 6 tags</span>
+        <div class="spacer"></div>
+        <button class="btn">Go to file</button>
+        <button class="btn btn-primary">＋ Add file</button>
+        <button class="btn btn-primary">＜＞ Code ▾</button>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border-default);font-size:13px;">
+          <span class="avatar" style="width:20px;height:20px;margin-right:8px;"></span> <b>octo-dev</b>&nbsp;<span class="muted">Add rate limiting middleware</span>
+          <div class="spacer"></div>
+          <span class="mono muted">a1b2c3d</span>&nbsp;<span class="muted">· 2 hours ago</span>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">📁 src</td><td class="muted">Refactor auth module</td><td class="muted" style="text-align:right;padding-right:16px;">3 days ago</td></tr>
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">📁 tests</td><td class="muted">Add integration tests</td><td class="muted" style="text-align:right;padding-right:16px;">5 days ago</td></tr>
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">📄 .gitignore</td><td class="muted">Initial commit</td><td class="muted" style="text-align:right;padding-right:16px;">3 weeks ago</td></tr>
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">📄 README.md</td><td class="muted">Update install instructions</td><td class="muted" style="text-align:right;padding-right:16px;">1 week ago</td></tr>
+          <tr><td style="padding:8px 16px;">📄 package.json</td><td class="muted">Bump dependencies</td><td class="muted" style="text-align:right;padding-right:16px;">2 hours ago</td></tr>
+        </table>
+      </div>
+      <div class="card" style="margin-top:16px;padding:16px;">
+        <h3>📖 README.md</h3>
+        <p>HubClone API is a lightweight REST service powering issue tracking, pull requests, and repository metadata for the HubClone platform.</p>
+        <p class="mono muted" style="background:var(--canvas-inset);padding:8px;border-radius:6px;">npm install &amp;&amp; npm run dev</p>
+      </div>
+    </div>
+    <div style="width:296px;flex-shrink:0;">
+      <h3 style="font-size:16px;">About</h3>
+      <p class="muted">Lightweight REST API for the HubClone platform — issues, pull requests, and repo metadata.</p>
+      <p>🔗 <a href="#">api.hubclone.dev</a></p>
+      <p class="muted">⭐ 312 stars · 👁 18 watching · 🍴 48 forks</p>
+      <hr>
+      <h3 style="font-size:16px;">Languages</h3>
+      <div style="height:8px;border-radius:4px;overflow:hidden;display:flex;margin-bottom:8px;">
+        <div style="width:70%;background:#3178c6;"></div><div style="width:20%;background:#f1e05a;"></div><div style="width:10%;background:#e34c26;"></div>
+      </div>
+      <p class="muted" style="font-size:12px;">TypeScript 70% · JavaScript 20% · HTML 10%</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ISSUES ===================== -->
+<section class="screen" id="issues">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container">
+    <div style="font-size:20px;margin-bottom:8px;">📁 <a href="#" onclick="showScreen('repository');return false;">octo-dev / hubclone-api</a></div>
+    <div class="tab-row">
+      <div class="tab" onclick="showScreen('repository')">&lt;&gt; Code</div>
+      <div class="tab active">◉ Issues</div>
+      <div class="tab" onclick="showScreen('pulls')">⑂ Pull requests</div>
+      <div class="tab">Actions</div>
+      <div class="tab" onclick="showScreen('settings')">⚙ Settings</div>
+    </div>
+  </div>
+  <div class="container" style="padding-top:16px;">
+    <div style="display:flex;gap:12px;margin-bottom:16px;">
+      <input type="text" placeholder="is:issue is:open" style="flex:1;">
+      <button class="btn">Labels</button>
+      <button class="btn">Milestones</button>
+      <button class="btn btn-primary" onclick="alert('New issue form')">New issue</button>
+    </div>
+    <div class="card">
+      <div style="display:flex;padding:12px 16px;border-bottom:1px solid var(--border-default);font-size:13px;">
+        <span><input type="checkbox"> <b>23 Open</b></span>&nbsp;&nbsp;<span class="muted">142 Closed</span>
+        <div class="spacer"></div><span class="muted">Author ▾ Label ▾ Sort ▾</span>
+      </div>
+      <div class="list-item"><span class="pill pill-open">●</span> <a href="#"><b>Rate limiter allows burst beyond configured threshold</b></a>
+        <span class="pill" style="background:var(--danger-subtle);color:var(--danger-fg);">bug</span>
+        <p class="muted" style="font-size:12px;margin:4px 0 0;">#146 opened 2 hours ago by jane-doe · 3 comments</p></div>
+      <div class="list-item"><span class="pill pill-open">●</span> <a href="#"><b>Add pagination to /repos endpoint</b></a>
+        <span class="pill" style="background:var(--accent-subtle);color:var(--accent-fg);">enhancement</span>
+        <p class="muted" style="font-size:12px;margin:4px 0 0;">#144 opened yesterday by octo-dev · 1 comment</p></div>
+      <div class="list-item"><span class="pill pill-open">●</span> <a href="#"><b>Docs: clarify webhook signature verification</b></a>
+        <span class="pill" style="background:var(--attention-subtle);color:var(--attention-fg);">documentation</span>
+        <p class="muted" style="font-size:12px;margin:4px 0 0;">#139 opened 4 days ago by contributor-99 · 0 comments</p></div>
+      <div class="list-item"><span class="pill pill-open">●</span> <a href="#"><b>Memory leak in websocket connection handler</b></a>
+        <span class="pill" style="background:var(--danger-subtle);color:var(--danger-fg);">bug</span> <span class="pill" style="background:var(--danger-subtle);color:var(--danger-fg);">priority</span>
+        <p class="muted" style="font-size:12px;margin:4px 0 0;">#131 opened 1 week ago by jane-doe · 8 comments</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PULL REQUESTS ===================== -->
+<section class="screen" id="pulls">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container">
+    <div style="font-size:20px;margin-bottom:8px;">📁 <a href="#" onclick="showScreen('repository');return false;">octo-dev / hubclone-api</a></div>
+    <div class="tab-row">
+      <div class="tab" onclick="showScreen('repository')">&lt;&gt; Code</div>
+      <div class="tab" onclick="showScreen('issues')">◉ Issues</div>
+      <div class="tab active">⑂ Pull requests</div>
+      <div class="tab">Actions</div>
+      <div class="tab" onclick="showScreen('settings')">⚙ Settings</div>
+    </div>
+  </div>
+  <div class="row container" style="padding-top:16px;">
+    <div style="width:60%;">
+      <div class="card">
+        <div class="list-item"><span class="pill pill-open">⑂</span> <a href="#"><b>Add dark mode toggle to settings page</b></a>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">#142 opened by octo-dev · wants to merge into main from feature/dark-mode</p></div>
+        <div class="list-item"><span class="pill pill-merged">⑂</span> <a href="#"><b>Fix flaky test in auth.spec.ts</b></a>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">#141 merged 2 days ago by jane-doe</p></div>
+        <div class="list-item"><span class="pill pill-open">⑂</span> <a href="#"><b>Bump next.js from 14.1 to 14.2</b></a>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">#140 opened by dependabot[bot] · 2 approvals</p></div>
+        <div class="list-item"><span class="pill pill-closed">⑂</span> <a href="#"><b>Experiment: switch to esbuild</b></a>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">#138 closed without merging by octo-dev</p></div>
+      </div>
+    </div>
+    <div style="width:40%;">
+      <div class="card" style="padding:16px;">
+        <b>#142 Add dark mode toggle to settings page</b>
+        <p class="muted" style="font-size:13px;">octo-dev wants to merge 6 commits into <span class="mono">main</span> from <span class="mono">feature/dark-mode</span></p>
+        <div class="pill" style="background:var(--success-subtle);color:var(--success-fg);margin-bottom:8px;">✓ All checks have passed</div>
+        <p style="font-size:13px;"><b>2</b> approvals · <b>0</b> changes requested</p>
+        <hr>
+        <p style="font-size:13px;"><b>jane-doe</b> approved these changes<br><span class="muted">"LGTM! Nice work on the theme persistence."</span></p>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;">Merge pull request</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SETTINGS ===================== -->
+<section class="screen" id="settings">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container" style="display:flex;gap:32px;">
+    <div style="width:240px;flex-shrink:0;" class="sidebar-nav">
+      <h3 style="font-size:16px;">Settings</h3>
+      <a href="#" class="active">General</a>
+      <a href="#">Access</a>
+      <a href="#">Branches</a>
+      <a href="#">Webhooks</a>
+      <a href="#">Notifications</a>
+      <a href="#" style="color:var(--danger-fg);">Danger zone</a>
+    </div>
+    <div class="col">
+      <h2>General</h2>
+      <div class="card" style="padding:16px;margin-bottom:16px;">
+        <label>Repository name</label><input type="text" value="hubclone-api">
+        <label>Description</label><input type="text" value="Lightweight REST API for the HubClone platform">
+        <button class="btn" style="margin-top:16px;">Save changes</button>
+      </div>
+      <div class="card" style="padding:16px;margin-bottom:16px;">
+        <h3 style="font-size:16px;">Features</h3>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;"><input type="checkbox" checked> Issues</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;"><input type="checkbox" checked> Projects</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;"><input type="checkbox"> Wikis</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:400;"><input type="checkbox" checked> Discussions</label>
+      </div>
+      <div class="card" style="border-color:var(--danger-fg);padding:16px;">
+        <h3 style="font-size:16px;color:var(--danger-fg);">Danger zone</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border-default);">
+          <div>Change repository visibility<br><span class="muted" style="font-size:12px;">Currently public</span></div>
+          <button class="btn btn-danger-outline">Change visibility</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border-default);">
+          <div>Delete this repository<br><span class="muted" style="font-size:12px;">Once deleted, this cannot be undone</span></div>
+          <button class="btn" style="background:var(--danger-emphasis);color:#fff;border:none;">Delete this repository</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ORGANIZATION ===================== -->
+<section class="screen" id="org">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container">
+    <div style="display:flex;gap:20px;align-items:center;margin-bottom:16px;">
+      <div style="width:80px;height:80px;border-radius:12px;background:linear-gradient(135deg,#8250df,#0969da);"></div>
+      <div>
+        <h1 style="font-size:24px;">Acme Org</h1>
+        <p class="muted">Building the future of collaborative software · 40 members</p>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn">Invite member</button>
+      <button class="btn btn-primary">New repository</button>
+    </div>
+    <div class="tab-row">
+      <div class="tab active">Repositories</div>
+      <div class="tab">People</div>
+      <div class="tab">Teams</div>
+      <div class="tab">Projects</div>
+      <div class="tab">Settings</div>
+    </div>
+    <div style="padding-top:16px;">
+      <input type="text" placeholder="Find a repository..." style="width:300px;margin-bottom:16px;">
+      <div class="card">
+        <div class="list-item"><a href="#" onclick="showScreen('repository');return false;"><b>mobile-app</b></a> <span class="pill" style="background:var(--canvas-inset);border:1px solid var(--border-default);color:var(--fg-muted);">Public</span>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">React Native client for iOS and Android · TypeScript · Updated 3 days ago</p></div>
+        <div class="list-item"><a href="#"><b>infra</b></a> <span class="pill" style="background:var(--canvas-inset);border:1px solid var(--border-default);color:var(--fg-muted);">Private</span>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">Terraform modules for org infrastructure · HCL · Updated 1 week ago</p></div>
+        <div class="list-item"><a href="#"><b>design-system</b></a> <span class="pill" style="background:var(--canvas-inset);border:1px solid var(--border-default);color:var(--fg-muted);">Public</span>
+          <p class="muted" style="font-size:12px;margin:4px 0 0;">Shared component library · TypeScript · Updated 2 weeks ago</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROFILE ===================== -->
+<section class="screen" id="profile">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container" style="display:flex;gap:32px;">
+    <div style="width:280px;flex-shrink:0;">
+      <div style="width:200px;height:200px;border-radius:50%;background:linear-gradient(135deg,#0969da,#8250df);margin-bottom:16px;"></div>
+      <h1 style="font-size:22px;">Octo Dev</h1>
+      <p class="muted" style="font-size:18px;">octo-dev</p>
+      <p style="margin-top:8px;">Backend engineer building developer tools. Coffee-powered.</p>
+      <button class="btn" style="width:100%;margin:12px 0;">Edit profile</button>
+      <p class="muted">👥 <b>128</b> followers · <b>52</b> following</p>
+      <p class="muted">📍 Bengaluru, India</p>
+      <p class="muted">🔗 <a href="#">octodev.io</a></p>
+      <hr>
+      <h3 style="font-size:14px;">Organizations</h3>
+      <div style="display:flex;gap:6px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#8250df,#0969da);" onclick="showScreen('org')"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="padding:12px 16px;margin-bottom:16px;">📊 <b>1,204</b> contributions in the last year</div>
+      <div class="card" style="height:120px;padding:16px;margin-bottom:24px;display:flex;align-items:flex-end;gap:3px;">
+        <script>
+          // seeded pseudo-random for a stable, deliberate-looking contribution pattern
+          function seeded(i){var x=Math.sin(i*12.9898)*43758.5453;return x-Math.floor(x);}
+          document.write(Array.from({length:52}).map((_,i)=>{
+            var wave = 0.35+0.35*Math.sin(i/5); // seasonal rhythm
+            var noise = seeded(i)*0.5;
+            var h = Math.max(8, Math.min(100,(wave+noise)*100));
+            var op = 0.4+ (h/100)*0.6;
+            return `<div style="flex:1;height:${h}%;background:var(--success-emphasis);opacity:${op.toFixed(2)};border-radius:2px;"></div>`;
+          }).join(''))
+        </script>
+      </div>
+      <div class="tab-row"><div class="tab active">Overview</div><div class="tab">Repositories 18</div><div class="tab">Projects</div><div class="tab">Stars</div></div>
+      <h3 style="margin-top:16px;">Pinned</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card" style="padding:16px;"><a href="#" onclick="showScreen('repository');return false;"><b>hubclone-api</b></a><p class="muted" style="font-size:13px;">Lightweight REST API for the HubClone platform</p><span class="muted" style="font-size:12px;">● TypeScript &nbsp; ⭐ 312</span></div>
+        <div class="card" style="padding:16px;"><a href="#"><b>design-tokens</b></a><p class="muted" style="font-size:13px;">Shared design tokens for cross-platform theming</p><span class="muted" style="font-size:12px;">● JSON &nbsp; ⭐ 89</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SEARCH ===================== -->
+<section class="screen" id="search">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" style="width:480px;" value="pagination bug" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container" style="display:flex;gap:24px;">
+    <div style="width:240px;flex-shrink:0;" class="sidebar-nav">
+      <a href="#" class="active">Repositories <span class="badge-count">1.2k</span></a>
+      <a href="#">Code</a>
+      <a href="#">Issues <span class="badge-count">340</span></a>
+      <a href="#">Pull requests <span class="badge-count">89</span></a>
+      <a href="#">Users <span class="badge-count">12</span></a>
+      <hr>
+      <label style="margin-top:0;">Language</label>
+      <label style="font-weight:400;"><input type="checkbox"> TypeScript</label>
+      <label style="font-weight:400;"><input type="checkbox"> Python</label>
+    </div>
+    <div class="col">
+      <p class="muted">1,204 repository results</p>
+      <div class="card" style="padding:16px;margin-bottom:12px;">
+        <a href="#" onclick="showScreen('repository');return false;"><b>octo-dev/hubclone-api</b></a>
+        <p class="muted" style="font-size:13px;">Lightweight REST API — includes a fix for the <b>pagination bug</b> in issue #144.</p>
+        <span class="muted" style="font-size:12px;">TypeScript · ⭐ 312 · Updated 2 hours ago</span>
+      </div>
+      <div class="card" style="padding:16px;margin-bottom:12px;">
+        <a href="#"><b>acme-org/mobile-app</b></a>
+        <p class="muted" style="font-size:13px;">React Native client — open issue tracking a <b>pagination bug</b> in the feed screen.</p>
+        <span class="muted" style="font-size:12px;">TypeScript · ⭐ 89 · Updated 3 days ago</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NOTIFICATIONS ===================== -->
+<section class="screen" id="notifications">
+  <div class="gh-header">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <input class="search" placeholder="Search or jump to...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container">
+    <h1 style="font-size:22px;">Notifications</h1>
+    <div class="tab-row" style="margin-bottom:16px;">
+      <div class="tab active">Inbox <span class="badge-count">6</span></div>
+      <div class="tab">Saved</div>
+      <div class="tab">Done</div>
+    </div>
+    <div class="card">
+      <div class="list-item" style="display:flex;justify-content:space-between;">
+        <div><input type="checkbox"> <span class="pill pill-open" style="margin:0 8px;">●</span><a href="#" onclick="showScreen('issues');return false;"><b>Rate limiter allows burst beyond configured threshold</b></a>
+        <p class="muted" style="font-size:12px;margin:4px 0 0 24px;">octo-dev/hubclone-api · Issue #146</p></div>
+        <span class="muted" style="font-size:12px;">2h</span>
+      </div>
+      <div class="list-item" style="display:flex;justify-content:space-between;">
+        <div><input type="checkbox"> <span class="pill pill-open" style="margin:0 8px;">⑂</span><a href="#" onclick="showScreen('pulls');return false;"><b>Review requested: Add dark mode toggle to settings page</b></a>
+        <p class="muted" style="font-size:12px;margin:4px 0 0 24px;">octo-dev/hubclone-api · PR #142</p></div>
+        <span class="muted" style="font-size:12px;">5h</span>
+      </div>
+      <div class="list-item" style="display:flex;justify-content:space-between;">
+        <div><input type="checkbox"> <span class="pill pill-merged" style="margin:0 8px;">⑂</span><a href="#"><b>Your pull request was merged</b></a>
+        <p class="muted" style="font-size:12px;margin:4px 0 0 24px;">acme-org/mobile-app · PR #56</p></div>
+        <span class="muted" style="font-size:12px;">1d</span>
+      </div>
+      <div class="list-item" style="display:flex;justify-content:space-between;">
+        <div><input type="checkbox"> <span class="pill" style="background:var(--canvas-inset);color:var(--fg-muted);margin:0 8px;">💬</span><a href="#"><b>jane-doe commented on your commit</b></a>
+        <p class="muted" style="font-size:12px;margin:4px 0 0 24px;">octo-dev/hubclone-api</p></div>
+        <span class="muted" style="font-size:12px;">2d</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ADMIN ===================== -->
+<section class="screen" id="admin">
+  <div class="gh-header" style="background:#3d1a1a;">
+    <svg class="logo" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <b style="color:#fff;">Site Admin</b>
+    <input class="search" placeholder="Search users, orgs, repos...">
+    <div class="spacer"></div><span class="avatar"></span>
+  </div>
+  <div class="container" style="display:flex;gap:32px;">
+    <div style="width:220px;flex-shrink:0;" class="sidebar-nav">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Users</a>
+      <a href="#">Organizations</a>
+      <a href="#">Repositories</a>
+      <a href="#">System settings</a>
+      <a href="#">Audit log</a>
+    </div>
+    <div class="col">
+      <h1 style="font-size:22px;">Admin dashboard</h1>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:16px 0 24px;">
+        <div class="card" style="padding:16px;"><span class="muted" style="font-size:12px;">Total users</span><h2 style="font-size:28px;">48,204</h2></div>
+        <div class="card" style="padding:16px;"><span class="muted" style="font-size:12px;">Total repositories</span><h2 style="font-size:28px;">126,910</h2></div>
+        <div class="card" style="padding:16px;"><span class="muted" style="font-size:12px;">Organizations</span><h2 style="font-size:28px;">1,842</h2></div>
+        <div class="card" style="padding:16px;"><span class="muted" style="font-size:12px;">Storage used</span><h2 style="font-size:28px;">4.2 TB</h2></div>
+      </div>
+      <h3>Recent users</h3>
+      <div class="card">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <tr style="border-bottom:1px solid var(--border-default);color:var(--fg-muted);"><td style="padding:8px 16px;">User</td><td>Email</td><td>Joined</td><td>Status</td><td></td></tr>
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">octo-dev</td><td>octo@hubclone.dev</td><td>2 hours ago</td><td><span class="pill pill-open">Active</span></td><td><a href="#">Manage</a></td></tr>
+          <tr style="border-bottom:1px solid var(--border-default);"><td style="padding:8px 16px;">jane-doe</td><td>jane@acme.org</td><td>1 day ago</td><td><span class="pill pill-open">Active</span></td><td><a href="#">Manage</a></td></tr>
+          <tr><td style="padding:8px 16px;">spammer-99</td><td>x@temp-mail.com</td><td>3 days ago</td><td><span class="pill" style="background:var(--danger-subtle);color:var(--danger-fg);">Suspended</span></td><td><a href="#">Manage</a></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active'); s.setAttribute('aria-hidden','true');});
+  const target = document.getElementById(id);
+  target.classList.add('active');
+  target.setAttribute('aria-hidden','false');
+  document.getElementById('screenSelect').value = id;
+  window.scrollTo(0,0);
+  // move focus to the new screen's main heading for screen reader users
+  const heading = target.querySelector('h1,h2');
+  if(heading){ heading.setAttribute('tabindex','-1'); heading.focus(); }
+}
+function toggleTheme(){
+  const html=document.documentElement;
+  const isDark = html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', isDark? 'light':'dark');
+  const btn = document.getElementById('themeBtn');
+  btn.textContent = isDark? '🌙 Dark mode':'☀️ Light mode';
+  btn.setAttribute('aria-pressed', String(!isDark));
+  try{ localStorage.setItem('hubclone-theme', isDark?'light':'dark'); }catch(e){}
+}
+// restore theme preference on load
+(function(){
+  try{
+    const saved = localStorage.getItem('hubclone-theme');
+    if(saved==='dark'){ document.documentElement.setAttribute('data-theme','dark'); }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

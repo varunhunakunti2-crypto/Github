@@ -1,10 +1,10 @@
-import React from 'react';
-import type { Metadata } from 'next';
-import '@gitforge/ui/src/theme.css';
+import React from "react";
+import type { Metadata } from "next";
+import "@gitforge/ui/src/theme.css";
 
 export const metadata: Metadata = {
-  title: 'GitForge - High-Performance Git Platform',
-  description: 'Fast, stark repository hosting and developer collaboration.',
+  title: "GitForge - High-Performance Git Platform",
+  description: "Fast, stark repository hosting and developer collaboration.",
 };
 
 export default function RootLayout({

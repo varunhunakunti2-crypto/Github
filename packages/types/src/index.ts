@@ -22,7 +22,7 @@ export interface Issue {
   number: number;
   title: string;
   body?: string;
-  status: 'OPEN' | 'CLOSED';
+  status: "OPEN" | "CLOSED";
   creatorId: string;
   repositoryId: string;
   createdAt: Date;
@@ -33,7 +33,7 @@ export interface PullRequest {
   number: number;
   title: string;
   body?: string;
-  status: 'DRAFT' | 'OPEN' | 'MERGED' | 'CLOSED';
+  status: "DRAFT" | "OPEN" | "MERGED" | "CLOSED";
   baseBranch: string;
   compareBranch: string;
   creatorId: string;
