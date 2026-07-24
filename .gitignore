@@ -30,8 +30,8 @@ dist/
 *dist/
 
 # Local Dev SSH Keys
-apps/git-daemon/keys/id_rsa*
-apps/git-daemon/keys/ssh_host*
+backend/git-daemon/keys/id_rsa*
+backend/git-daemon/keys/ssh_host*
 
 # Local IDE Agent configurations
 .agents/

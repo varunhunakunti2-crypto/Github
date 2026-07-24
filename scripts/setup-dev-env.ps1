@@ -18,7 +18,7 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
 }
 
 # 3. Generate development SSH host keys
-$keyDir = "apps/git-daemon/keys"
+$keyDir = "backend/git-daemon/keys"
 if (-not (Test-Path $keyDir)) {
     New-Item -ItemType Directory -Force -Path $keyDir | Out-Null
 }
