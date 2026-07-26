@@ -7,16 +7,7 @@ export interface User {
   createdAt: Date;
 }
 
-export interface Repository {
-  id: string;
-  name: string;
-  description?: string;
-  isPrivate: boolean;
-  ownerId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+export * from "./repository";
 export interface Issue {
   id: string;
   number: number;
@@ -40,3 +31,5 @@ export interface PullRequest {
   repositoryId: string;
   createdAt: Date;
 }
+
+export * from "./profile";

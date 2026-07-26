@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --theme-canvas: #ffffff;
+  --theme-canvas-soft: #f6f8fa;
+  --theme-canvas-soft-2: #f6f8fa;
+  --theme-ink: #1f2328;
+  --theme-body: #1f2328;
+  --theme-mute: #59636e;
+  --theme-hairline: #d1d9e0;
+  --theme-hairline-strong: #8c959f;
+  --theme-primary: #1f883d;
+  --theme-on-primary: #ffffff;
+  --theme-link: #0969da;
+  --theme-success: #1a7f37;
+  --theme-error: #cf222e;
+}
+
+@theme {
+  --color-base: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-border: #d1d9e0;
+  --color-text-primary: #1f2328;
+  --color-text-muted: #59636e;
+  --color-accent: #0969da;
+  --color-success: #1a7f37;
+  --color-danger: #cf222e;
+
+  --font-space-grotesk: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-inter: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-jetbrains-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+  background-color: #f6f8fa;
+  color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}

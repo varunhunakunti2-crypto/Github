@@ -10,17 +10,20 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@gitforge/types": "*",
+    "@gitforge/ui": "*",
     "next": "^15.0.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "@gitforge/ui": "*",
-    "@gitforge/types": "*"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.12.7",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.4.5"
   }
 }

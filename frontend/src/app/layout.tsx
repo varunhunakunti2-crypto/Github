@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import "@gitforge/ui/src/theme.css";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "GitForge - High-Performance Git Platform",
