@@ -75,11 +75,60 @@ export default function ReadmeSection({
     const lines = md.split("\n");
     let inCodeBlock = false;
     let codeBlockContent: string[] = [];
+    let inTable = false;
+    let tableRows: string[][] = [];
     const elements: React.ReactNode[] = [];
+
+    const flushTable = (keyIndex: number) => {
+      if (tableRows.length > 0) {
+        const separatorIdx = tableRows.findIndex(row => row.some(cell => cell.includes("---")));
+        let headers: string[] = [];
+        let rows: string[][] = [];
+        
+        if (separatorIdx !== -1) {
+          headers = tableRows[0];
+          rows = tableRows.slice(separatorIdx + 1);
+        } else {
+          rows = tableRows;
+        }
+
+        elements.push(
+          <div key={`table-${keyIndex}`} className="overflow-x-auto my-sm border border-border rounded-sm">
+            <table className="w-full text-left text-xs text-text-primary border-collapse">
+              {headers.length > 0 && (
+                <thead className="bg-base border-b border-border">
+                  <tr>
+                    {headers.map((th, i) => (
+                      <th key={i} className="px-sm py-xs font-space-grotesk font-bold border-r border-border last:border-r-0">
+                        {parseInlineFormatting(th.trim())}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+              )}
+              <tbody>
+                {rows.map((row, rIdx) => (
+                  <tr key={rIdx} className="border-b border-border last:border-b-0 hover:bg-surface/50">
+                    {row.map((td, cIdx) => (
+                      <td key={cIdx} className="px-sm py-xs border-r border-border last:border-r-0">
+                        {parseInlineFormatting(td.trim())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+        tableRows = [];
+        inTable = false;
+      }
+    };
 
     lines.forEach((line, index) => {
       // Code block toggle
       if (line.trim().startsWith("```")) {
+        if (inTable) flushTable(index);
         if (inCodeBlock) {
           inCodeBlock = false;
           elements.push(
@@ -100,6 +149,16 @@ export default function ReadmeSection({
       if (inCodeBlock) {
         codeBlockContent.push(line);
         return;
+      }
+
+      // Table row
+      if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+        inTable = true;
+        const cells = line.trim().slice(1, -1).split("|");
+        tableRows.push(cells);
+        return;
+      } else if (inTable) {
+        flushTable(index);
       }
 
       // H1 Header
@@ -182,76 +241,74 @@ export default function ReadmeSection({
       }
     });
 
+    if (inTable) {
+      flushTable(lines.length);
+    }
+
     return elements;
   };
 
-  // Helper to parse inline styles like `code`, [link](url), and **bold**
+  // Helper to parse inline styles like `code`, [link](url), ![img](url) and **bold**
   const parseInlineFormatting = (text: string) => {
-    // 1. Parse Links: [text](url)
+    const imgRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
     const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    // 2. Parse inline code: `code`
     const codeRegex = /`([^`]+)`/g;
+    const boldRegex = /\*\*([^*]+)\*\*/g;
     
     let parts: React.ReactNode[] = [text];
 
-    // Simple replacement helper
-    const matches = Array.from(text.matchAll(linkRegex));
-    if (matches.length > 0) {
-      let lastIndex = 0;
-      const newParts: React.ReactNode[] = [];
-      matches.forEach((m, idx) => {
-        const [full, linkText, linkUrl] = m;
-        const index = text.indexOf(full, lastIndex);
-        if (index > lastIndex) {
-          newParts.push(text.slice(lastIndex, index));
+    const applyRegex = (currentParts: React.ReactNode[], regex: RegExp, render: (m: RegExpMatchArray, i: number) => React.ReactNode) => {
+      let newParts: React.ReactNode[] = [];
+      currentParts.forEach((part, partIdx) => {
+        if (typeof part !== "string") {
+          newParts.push(part);
+          return;
         }
-        newParts.push(
-          <Link
-            key={idx}
-            href={linkUrl}
-            className="text-accent hover:underline outline-none focus-visible:ring-1 focus-visible:ring-accent"
-          >
-            {linkText}
-          </Link>
-        );
-        lastIndex = index + full.length;
-      });
-      if (lastIndex < text.length) {
-        newParts.push(text.slice(lastIndex));
-      }
-      parts = newParts;
-    }
-
-    // Parse inline code
-    parts = parts.map((part) => {
-      if (typeof part !== "string") return part;
-      
-      const codeMatches = Array.from(part.matchAll(codeRegex));
-      if (codeMatches.length === 0) return part;
-
-      let lastIdx = 0;
-      const codeParts: React.ReactNode[] = [];
-      codeMatches.forEach((cm, cIdx) => {
-        const [full, codeText] = cm;
-        const index = part.indexOf(full, lastIdx);
-        if (index > lastIdx) {
-          codeParts.push(part.slice(lastIdx, index));
+        const matches = Array.from(part.matchAll(regex));
+        if (matches.length === 0) {
+          newParts.push(part);
+          return;
         }
-        codeParts.push(
-          <code
-            key={cIdx}
-            className="bg-base border border-border px-xxs py-[2px] rounded-xs font-jetbrains-mono text-[10px] text-text-primary"
-          >
-            {codeText}
-          </code>
-        );
-        lastIdx = index + full.length;
+        let lastIdx = 0;
+        matches.forEach((m, mIdx) => {
+          const [full] = m;
+          const index = part.indexOf(full, lastIdx);
+          if (index > lastIdx) {
+            newParts.push(part.slice(lastIdx, index));
+          }
+          newParts.push(render(m, partIdx * 1000 + mIdx));
+          lastIdx = index + full.length;
+        });
+        if (lastIdx < part.length) {
+          newParts.push(part.slice(lastIdx));
+        }
       });
-      if (lastIdx < part.length) {
-        codeParts.push(part.slice(lastIdx));
-      }
-      return codeParts;
-    });
+      return newParts;
+    };
+
+    // Images first
+    parts = applyRegex(parts, imgRegex, (m, i) => (
+      <img key={`img-${i}`} src={m[2]} alt={m[1]} className="max-w-full h-auto rounded-sm border border-border my-xs" />
+    ));
+
+    // Then links
+    parts = applyRegex(parts, linkRegex, (m, i) => (
+      <Link key={`link-${i}`} href={m[2]} className="text-accent hover:underline outline-none focus-visible:ring-1 focus-visible:ring-accent">
+        {m[1]}
+      </Link>
+    ));
+
+    // Then inline code
+    parts = applyRegex(parts, codeRegex, (m, i) => (
+      <code key={`code-${i}`} className="bg-base border border-border px-xxs py-[2px] rounded-xs font-jetbrains-mono text-[10px] text-text-primary">
+        {m[1]}
+      </code>
+    ));
+
+    // Then bold
+    parts = applyRegex(parts, boldRegex, (m, i) => (
+      <strong key={`bold-${i}`} className="font-bold">{m[1]}</strong>
+    ));
 
     return parts;
   };

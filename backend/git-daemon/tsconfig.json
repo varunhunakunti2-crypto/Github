@@ -1,8 +1,15 @@
 {
-  "extends": "@gitforge/tsconfig/base.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src/**/*"]
 }

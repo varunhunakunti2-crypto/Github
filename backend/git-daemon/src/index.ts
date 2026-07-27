@@ -1,48 +1,31 @@
-import { Server, Connection, AuthContext, Session } from "ssh2";
+import 'reflect-metadata';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { SshServer } from './ssh/ssh-server';
 
-// Basic Git SSH server shell configuration
-const port = process.env.SSH_PORT ? parseInt(process.env.SSH_PORT) : 2222;
-
-try {
-  const server = new Server(
-    {
-      // Temporary host keys placeholder for initial compilation
-      hostKeys: [],
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  
+  // Set up standard express body parser for LFS and API, 
+  // but keep raw stream for Git Smart HTTP POSTs
+  const bodyParser = require('body-parser');
+  app.use(bodyParser.json({
+    verify: (req: any, res: any, buf: Buffer) => {
+      req.rawBody = buf;
     },
-    (client: Connection) => {
-      console.log("Incoming Git SSH client connection...");
+    limit: '50mb'
+  }));
 
-      client
-        .on("authentication", (ctx: AuthContext) => {
-          // Authenticating SSH keys via Prisma database will be implemented in subsequent phase
-          ctx.accept();
-        })
-        .on("ready", () => {
-          client.on("session", (accept: any) => {
-            const session: Session = accept();
-            session.on("exec", (accept: any, reject: any, info: any) => {
-              console.log(`Executing Git SSH command: ${info.command}`);
-              const stream = accept();
-              stream.stderr.write(
-                "GitForge SSH transport mock interface active.\n",
-              );
-              stream.exit(0);
-              stream.end();
-            });
-          });
-        })
-        .on("close", () => {
-          console.log("Client SSH connection closed.");
-        });
-    },
-  );
+  const httpPort = process.env.PORT || 3002;
+  await app.listen(httpPort);
+  console.log(`[HTTP] GitForge Backend HTTP listening on port ${httpPort}`);
 
-  server.listen(port, "0.0.0.0", () => {
-    console.log(`GitForge Git-SSH Daemon listening on port ${port}`);
-  });
-} catch (err) {
-  console.warn(
-    "SSH server init deferred until host key certificates are generated:",
-    err,
-  );
+  try {
+    const sshServer = new SshServer();
+    sshServer.listen(2222, '0.0.0.0');
+  } catch (err) {
+    console.warn("[SSH] Server init deferred:", err);
+  }
 }
+
+bootstrap();

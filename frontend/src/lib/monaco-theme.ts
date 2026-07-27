@@ -1,0 +1,27 @@
+export const gitforgeDarkTheme = {
+  base: 'vs-dark' as const,
+  inherit: true,
+  rules: [
+    { token: '', foreground: 'E0E6ED', background: '0B0D10' },
+    { token: 'comment', foreground: '5C6370', fontStyle: 'italic' },
+    { token: 'keyword', foreground: '7C5CFF', fontStyle: 'bold' },
+    { token: 'number', foreground: 'E5C07B' },
+    { token: 'string', foreground: '98C379' },
+    { token: 'type', foreground: '61AFEF' },
+    { token: 'class', foreground: 'E5C07B' },
+    { token: 'function', foreground: '61AFEF' },
+    { token: 'variable', foreground: 'E0E6ED' },
+  ],
+  colors: {
+    'editor.background': '#0B0D10',
+    'editor.foreground': '#E0E6ED',
+    'editorLineNumber.foreground': '#5C6370',
+    'editorLineNumber.activeForeground': '#7C5CFF',
+    'editor.lineHighlightBackground': '#14171C',
+    'editor.selectionBackground': '#232830',
+    'editor.inactiveSelectionBackground': '#14171C',
+    'editorGutter.background': '#0B0D10',
+    'editorGutter.border': '#232830',
+    'editorCursor.foreground': '#7C5CFF',
+  },
+};

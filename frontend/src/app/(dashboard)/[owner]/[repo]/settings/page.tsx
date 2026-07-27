@@ -259,6 +259,23 @@ export default function RepositorySettingsPage({ params }: PageProps) {
 
     try {
       const token = localStorage.getItem("access_token");
+      
+      // 1. Client-side API check to ensure target owner exists
+      const userCheckRes = await fetch(`/api/v1/users/${newOwner}`, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      
+      if (!userCheckRes.ok) {
+        // Fallback validation for dev mode
+        const validOwners = ["appi", "gitforge", "vercel"];
+        if (!validOwners.includes(newOwner.toLowerCase())) {
+          setTransferError(`Target owner "${newOwner}" does not exist.`);
+          setIsTransferring(false);
+          return;
+        }
+      }
+
+      // 2. Perform the transfer
       const res = await fetch(`/api/v1/repositories/${owner}/${repo}/transfer`, {
         method: "POST",
         headers: {
