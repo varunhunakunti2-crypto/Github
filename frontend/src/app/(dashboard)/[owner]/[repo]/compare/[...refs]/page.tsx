@@ -136,20 +136,32 @@ export default function ComparePage({ params }: { params: Promise<{ owner: strin
           </select>
         </div>
 
-        {data && data.commits.length > 0 && (
+        {data && (
           <div className="sm:ml-auto flex gap-2 w-full sm:w-auto">
-            <button
-              onClick={() => setIsMergeOpen(true)}
-              className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold bg-[#232830] border border-[#232830] hover:bg-gray-800 text-gray-300 rounded transition"
-            >
-              Merge branches
-            </button>
-            <Link
-              href={`/${owner}/${repo}/pulls/new?base=${encodeURIComponent(baseBranch)}&head=${encodeURIComponent(headBranch)}`}
-              className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold bg-[#7C5CFF] text-white hover:bg-opacity-90 rounded text-center transition"
-            >
-              Create pull request
-            </Link>
+            {data.commits.length > 0 ? (
+              <>
+                <button
+                  onClick={() => setIsMergeOpen(true)}
+                  className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold bg-[#232830] border border-[#232830] hover:bg-gray-800 text-gray-300 rounded transition"
+                >
+                  Merge branches
+                </button>
+                <Link
+                  href={`/${owner}/${repo}/pulls/new?base=${encodeURIComponent(baseBranch)}&head=${encodeURIComponent(headBranch)}`}
+                  className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold bg-[#7C5CFF] text-white hover:bg-opacity-90 rounded text-center transition"
+                >
+                  Create pull request
+                </Link>
+              </>
+            ) : (
+              <button
+                disabled
+                title="There are no commits to compare between the selected branches."
+                className="flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold bg-gray-800 text-gray-500 border border-[#232830] rounded cursor-not-allowed"
+              >
+                Create pull request
+              </button>
+            )}
           </div>
         )}
       </div>

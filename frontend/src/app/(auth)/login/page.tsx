@@ -63,7 +63,7 @@ export default function LoginPage() {
       const data = await response.json();
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
-      router.push("/");
+      router.push(`/${data.username || "appi"}`);
     } catch (err: any) {
       setErrors({ global: err.message });
     } finally {

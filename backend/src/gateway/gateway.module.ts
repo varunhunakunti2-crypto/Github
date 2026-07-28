@@ -27,6 +27,7 @@ import { OrganizationServiceModule } from "../services/organization/organization
 import { StorageServiceModule } from "../services/storage/storage.module";
 import { EmailServiceModule } from "../services/email/email.module";
 import { SecurityServiceModule } from "../services/security/security.module";
+import { PullsService } from "../services/pulls/pulls.service";
 
 @Module({
   imports: [
@@ -60,5 +61,6 @@ import { SecurityServiceModule } from "../services/security/security.module";
     SearchController,
     ActivityController,
   ],
+  providers: [PullsService],
 })
 export class GatewayModule {}

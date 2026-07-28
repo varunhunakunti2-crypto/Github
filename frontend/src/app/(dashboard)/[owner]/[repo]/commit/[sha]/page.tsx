@@ -45,6 +45,9 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
   const [fileContents, setFileContents] = useState<{ [path: string]: { original: string; modified: string } }>({});
   const [loadingContents, setLoadingContents] = useState<{ [path: string]: boolean }>({});
 
+  const [authorUser, setAuthorUser] = useState<{ username: string | null } | null>(null);
+  const [committerUser, setCommitterUser] = useState<{ username: string | null } | null>(null);
+
   useEffect(() => {
     async function loadCommit() {
       try {
@@ -137,6 +140,22 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
     );
   }
 
+  useEffect(() => {
+    if (commit) {
+      fetch(`/api/v1/users/lookup/${encodeURIComponent(commit.authorEmail)}`)
+        .then(res => res.ok ? res.json() : { username: null })
+        .then(data => setAuthorUser(data))
+        .catch(() => setAuthorUser({ username: null }));
+      
+      if (commit.committerEmail && commit.committerEmail !== commit.authorEmail) {
+        fetch(`/api/v1/users/lookup/${encodeURIComponent(commit.committerEmail)}`)
+          .then(res => res.ok ? res.json() : { username: null })
+          .then(data => setCommitterUser(data))
+          .catch(() => setCommitterUser({ username: null }));
+      }
+    }
+  }, [commit]);
+
   if (!commit) return null;
 
   const totalAdditions = commit.files.reduce((sum, f) => sum + f.additions, 0);
@@ -172,6 +191,13 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
             <div className="flex items-center gap-2">
               <span className="text-gray-500 font-mono">Commit:</span>
               <span className="font-mono text-gray-300 select-all font-bold">{commit.hash}</span>
+              <button 
+                onClick={() => navigator.clipboard.writeText(commit.hash)}
+                className="text-gray-500 hover:text-gray-300 ml-1"
+                title="Copy full SHA"
+              >
+                📋
+              </button>
             </div>
             {commit.parents.length > 0 && (
               <div className="flex items-center gap-2 flex-wrap">
@@ -203,7 +229,13 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
             <span className="w-5 h-5 rounded-full bg-[#7C5CFF]/20 flex items-center justify-center font-bold text-[#7C5CFF]">
               {commit.authorName[0]?.toUpperCase()}
             </span>
-            <span className="text-gray-200 font-semibold">{commit.authorName}</span>
+            {authorUser?.username ? (
+              <Link href={`/${authorUser.username}`} className="text-blue-400 font-semibold hover:underline">
+                {commit.authorName}
+              </Link>
+            ) : (
+              <span className="text-gray-200 font-semibold">{commit.authorName}</span>
+            )}
             <span className="text-gray-500">&lt;{commit.authorEmail}&gt;</span>
             <span className="text-gray-500">authored on {new Date(commit.authorDate).toLocaleString()}</span>
           </div>
@@ -211,7 +243,13 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
           {showCommitter && (
             <div className="text-[11px] text-gray-500 border-t sm:border-t-0 pt-2 sm:pt-0 border-[#232830] flex items-center gap-2">
               <span>committed by</span>
-              <span className="text-gray-300 font-semibold">{commit.committerName}</span>
+              {committerUser?.username ? (
+                <Link href={`/${committerUser.username}`} className="text-blue-400 font-semibold hover:underline">
+                  {commit.committerName}
+                </Link>
+              ) : (
+                <span className="text-gray-300 font-semibold">{commit.committerName}</span>
+              )}
               <span>on {new Date(commit.committerDate).toLocaleString()}</span>
             </div>
           )}

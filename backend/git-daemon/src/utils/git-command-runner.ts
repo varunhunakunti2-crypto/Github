@@ -12,7 +12,7 @@ export interface GitCommandOptions {
 }
 
 export class GitCommandError extends Error {
-  constructor(public message: string, public code: number, public stderr: string) {
+  constructor(public message: string, public code: number, public stderr: string, public stdout: string = '') {
     super(message);
     this.name = 'GitCommandError';
   }
@@ -65,7 +65,8 @@ export class GitCommandRunner {
       throw new GitCommandError(
         error.message || 'Git command failed',
         error.code || 1,
-        error.stderr || ''
+        error.stderr || '',
+        error.stdout || ''
       );
     }
   }

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Button, Card } from "@gitforge/ui";
 import {
   GitBranch,
@@ -43,8 +44,12 @@ export default function HomePage() {
           </a>
         </nav>
         <div className="flex items-center gap-3">
-          <Button variant="secondary-sm">Log In</Button>
-          <Button variant="primary-sm">Sign Up</Button>
+          <Link href="/login">
+            <Button variant="secondary-sm">Log In</Button>
+          </Link>
+          <Link href="/signup">
+            <Button variant="primary-sm">Sign Up</Button>
+          </Link>
         </div>
       </header>
 
@@ -71,9 +76,11 @@ export default function HomePage() {
           </p>
 
           <div className="flex items-center gap-4 mt-4">
-            <Button variant="primary" className="gap-2">
-              Start Deploying <ArrowRight className="w-4 h-4" />
-            </Button>
+            <Link href="/signup">
+              <Button variant="primary" className="gap-2">
+                Start Deploying <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
             <Button variant="secondary">Read Docs</Button>
           </div>
         </div>

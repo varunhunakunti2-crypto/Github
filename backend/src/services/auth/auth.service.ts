@@ -3,7 +3,14 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class AuthService {
   async signup(dto: any) { return { message: "signup" }; }
-  async login(dto: any) { return { message: "login" }; }
+  async login(dto: any) { 
+    return { 
+      message: "login",
+      access_token: "mock_access_token",
+      refresh_token: "mock_refresh_token",
+      username: dto.identifier || dto.username || "appi"
+    }; 
+  }
   async logout() { return { message: "logout" }; }
   async refreshToken() { return { message: "refresh" }; }
   async verifyEmail() { return { message: "verify-email" }; }

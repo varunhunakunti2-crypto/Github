@@ -4,6 +4,7 @@ GitForge is a high-performance Git hosting and developer collaboration platform.
 
 ## 🚀 Repository Structure
 
+> **Note on Databases:** This project explicitly requires **PostgreSQL**. A temporary fallback to SQLite was previously used for local development when Postgres was unavailable, but the schema requires Postgres-specific features (Enums, String Arrays). Please ensure PostgreSQL is running before applying migrations.
 - **[frontend/](file:///c:/Users/varun/Music/New%20folder/Projects/Github/frontend)** — Next.js 15 App Router web interface.
 - **[backend/](file:///c:/Users/varun/Music/New%20folder/Projects/Github/backend)** — NestJS REST API server.
 - **[backend/git-daemon/](file:///c:/Users/varun/Music/New%20folder/Projects/Github/backend/git-daemon)** — SSH key gateway and Git hosting daemon service.

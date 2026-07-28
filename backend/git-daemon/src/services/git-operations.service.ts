@@ -273,18 +273,32 @@ export class GitOperationsService {
 
       let ahead = 0;
       let behind = 0;
+      let conflicts: string[] = [];
       try {
         const { stdout: aheadOut } = await GitCommandRunner.execute(['rev-list', '--count', `${base}..${head}`], { cwd: repoPath });
         const { stdout: behindOut } = await GitCommandRunner.execute(['rev-list', '--count', `${head}..${base}`], { cwd: repoPath });
         ahead = parseInt(aheadOut.trim(), 10) || 0;
         behind = parseInt(behindOut.trim(), 10) || 0;
+        
+        // Check for conflicts
+        try {
+          await GitCommandRunner.execute(['merge-tree', '--write-tree', base, head], { cwd: repoPath });
+        } catch (mergeErr: any) {
+          if (mergeErr.stdout) {
+            conflicts = mergeErr.stdout
+              .split('\n')
+              .filter((line: string) => line.startsWith('CONFLICT') && line.includes('in '))
+              .map((line: string) => line.split('in ')[1].trim());
+          }
+        }
       } catch (e) {}
 
       return {
         commits,
         diff,
         ahead,
-        behind
+        behind,
+        conflicts
       };
     } catch (err) {
       this.handleGitError(err, 'compare');
@@ -302,10 +316,29 @@ export class GitOperationsService {
       const { stdout: bodyOut } = await GitCommandRunner.execute(['log', '-1', '--format=%B', sha], { cwd: repoPath });
       const fullMessage = bodyOut.trim();
 
-      const { stdout: numstatOut } = await GitCommandRunner.execute(['show', '--numstat', '--format=', sha], { cwd: repoPath });
-      const numstatLines = numstatOut.trim().split('\n').filter(Boolean);
+      const parents = parentsStr ? parentsStr.split(' ') : [];
 
-      const { stdout: nameStatusOut } = await GitCommandRunner.execute(['show', '--name-status', '--format=', sha], { cwd: repoPath });
+      let numstatOut = '';
+      let nameStatusOut = '';
+
+      if (parents.length > 1) {
+        // Merge commit diffs are shown against the first parent
+        // (the branch merged into), matching GitHub's convention.
+        // This is a deliberate choice — see Phase 14 test 17.
+        const { stdout: diffNumstat } = await GitCommandRunner.execute(['diff', '--numstat', `${sha}^1`, sha], { cwd: repoPath });
+        numstatOut = diffNumstat;
+
+        const { stdout: diffNameStatus } = await GitCommandRunner.execute(['diff', '--name-status', `${sha}^1`, sha], { cwd: repoPath });
+        nameStatusOut = diffNameStatus;
+      } else {
+        const { stdout: showNumstat } = await GitCommandRunner.execute(['show', '--numstat', '--format=', sha], { cwd: repoPath });
+        numstatOut = showNumstat;
+
+        const { stdout: showNameStatus } = await GitCommandRunner.execute(['show', '--name-status', '--format=', sha], { cwd: repoPath });
+        nameStatusOut = showNameStatus;
+      }
+
+      const numstatLines = numstatOut.trim().split('\n').filter(Boolean);
       const nameStatusLines = nameStatusOut.trim().split('\n').filter(Boolean);
 
       const files = numstatLines.map((line, idx) => {
@@ -344,7 +377,7 @@ export class GitOperationsService {
         committerDate,
         subject,
         fullMessage,
-        parents: parentsStr ? parentsStr.split(' ') : [],
+        parents,
         gpg: gpg || 'N',
         files
       };
@@ -406,7 +439,10 @@ export class GitOperationsService {
         const mergedTreeSha = mergeOut.trim().split('\n')[0];
 
         // Create merge commit
-        const commitArgs = ['commit-tree', mergedTreeSha, '-p', baseSha.trim(), '-p', headSha.trim()];
+        const commitArgs = ['commit-tree', mergedTreeSha, '-p', baseSha.trim()];
+        if (strategy !== 'squash') {
+          commitArgs.push('-p', headSha.trim());
+        }
         commitArgs.push('-m', message || `Merge branch '${head}' into '${base}'`);
 
         const { stdout: commitSha } = await GitCommandRunner.execute(commitArgs, { cwd: repoPath });
