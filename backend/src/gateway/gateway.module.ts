@@ -7,6 +7,7 @@ import { CommitsController } from "./controllers/commits.controller";
 import { IssuesController } from "./controllers/issues.controller";
 import { PullsController } from "./controllers/pulls.controller";
 import { LabelsController } from "./controllers/labels.controller";
+import { ProjectsController } from "./controllers/projects.controller";
 import { OrganizationsController } from "./controllers/organizations.controller";
 import { DiscussionsController } from "./controllers/discussions.controller";
 import { ReleasesController } from "./controllers/releases.controller";
@@ -52,6 +53,7 @@ import { PullsService } from "../services/pulls/pulls.service";
     IssuesController,
     PullsController,
     LabelsController,
+    ProjectsController,
     OrganizationsController,
     DiscussionsController,
     ReleasesController,

@@ -8,19 +8,20 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  username     String        @unique
-  email        String        @unique
-  passwordHash String
-  name         String?
-  avatarUrl    String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  repositories Repository[]
-  sshKeys      SshKey[]
-  issues       Issue[]
-  pullRequests PullRequest[]
-  comments     Comment[]
+  id             String        @id @default(uuid())
+  username       String        @unique
+  email          String        @unique
+  passwordHash   String
+  name           String?
+  avatarUrl      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  repositories   Repository[]
+  sshKeys        SshKey[]
+  issues         Issue[]
+  pullRequests   PullRequest[]
+  comments       Comment[]
+  assignedIssues Issue[]       @relation("IssueAssignees")
 }
 
 model Repository {
@@ -35,6 +36,9 @@ model Repository {
   issues       Issue[]
   pullRequests PullRequest[]
   webhooks     Webhook[]
+  labels       Label[]
+  milestones   Milestone[]
+  projects     Project[]
 
   @@unique([ownerId, name])
 }
@@ -61,6 +65,11 @@ model Issue {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   comments     Comment[]
+  
+  milestoneId  String?
+  milestone    Milestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  assignees    User[]     @relation("IssueAssignees")
+  labels       Label[]
 
   @@unique([repositoryId, number])
 }
@@ -97,6 +106,60 @@ model Comment {
   filePath      String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+
+  isEvent       Boolean      @default(false)
+  eventType     String?
+  eventMetadata String?
+}
+
+model Label {
+  id           String     @id @default(uuid())
+  name         String
+  color        String
+  description  String?
+  repositoryId String
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  issues       Issue[]
+
+  @@unique([repositoryId, name])
+}
+
+model Milestone {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  dueDate      DateTime?
+  status       Status     @default(OPEN)
+  repositoryId String
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  issues       Issue[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Project {
+  id           String        @id @default(uuid())
+  title        String
+  description  String?
+  repositoryId String
+  repository   Repository    @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  items        ProjectItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model ProjectItem {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  itemType     String   // "issue", "pull_request", "note"
+  itemId       String?  // reference to Issue/PR
+  noteTitle    String?  // for notes
+  noteBody     String?  // for notes
+  statusColumn String   // "Todo", "In Progress", "Done"
+  position     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Webhook {

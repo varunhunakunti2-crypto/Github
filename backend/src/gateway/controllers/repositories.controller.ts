@@ -22,4 +22,9 @@ export class RepositoriesController {
 
   @Post(":owner/:repo/star")
   star(@Param("owner") owner: string, @Param("repo") repo: string) { return this.repoService.star(owner, repo); }
+
+  @Get(":owner/:repo/collaborators")
+  getCollaborators(@Param("owner") owner: string, @Param("repo") repo: string) {
+    return this.repoService.getCollaborators(owner, repo);
+  }
 }

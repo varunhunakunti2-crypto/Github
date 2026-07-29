@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-canvas-soft text-ink min-h-screen antialiased">
+      <body className="bg-canvas-soft text-ink min-h-screen antialiased" suppressHydrationWarning>
         {children}
       </body>
     </html>
