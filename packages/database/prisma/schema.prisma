@@ -22,6 +22,8 @@ model User {
   pullRequests   PullRequest[]
   comments       Comment[]
   assignedIssues Issue[]       @relation("IssueAssignees")
+  discussions    Discussion[]
+  pollVotes      PollVote[]
 }
 
 model Repository {
@@ -39,6 +41,7 @@ model Repository {
   labels       Label[]
   milestones   Milestone[]
   projects     Project[]
+  discussions  Discussion[]
 
   @@unique([ownerId, name])
 }
@@ -102,6 +105,8 @@ model Comment {
   issue         Issue?       @relation(fields: [issueId], references: [id], onDelete: Cascade)
   pullRequestId String?
   pullRequest   PullRequest? @relation(fields: [pullRequestId], references: [id], onDelete: Cascade)
+  discussionId  String?
+  discussion    Discussion?  @relation(fields: [discussionId], references: [id], onDelete: Cascade)
   diffLine      Int?
   filePath      String?
   createdAt     DateTime     @default(now())
@@ -110,6 +115,8 @@ model Comment {
   isEvent       Boolean      @default(false)
   eventType     String?
   eventMetadata String?
+
+  answeredDiscussions Discussion[] @relation("AnsweredComment")
 }
 
 model Label {
@@ -182,4 +189,45 @@ enum PrStatus {
   OPEN
   MERGED
   CLOSED
+}
+
+model Discussion {
+  id                    String       @id @default(uuid())
+  number                Int
+  category              String
+  title                 String
+  body                  String
+  authorId              String
+  author                User         @relation(fields: [authorId], references: [id])
+  repositoryId          String
+  repository            Repository   @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  answeredCommentId     String?
+  answeredComment       Comment?     @relation("AnsweredComment", fields: [answeredCommentId], references: [id], onDelete: SetNull)
+  isPinned              Boolean      @default(false)
+  allowMultiplePollVotes Boolean     @default(false)
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  comments              Comment[]
+  pollOptions           PollOption[]
+
+  @@unique([repositoryId, number])
+}
+
+model PollOption {
+  id           String     @id @default(uuid())
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  text         String
+  position     Int
+  votes        PollVote[]
+}
+
+model PollVote {
+  id           String     @id @default(uuid())
+  pollOptionId String
+  pollOption   PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollOptionId, userId])
 }

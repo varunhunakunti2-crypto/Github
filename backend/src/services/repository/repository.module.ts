@@ -8,6 +8,7 @@ import { DiscussionService } from "./discussion.service";
 import { ReleaseService } from "./release.service";
 import { LabelService } from "./label.service";
 import { ProjectService } from "./project.service";
+import { WikiService } from "./wiki.service";
 
 @Module({
   providers: [
@@ -20,6 +21,7 @@ import { ProjectService } from "./project.service";
     ReleaseService,
     LabelService,
     ProjectService,
+    WikiService,
   ],
   exports: [
     RepositoryService,
@@ -31,6 +33,7 @@ import { ProjectService } from "./project.service";
     ReleaseService,
     LabelService,
     ProjectService,
+    WikiService,
   ],
 })
 export class RepositoryServiceModule {}

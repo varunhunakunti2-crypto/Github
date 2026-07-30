@@ -16,6 +16,7 @@ import { NotificationsController } from "./controllers/notifications.controller"
 import { SecurityController } from "./controllers/security.controller";
 import { SearchController } from "./controllers/search.controller";
 import { ActivityController } from "./controllers/activity.controller";
+import { WikiController } from "./controllers/wiki.controller";
 
 import { AuthServiceModule } from "../services/auth/auth.module";
 import { UsersServiceModule } from "../services/users/users.module";
@@ -62,6 +63,7 @@ import { PullsService } from "../services/pulls/pulls.service";
     SecurityController,
     SearchController,
     ActivityController,
+    WikiController,
   ],
   providers: [PullsService],
 })
