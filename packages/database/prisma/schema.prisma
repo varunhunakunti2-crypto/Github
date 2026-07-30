@@ -24,6 +24,7 @@ model User {
   assignedIssues Issue[]       @relation("IssueAssignees")
   discussions    Discussion[]
   pollVotes      PollVote[]
+  releases       Release[]
 }
 
 model Repository {
@@ -42,6 +43,7 @@ model Repository {
   milestones   Milestone[]
   projects     Project[]
   discussions  Discussion[]
+  releases     Release[]
 
   @@unique([ownerId, name])
 }
@@ -230,4 +232,36 @@ model PollVote {
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([pollOptionId, userId])
+}
+
+model Release {
+  id              String         @id @default(uuid())
+  tagName         String
+  targetCommitSha String
+  title           String
+  bodyMarkdown    String
+  isPrerelease    Boolean        @default(false)
+  isDraft         Boolean        @default(false)
+  authorId        String
+  author          User           @relation(fields: [authorId], references: [id])
+  repositoryId    String
+  repository      Repository     @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  assets          ReleaseAsset[]
+
+  @@unique([repositoryId, tagName])
+}
+
+model ReleaseAsset {
+  id            String   @id @default(uuid())
+  fileName      String
+  fileUrl       String
+  sizeBytes     Int
+  downloadCount Int      @default(0)
+  releaseId     String
+  release       Release  @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
