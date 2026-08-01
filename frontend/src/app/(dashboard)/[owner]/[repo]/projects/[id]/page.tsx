@@ -1,22 +1,30 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Calendar, Inbox, CheckSquare, Plus, ArrowLeft, Settings, Trash2, ShieldAlert, GitPullRequest, Loader2, ArrowRight } from "lucide-react";
+import RoadmapView from "@/components/projects/RoadmapView";
 
 interface Card {
   id: string;
-  itemType: 'issue' | 'pull_request' | 'note';
+  itemType: "issue" | "pull_request" | "note";
   itemId: string | null;
   noteTitle: string | null;
   noteBody: string | null;
   statusColumn: string;
   position: number;
+  startDate?: string | null;
+  dueDate?: string | null;
+  priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT" | null;
+  isDone?: boolean;
+  assigneeId?: string | null;
+  assignee?: { id: string; username: string; avatarUrl: string | null } | null;
   issue?: {
     id: string;
     number: number;
     title: string;
-    status: 'OPEN' | 'CLOSED';
+    status: "OPEN" | "CLOSED";
     labels: { name: string; color: string }[];
     assignees: { username: string; avatarUrl: string | null }[];
   };
@@ -24,7 +32,7 @@ interface Card {
     id: string;
     number: number;
     title: string;
-    status: 'OPEN' | 'CLOSED' | 'MERGED';
+    status: "OPEN" | "CLOSED" | "MERGED";
     creator: { username: string; avatarUrl: string | null };
   };
 }
@@ -43,29 +51,40 @@ interface RepoIssue {
 }
 
 export default function ProjectBoardPage() {
+  const router = useRouter();
   const { owner, repo, id } = useParams() as { owner: string; repo: string; id: string };
 
   const [project, setProject] = useState<Project | null>(null);
   const [issues, setIssues] = useState<RepoIssue[]>([]);
+  const [collaborators, setCollaborators] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Columns list
-  const [columns, setColumns] = useState<string[]>(['Todo', 'In Progress', 'Done']);
-  const [newColumnName, setNewColumnName] = useState('');
+  // Views switcher
+  const [currentView, setCurrentView] = useState<"board" | "roadmap">("board");
+
+  // Columns state
+  const [columns, setColumns] = useState<string[]>(["Todo", "In Progress", "Done"]);
+  const [newColumnName, setNewColumnName] = useState("");
   const [isAddingColumn, setIsAddingColumn] = useState(false);
 
   // Card creator state
   const [showAddCard, setShowAddCard] = useState<string | null>(null); // column name
-  const [addType, setAddType] = useState<'issue' | 'note'>('note');
+  const [addType, setAddType] = useState<"issue" | "note">("note");
   
-  // Note Form
-  const [noteTitle, setNoteTitle] = useState('');
-  const [noteBody, setNoteBody] = useState('');
-  
-  // Issue/PR selection Form
-  const [selectedIssueNumber, setSelectedIssueNumber] = useState('');
+  // Note/Task Form
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteBody, setNoteBody] = useState("");
+  const [taskPriority, setTaskPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
+  const [taskDueDate, setTaskDueDate] = useState("");
+  const [taskAssignee, setTaskAssignee] = useState("");
 
-  const currentUser = 'appi';
+  // Issue/PR selection Form
+  const [selectedIssueNumber, setSelectedIssueNumber] = useState("");
+
+  // Quick edit status
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
+  const [editingPriority, setEditingPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
+  const [editingDueDate, setEditingDueDate] = useState("");
 
   const fetchBoard = async () => {
     try {
@@ -97,9 +116,27 @@ export default function ProjectBoardPage() {
     }
   };
 
+  const fetchCollaborators = async () => {
+    try {
+      const res = await fetch(`/api/v1/repositories/${owner}/${repo}/settings/collaborators`);
+      if (res.ok) {
+        setCollaborators(await res.json());
+      } else {
+        // Fallback mock collaborators
+        setCollaborators([
+          { id: "1", username: "appi" },
+          { id: "2", username: "searchmember" }
+        ]);
+      }
+    } catch (e) {
+      console.warn("Failed to fetch collaborators", e);
+    }
+  };
+
   useEffect(() => {
     fetchBoard();
     fetchIssuesList();
+    fetchCollaborators();
   }, [id, owner, repo]);
 
   const handleAddColumn = (e: React.FormEvent) => {
@@ -107,7 +144,7 @@ export default function ProjectBoardPage() {
     if (!newColumnName.trim()) return;
     if (columns.includes(newColumnName.trim())) return;
     setColumns([...columns, newColumnName.trim()]);
-    setNewColumnName('');
+    setNewColumnName("");
     setIsAddingColumn(false);
   };
 
@@ -115,27 +152,37 @@ export default function ProjectBoardPage() {
     const body: any = {
       itemType: addType,
       statusColumn: column,
+      startDate: new Date().toISOString()
     };
 
-    if (addType === 'note') {
+    if (addType === "note") {
       if (!noteTitle.trim()) return;
       body.noteTitle = noteTitle;
       body.noteBody = noteBody;
+      body.priority = taskPriority;
+      if (taskDueDate) body.dueDate = new Date(taskDueDate).toISOString();
+      if (taskAssignee) body.assigneeId = taskAssignee;
     } else {
       if (!selectedIssueNumber) return;
       body.issueNumber = selectedIssueNumber;
     }
 
     try {
+      const token = localStorage.getItem("access_token");
       const res = await fetch(`/api/v1/projects/${id}/items`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : ""
+        },
         body: JSON.stringify(body),
       });
       if (res.ok) {
-        setNoteTitle('');
-        setNoteBody('');
-        setSelectedIssueNumber('');
+        setNoteTitle("");
+        setNoteBody("");
+        setSelectedIssueNumber("");
+        setTaskDueDate("");
+        setTaskAssignee("");
         setShowAddCard(null);
         fetchBoard();
       }
@@ -146,9 +193,13 @@ export default function ProjectBoardPage() {
 
   const handleMoveCard = async (itemId: string, destinationColumn: string) => {
     try {
+      const token = localStorage.getItem("access_token");
       const res = await fetch(`/api/v1/projects/${id}/items/${itemId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : ""
+        },
         body: JSON.stringify({ statusColumn: destinationColumn }),
       });
       if (res.ok) {
@@ -159,12 +210,16 @@ export default function ProjectBoardPage() {
     }
   };
 
-  const handleDeleteCard = async (itemId: string) => {
-    if (!confirm('Are you sure you want to remove this item from the project board?')) return;
-
+  const handleToggleDone = async (itemId: string, currentDone: boolean) => {
     try {
+      const token = localStorage.getItem("access_token");
       const res = await fetch(`/api/v1/projects/${id}/items/${itemId}`, {
-        method: 'DELETE',
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : ""
+        },
+        body: JSON.stringify({ isDone: !currentDone }),
       });
       if (res.ok) {
         fetchBoard();
@@ -174,33 +229,115 @@ export default function ProjectBoardPage() {
     }
   };
 
-  // Drag and Drop implementation
+  const handleUpdateCardMetadata = async (itemId: string) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const body: any = { priority: editingPriority };
+      if (editingDueDate) {
+        body.dueDate = new Date(editingDueDate).toISOString();
+      }
+      
+      const res = await fetch(`/api/v1/projects/${id}/items/${itemId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : ""
+        },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        setEditingCardId(null);
+        fetchBoard();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeleteCard = async (itemId: string) => {
+    if (!confirm("Are you sure you want to remove this item?")) return;
+    try {
+      const token = localStorage.getItem("access_token");
+      const res = await fetch(`/api/v1/projects/${id}/items/${itemId}`, {
+        method: "DELETE",
+        headers: { Authorization: token ? `Bearer ${token}` : "" }
+      });
+      if (res.ok) {
+        fetchBoard();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleConvertToIssue = async (itemId: string) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const res = await fetch(`/api/v1/projects/${id}/items/${itemId}/convert-issue`, {
+        method: "POST",
+        headers: { Authorization: token ? `Bearer ${token}` : "" }
+      });
+      if (res.ok) {
+        fetchBoard();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Drag and Drop
   const handleDragStart = (e: React.DragEvent, cardId: string) => {
-    e.dataTransfer.setData('text/plain', cardId);
+    e.dataTransfer.setData("text/plain", cardId);
   };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
+  const handleDragOver = (e: React.DragEvent) => e.preventDefault();
   const handleDrop = (e: React.DragEvent, column: string) => {
     e.preventDefault();
-    const cardId = e.dataTransfer.getData('text/plain');
+    const cardId = e.dataTransfer.getData("text/plain");
     if (cardId) {
       handleMoveCard(cardId, column);
     }
   };
 
+  // Due date check relative logic
+  const renderDueDateLabel = (dueDateStr: string | null | undefined, colName: string) => {
+    if (!dueDateStr) return null;
+    const due = new Date(dueDateStr);
+    const now = new Date();
+    const isOverdue = due < now && colName.toLowerCase() !== "done";
+    
+    return (
+      <span className={`text-[10px] font-mono font-semibold px-xxs py-[1px] rounded-xs border ${
+        isOverdue 
+          ? "bg-danger-soft text-danger border-danger/20" 
+          : "bg-canvas-soft text-text-muted border-border"
+      }`}>
+        Due: {due.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+      </span>
+    );
+  };
+
+  const getPriorityColor = (p: string | null | undefined) => {
+    if (p === "LOW") return "bg-canvas-soft text-text-muted border border-border";
+    if (p === "MEDIUM") return "bg-blue-600 text-blue-100";
+    if (p === "HIGH") return "bg-amber-600/30 text-amber-400 border border-amber-500/20";
+    if (p === "URGENT") return "bg-red-600/30 text-red-400 border border-red-500/20 animate-pulse";
+    return null;
+  };
+
   if (isLoading) {
-    return <div className="p-8 text-center text-gray-500 animate-pulse">Loading project board...</div>;
+    return (
+      <div className="p-xl text-center flex flex-col items-center justify-center gap-xs text-text-muted">
+        <Loader2 className="w-6 h-6 animate-spin text-accent" />
+        <span>Loading project details...</span>
+      </div>
+    );
   }
 
   if (!project) {
     return (
-      <div className="py-16 text-center text-gray-500">
-        <span className="text-3xl">⚠️</span>
-        <h3 className="text-lg font-semibold text-white mt-2">Board not found</h3>
-        <Link href={`/${owner}/${repo}/projects`} className="text-blue-500 hover:underline mt-4 inline-block">
+      <div className="py-xl text-center space-y-md">
+        <h3 className="font-space-grotesk font-bold text-text-primary">Project Not Found</h3>
+        <Link href={`/${owner}/${repo}/projects`} className="text-accent hover:underline">
           Back to Projects
         </Link>
       </div>
@@ -208,262 +345,390 @@ export default function ProjectBoardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-6 px-4 text-gray-300 flex flex-col gap-6">
+    <div className="max-w-[1400px] mx-auto p-md md:p-xl space-y-md">
       
-      {/* Header details */}
-      <div className="flex justify-between items-start border-b border-[#232830] pb-4 gap-4 flex-wrap">
-        <div>
-          <div className="flex items-center gap-2 text-xs">
-            <Link href={`/${owner}/${repo}/projects`} className="text-blue-500 hover:underline">Projects</Link>
-            <span className="text-gray-500">/</span>
-            <span className="text-gray-400">Board</span>
+      {/* Header Panel */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm border-b border-hairline pb-sm">
+        <div className="space-y-xxs">
+          <div className="flex items-center gap-xs text-xs">
+            <Link href={`/${owner}/${repo}/projects`} className="text-accent hover:underline">Projects</Link>
+            <span className="text-text-muted">/</span>
+            <span className="text-text-muted capitalize">{currentView}</span>
           </div>
-          <h1 className="text-xl font-bold text-white mt-1">{project.title}</h1>
-          <p className="text-xs text-gray-500 mt-0.5">{project.description || 'No description'}</p>
+          <h1 className="font-space-grotesk text-xl font-bold text-text-primary">{project.title}</h1>
+          <p className="font-inter text-xs text-text-muted">{project.description || "No description provided."}</p>
         </div>
 
-        {/* Add column trigger */}
-        <div className="flex gap-2">
-          {isAddingColumn ? (
-            <form onSubmit={handleAddColumn} className="flex gap-1.5 items-center">
-              <input
-                type="text"
-                required
-                placeholder="Column name"
-                className="px-2.5 py-1 bg-[#1C2128] border border-[#30363D] rounded text-white text-xs focus:outline-none"
-                value={newColumnName}
-                onChange={(e) => setNewColumnName(e.target.value)}
-              />
-              <button type="submit" className="px-2.5 py-1 bg-green-600 text-white rounded text-xs font-semibold">
-                Add
-              </button>
-              <button type="button" onClick={() => setIsAddingColumn(false)} className="px-2.5 py-1 bg-[#21262D] rounded text-xs">
-                Cancel
-              </button>
-            </form>
-          ) : (
-            <button
-              onClick={() => setIsAddingColumn(true)}
-              className="px-3.5 py-1.5 bg-[#21262D] hover:bg-[#30363D] border border-[#30363D] text-white rounded text-xs font-semibold"
-            >
-              + Add column
-            </button>
-          )}
+        {/* View Switcher Tabs Bar */}
+        <div className="flex bg-canvas border border-border p-[2px] rounded-xs self-start sm:self-center">
+          <button
+            onClick={() => setCurrentView("board")}
+            className={`font-sans text-xs font-semibold px-sm py-xs rounded-xs transition-colors ${
+              currentView === "board" ? "bg-accent text-white" : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            Board
+          </button>
+          <button
+            onClick={() => setCurrentView("roadmap")}
+            className={`font-sans text-xs font-semibold px-sm py-xs rounded-xs transition-colors ${
+              currentView === "roadmap" ? "bg-accent text-white" : "text-text-muted hover:text-text-primary"
+            }`}
+          >
+            Roadmap
+          </button>
         </div>
       </div>
 
-      {/* Board Scrollable Columns Container */}
-      <div className="flex gap-4 overflow-x-auto pb-4 items-start select-none">
-        {columns.map((col) => {
-          const colItems = project.items.filter((item) => item.statusColumn === col);
+      {/* Render Roadmap View if selected */}
+      {currentView === "roadmap" ? (
+        <RoadmapView project={project} onUpdateItem={fetchBoard} />
+      ) : (
+        /* Kanban Board Grid View */
+        <div className="flex gap-md overflow-x-auto pb-md items-start scrollbar-thin select-none">
+          {columns.map(col => {
+            const colItems = project.items.filter(item => item.statusColumn === col);
 
-          return (
-            <div
-              key={col}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, col)}
-              className="w-80 shrink-0 bg-[#14171C] border border-[#232830] rounded-lg p-3 flex flex-col gap-3 max-h-[75vh]"
-            >
-              {/* Column Header */}
-              <div className="flex justify-between items-center px-1">
-                <span className="font-bold text-white text-sm flex items-center gap-1.5">
-                  {col}
-                  <span className="px-2 py-0.5 text-[10px] bg-[#21262D] text-gray-400 rounded-full font-mono">
-                    {colItems.length}
+            return (
+              <div
+                key={col}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, col)}
+                className="w-80 shrink-0 bg-surface border border-border rounded-sm p-sm flex flex-col gap-sm max-h-[75vh]"
+              >
+                {/* Column Header */}
+                <div className="flex justify-between items-center px-xxs">
+                  <span className="font-sans font-bold text-text-primary text-xs flex items-center gap-xs">
+                    {col}
+                    <span className="px-xs py-[1px] text-[9px] bg-canvas text-text-muted rounded-full font-mono border border-hairline">
+                      {colItems.length}
+                    </span>
                   </span>
-                </span>
-                <button
-                  onClick={() => setShowAddCard(col)}
-                  className="text-xs text-gray-500 hover:text-white"
-                >
-                  ➕
-                </button>
-              </div>
-
-              {/* Add card form inside column */}
-              {showAddCard === col && (
-                <div className="bg-[#1C2128] border border-[#30363D] rounded-lg p-3 flex flex-col gap-2.5">
-                  <div className="flex gap-2 border-b border-[#30363D] pb-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setAddType('note')}
-                      className={`text-[10px] font-bold uppercase pb-0.5 ${addType === 'note' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500'}`}
-                    >
-                      Note
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAddType('issue')}
-                      className={`text-[10px] font-bold uppercase pb-0.5 ${addType === 'issue' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500'}`}
-                    >
-                      Issue
-                    </button>
-                  </div>
-
-                  {addType === 'note' ? (
-                    <>
-                      <input
-                        type="text"
-                        placeholder="Note title"
-                        className="w-full px-2 py-1 bg-[#0B0D10] border border-[#30363D] rounded text-white text-xs focus:outline-none"
-                        value={noteTitle}
-                        onChange={(e) => setNoteTitle(e.target.value)}
-                      />
-                      <textarea
-                        rows={2}
-                        placeholder="Details..."
-                        className="w-full px-2 py-1 bg-[#0B0D10] border border-[#30363D] rounded text-white text-xs focus:outline-none"
-                        value={noteBody}
-                        onChange={(e) => setNoteBody(e.target.value)}
-                      />
-                    </>
-                  ) : (
-                    <select
-                      className="w-full px-2 py-1 bg-[#0B0D10] border border-[#30363D] rounded text-white text-xs focus:outline-none"
-                      value={selectedIssueNumber}
-                      onChange={(e) => setSelectedIssueNumber(e.target.value)}
-                    >
-                      <option value="">Select an issue...</option>
-                      {issues.map((i) => (
-                        <option key={i.id} value={i.number}>
-                          #{i.number} - {i.title}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-
-                  <div className="flex justify-end gap-1.5 text-[10px]">
-                    <button
-                      type="button"
-                      onClick={() => handleCreateCard(col)}
-                      className="px-2.5 py-1 bg-green-600 text-white rounded font-bold"
-                    >
-                      Add card
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowAddCard(null)}
-                      className="px-2.5 py-1 bg-[#21262D] rounded"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Cards List */}
-              <div className="flex flex-col gap-2 overflow-y-auto">
-                {colItems.map((item) => (
-                  <div
-                    key={item.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, item.id)}
-                    className="bg-[#1C2128] border border-[#30363D] rounded-lg p-3 hover:border-gray-500 cursor-grab active:cursor-grabbing transition-colors flex flex-col gap-2 relative group"
+                  <button
+                    onClick={() => setShowAddCard(col)}
+                    className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors text-xs"
                   >
-                    
-                    {/* Delete card */}
-                    <button
-                      onClick={() => handleDeleteCard(item.id)}
-                      className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-gray-500 hover:text-red-500 text-xs transition-opacity"
-                    >
-                      ×
-                    </button>
+                    ➕
+                  </button>
+                </div>
 
-                    {/* Note Render */}
-                    {item.itemType === 'note' && (
-                      <div>
-                        <h4 className="font-bold text-white text-xs">{item.noteTitle}</h4>
-                        <p className="text-[11px] text-gray-400 mt-1 whitespace-pre-wrap">{item.noteBody}</p>
+                {/* Add Card Form inline */}
+                {showAddCard === col && (
+                  <div className="bg-canvas border border-border rounded-sm p-sm flex flex-col gap-sm">
+                    <div className="flex gap-xs border-b border-hairline pb-xs">
+                      <button
+                        type="button"
+                        onClick={() => setAddType("note")}
+                        className={`text-[9px] font-bold uppercase pb-xxs border-b ${
+                          addType === "note" ? "border-accent text-accent" : "border-transparent text-text-muted"
+                        }`}
+                      >
+                        Task
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAddType("issue")}
+                        className={`text-[9px] font-bold uppercase pb-xxs border-b ${
+                          addType === "issue" ? "border-accent text-accent" : "border-transparent text-text-muted"
+                        }`}
+                      >
+                        Issue
+                      </button>
+                    </div>
+
+                    {addType === "note" ? (
+                      <div className="space-y-xs">
+                        <input
+                          type="text"
+                          placeholder="Task title"
+                          className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                          value={noteTitle}
+                          onChange={(e) => setNoteTitle(e.target.value)}
+                        />
+                        <textarea
+                          rows={2}
+                          placeholder="Details..."
+                          className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none resize-none"
+                          value={noteBody}
+                          onChange={(e) => setNoteBody(e.target.value)}
+                        />
+                        <div className="grid grid-cols-2 gap-xxs">
+                          <div>
+                            <label className="text-[9px] text-text-muted font-bold block uppercase">Priority</label>
+                            <select
+                              value={taskPriority}
+                              onChange={(e) => setTaskPriority(e.target.value as any)}
+                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                            >
+                              <option value="LOW">Low</option>
+                              <option value="MEDIUM">Medium</option>
+                              <option value="HIGH">High</option>
+                              <option value="URGENT">Urgent</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[9px] text-text-muted font-bold block uppercase">Due Date</label>
+                            <input
+                              type="date"
+                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                              value={taskDueDate}
+                              onChange={(e) => setTaskDueDate(e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-[9px] text-text-muted font-bold block uppercase">Assignee</label>
+                          <select
+                            value={taskAssignee}
+                            onChange={(e) => setTaskAssignee(e.target.value)}
+                            className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                          >
+                            <option value="">Select Assignee...</option>
+                            {collaborators.map(c => (
+                              <option key={c.id} value={c.id}>
+                                @{c.username}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </div>
+                    ) : (
+                      <select
+                        className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                        value={selectedIssueNumber}
+                        onChange={(e) => setSelectedIssueNumber(e.target.value)}
+                      >
+                        <option value="">Select an issue...</option>
+                        {issues.map(i => (
+                          <option key={i.id} value={i.number}>
+                            #{i.number} - {i.title}
+                          </option>
+                        ))}
+                      </select>
                     )}
 
-                    {/* Issue Render */}
-                    {item.itemType === 'issue' && item.issue && (
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-green-500">🟢</span>
-                          <Link
-                            href={`/${owner}/${repo}/issues/${item.issue.number}`}
-                            className="font-bold text-white text-xs hover:text-blue-400 hover:underline leading-tight"
-                          >
-                            {item.issue.title}
-                          </Link>
-                        </div>
-                        <span className="text-[10px] text-gray-500">#{item.issue.number}</span>
-                        
-                        {/* Labels */}
-                        {item.issue.labels.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {item.issue.labels.map((l) => (
-                              <span
-                                key={l.name}
-                                className="px-1.5 py-0.5 rounded text-[9px] font-semibold"
-                                style={{ backgroundColor: `#${l.color}15`, color: `#${l.color}`, border: `1px solid #${l.color}40` }}
-                              >
-                                {l.name}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                    <div className="flex justify-end gap-xs text-[10px]">
+                      <button
+                        type="button"
+                        onClick={() => handleCreateCard(col)}
+                        className="px-sm py-xxs bg-accent hover:bg-accent-hover text-white rounded-xs font-semibold"
+                      >
+                        Create
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddCard(null)}
+                        className="px-sm py-xxs bg-canvas rounded-xs border border-border hover:bg-canvas-soft-2"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-                        {/* Assignees */}
-                        {item.issue.assignees.length > 0 && (
-                          <div className="flex justify-end mt-1.5">
-                            <div className="flex -space-x-1">
-                              {item.issue.assignees.map((a) => (
-                                <span
-                                  key={a.username}
-                                  className="w-4 h-4 rounded-full bg-gray-600 text-[8px] flex items-center justify-center font-bold text-white ring-1 ring-[#1C2128]"
-                                >
-                                  {a.username[0].toUpperCase()}
-                                </span>
-                              ))}
+                {/* Cards List container */}
+                <div className="flex flex-col gap-xs overflow-y-auto pr-xxs">
+                  {colItems.map(item => (
+                    <div
+                      key={item.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, item.id)}
+                      className="bg-canvas border border-border rounded-sm p-sm hover:border-text-muted cursor-grab active:cursor-grabbing transition-colors flex flex-col gap-sm relative group"
+                    >
+                      {/* Delete icon */}
+                      <button
+                        onClick={() => handleDeleteCard(item.id)}
+                        className="absolute right-xs top-xs opacity-0 group-hover:opacity-100 text-text-muted hover:text-danger text-xs transition-opacity"
+                        title="Remove item"
+                      >
+                        ×
+                      </button>
+
+                      {/* Standalone Task (note type) */}
+                      {item.itemType === "note" && (
+                        <div className="space-y-xs">
+                          <div className="flex gap-xs items-start">
+                            <input
+                              type="checkbox"
+                              checked={item.isDone || false}
+                              onChange={() => handleToggleDone(item.id, item.isDone || false)}
+                              className="mt-xxs accent-success"
+                            />
+                            <div>
+                              <h4 className={`font-sans font-bold text-xs text-text-primary leading-tight ${item.isDone ? "line-through text-text-muted" : ""}`}>
+                                {item.noteTitle}
+                              </h4>
+                              {item.noteBody && (
+                                <p className="font-inter text-[11px] text-text-muted mt-xxs whitespace-pre-wrap">{item.noteBody}</p>
+                              )}
                             </div>
                           </div>
+
+                          {/* Quick Convert Task to Issue */}
+                          <button
+                            onClick={() => handleConvertToIssue(item.id)}
+                            className="font-sans text-[9px] text-accent hover:underline flex items-center gap-xxs"
+                            title="Convert note to real issue"
+                          >
+                            <ArrowRight className="w-3 h-3" /> Convert to Issue
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Issue details */}
+                      {item.itemType === "issue" && item.issue && (
+                        <div className="space-y-xs">
+                          <div className="flex items-start gap-xs">
+                            <span className="text-xs text-success shrink-0">🟢</span>
+                            <Link
+                              href={`/${owner}/${repo}/issues/${item.issue.number}`}
+                              className="font-sans font-bold text-xs text-text-primary hover:text-accent hover:underline leading-tight"
+                            >
+                              {item.issue.title}
+                            </Link>
+                          </div>
+                          <span className="text-[10px] text-text-muted block">#{item.issue.number}</span>
+                        </div>
+                      )}
+
+                      {/* Pull Request details */}
+                      {item.itemType === "pull_request" && item.pullRequest && (
+                        <div className="space-y-xs">
+                          <div className="flex items-start gap-xs">
+                            <span className="text-xs text-accent shrink-0">🔄</span>
+                            <Link
+                              href={`/${owner}/${repo}/pull/${item.pullRequest.number}`}
+                              className="font-sans font-bold text-xs text-text-primary hover:text-accent hover:underline leading-tight"
+                            >
+                              {item.pullRequest.title}
+                            </Link>
+                          </div>
+                          <span className="text-[10px] text-text-muted block">#{item.pullRequest.number}</span>
+                        </div>
+                      )}
+
+                      {/* Metadata Badges */}
+                      <div className="flex items-center justify-between gap-xs flex-wrap border-t border-hairline pt-xs">
+                        <div className="flex gap-xs flex-wrap items-center">
+                          {item.priority && (
+                            <span className={`text-[9px] font-mono font-semibold px-xxs py-[0.5px] rounded-xs ${getPriorityColor(item.priority)}`}>
+                              {item.priority.toLowerCase()}
+                            </span>
+                          )}
+                          {renderDueDateLabel(item.dueDate, col)}
+                        </div>
+
+                        {/* Assignee Avatar */}
+                        {item.assignee && (
+                          <span
+                            className="w-5 h-5 rounded-full bg-canvas-soft-2 border border-hairline text-[8px] flex items-center justify-center font-bold text-text-primary"
+                            title={`Assigned to @${item.assignee.username}`}
+                          >
+                            {item.assignee.username[0].toUpperCase()}
+                          </span>
                         )}
                       </div>
-                    )}
 
-                    {/* PR Render */}
-                    {item.itemType === 'pull_request' && item.pullRequest && (
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-blue-500">🔄</span>
-                          <Link
-                            href={`/${owner}/${repo}/pull/${item.pullRequest.number}`}
-                            className="font-bold text-white text-xs hover:text-blue-400 hover:underline leading-tight"
+                      {/* Inline metadata editors */}
+                      <div className="flex justify-between items-center text-[9px] text-text-muted pt-xxs">
+                        {editingCardId === item.id ? (
+                          <div className="w-full flex flex-col gap-xxs bg-canvas border border-border p-xxs rounded-xs z-15">
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-[8px] uppercase">Edit Card</span>
+                              <button onClick={() => setEditingCardId(null)} className="text-text-muted hover:text-text-primary">×</button>
+                            </div>
+                            <select
+                              value={editingPriority}
+                              onChange={(e) => setEditingPriority(e.target.value as any)}
+                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary"
+                            >
+                              <option value="LOW">Low</option>
+                              <option value="MEDIUM">Medium</option>
+                              <option value="HIGH">High</option>
+                              <option value="URGENT">Urgent</option>
+                            </select>
+                            <input
+                              type="date"
+                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary"
+                              value={editingDueDate}
+                              onChange={(e) => setEditingDueDate(e.target.value)}
+                            />
+                            <button
+                              onClick={() => handleUpdateCardMetadata(item.id)}
+                              className="w-full bg-accent text-white text-[9px] py-[2px] font-bold rounded-xs"
+                            >
+                              Apply
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setEditingCardId(item.id);
+                              setEditingPriority(item.priority || "MEDIUM");
+                              setEditingDueDate(item.dueDate ? item.dueDate.split("T")[0] : "");
+                            }}
+                            className="text-accent hover:underline"
                           >
-                            {item.pullRequest.title}
-                          </Link>
-                        </div>
-                        <span className="text-[10px] text-gray-500">#{item.pullRequest.number}</span>
-                      </div>
-                    )}
+                            Quick Edit
+                          </button>
+                        )}
 
-                    {/* Keyboard Accessible Column Movement Selector */}
-                    <div className="border-t border-[#30363D] pt-1.5 mt-1 flex justify-between items-center text-[10px] text-gray-500">
-                      <span>Move card:</span>
-                      <div className="flex gap-1">
-                        {columns
-                          .filter((c) => c !== col)
-                          .map((c) => (
+                        <span className="font-mono text-[8px] text-text-muted">Move to:</span>
+                        <div className="flex gap-[2px]">
+                          {columns.filter(c => c !== col).map(c => (
                             <button
                               key={c}
                               onClick={() => handleMoveCard(item.id, c)}
-                              className="px-1.5 py-0.5 bg-[#21262D] hover:bg-[#30363D] border border-[#30363D] rounded text-gray-400 hover:text-white"
+                              className="px-xxs py-[1px] bg-canvas border border-border rounded-xs hover:bg-canvas-soft-2 font-mono text-[8px]"
                             >
-                              {c.split(' ').map((w) => w[0]).join('')}
+                              {c.split(" ").map(w => w[0]).join("")}
                             </button>
                           ))}
+                        </div>
                       </div>
+
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+
+          {/* Add Column button form */}
+          <div className="w-80 shrink-0">
+            {isAddingColumn ? (
+              <form onSubmit={handleAddColumn} className="bg-surface border border-border p-sm rounded-sm flex flex-col gap-xs">
+                <input
+                  type="text"
+                  required
+                  placeholder="Column name..."
+                  className="px-xs py-xxs bg-canvas border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                  value={newColumnName}
+                  onChange={(e) => setNewColumnName(e.target.value)}
+                />
+                <div className="flex gap-xs text-[10px] justify-end">
+                  <button type="submit" className="px-sm py-xxs bg-accent hover:bg-accent-hover text-white rounded-xs font-semibold">
+                    Add
+                  </button>
+                  <button type="button" onClick={() => setIsAddingColumn(false)} className="px-sm py-xxs bg-canvas rounded-xs border border-border">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <button
+                onClick={() => setIsAddingColumn(true)}
+                className="w-full p-sm bg-surface border border-dashed border-border rounded-sm hover:border-text-muted text-text-muted hover:text-text-primary font-semibold text-xs transition-colors"
+              >
+                + Add column
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

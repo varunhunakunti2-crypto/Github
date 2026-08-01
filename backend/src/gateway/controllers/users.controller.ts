@@ -1,5 +1,8 @@
-import { Controller, Get, Put, Param, Body } from "@nestjs/common";
+import { Controller, Get, Put, Param, Body, UseGuards } from "@nestjs/common";
 import { UsersService } from "../../services/users/users.service";
+import { AuthGuard } from "../../common/guards/auth.guard";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { User } from "@prisma/client";
 
 @Controller()
 export class UsersController {
@@ -15,10 +18,12 @@ export class UsersController {
   }
 
   @Get("user")
-  getCurrentUser() { return this.usersService.getCurrentUser(); }
+  @UseGuards(AuthGuard)
+  getCurrentUser(@CurrentUser() user: User) { return this.usersService.getCurrentUser(user.id); }
 
   @Put("user")
-  updateCurrentUser(@Body() dto: any) { return this.usersService.updateUser(dto); }
+  @UseGuards(AuthGuard)
+  updateCurrentUser(@CurrentUser() user: User, @Body() dto: any) { return this.usersService.updateUser(user.id, dto); }
 
   @Get("user/following")
   getFollowing() { return this.usersService.getFollowing(); }

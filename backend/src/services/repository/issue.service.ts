@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { prisma } from "@gitforge/database";
+import { NotificationDispatchService } from "../notification/notification-dispatch.service";
 
 @Injectable()
 export class IssueService {
+  constructor(private readonly notificationDispatchService: NotificationDispatchService) {}
   async list(owner: string, repo: string, query?: any) {
     const repository = await prisma.repository.findFirst({
       where: {
@@ -154,6 +156,25 @@ export class IssueService {
         eventType: 'created'
       }
     });
+
+    // Notify assignees
+    if (dto.assignees && issue.assignees.length > 0) {
+      for (const u of issue.assignees) {
+        if (u.id !== creator.id) {
+          await this.notificationDispatchService.dispatch({
+            recipientId: u.id,
+            senderId: creator.id,
+            repositoryId: repository.id,
+            notifiableType: "Issue",
+            notifiableId: issue.id,
+            reason: "ASSIGN",
+            title: `Assigned to issue #${issue.number}: ${issue.title}`,
+            body: issue.body || "",
+            url: `/repositories/${owner}/${repo}/issues/${issue.number}`
+          });
+        }
+      }
+    }
 
     return issue;
   }
@@ -370,7 +391,7 @@ export class IssueService {
     const user = await prisma.user.findUnique({ where: { username } }) || await prisma.user.findFirst();
     if (!user) throw new NotFoundException('User not found');
 
-    return prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: {
         body: dto.body,
         userId: user.id,
@@ -380,6 +401,42 @@ export class IssueService {
         user: { select: { id: true, username: true, avatarUrl: true } }
       }
     });
+
+    // Notify issue creator (subscribed)
+    if (issue.creatorId !== user.id) {
+      await this.notificationDispatchService.dispatch({
+        recipientId: issue.creatorId,
+        senderId: user.id,
+        repositoryId: repository.id,
+        notifiableType: "Issue",
+        notifiableId: issue.id,
+        reason: "SUBSCRIBED",
+        title: `New comment on issue #${issue.number}: ${issue.title}`,
+        body: dto.body,
+        url: `/repositories/${owner}/${repo}/issues/${issue.number}`
+      });
+    }
+
+    const matches = dto.body.match(/@(\w+)/g);
+    const mentions = matches ? matches.map((m: string) => m.slice(1)) : [];
+    for (const mentionName of mentions) {
+      const mentionedUser = await prisma.user.findUnique({ where: { username: mentionName } });
+      if (mentionedUser && mentionedUser.id !== user.id && mentionedUser.id !== issue.creatorId) {
+        await this.notificationDispatchService.dispatch({
+          recipientId: mentionedUser.id,
+          senderId: user.id,
+          repositoryId: repository.id,
+          notifiableType: "Issue",
+          notifiableId: issue.id,
+          reason: "MENTION",
+          title: `You were mentioned in a comment on issue #${issue.number}`,
+          body: dto.body,
+          url: `/repositories/${owner}/${repo}/issues/${issue.number}`
+        });
+      }
+    }
+
+    return comment;
   }
 
   async updateComment(commentId: string, username: string, body: string) {

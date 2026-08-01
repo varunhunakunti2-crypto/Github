@@ -10,7 +10,10 @@ import { LabelService } from "./label.service";
 import { ProjectService } from "./project.service";
 import { WikiService } from "./wiki.service";
 
+import { NotificationServiceModule } from "../notification/notification.module";
+
 @Module({
+  imports: [NotificationServiceModule],
   providers: [
     RepositoryService,
     BranchService,

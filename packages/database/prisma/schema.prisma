@@ -8,44 +8,63 @@ generator client {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  username       String        @unique
-  email          String        @unique
-  passwordHash   String
-  name           String?
-  avatarUrl      String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  repositories   Repository[]
-  sshKeys        SshKey[]
-  issues         Issue[]
-  pullRequests   PullRequest[]
-  comments       Comment[]
-  assignedIssues Issue[]       @relation("IssueAssignees")
-  discussions    Discussion[]
-  pollVotes      PollVote[]
-  releases       Release[]
+  id                  String               @id @default(uuid())
+  username            String               @unique
+  email               String               @unique
+  passwordHash        String
+  name                String?
+  avatarUrl           String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  repositories        Repository[]
+  sshKeys             SshKey[]
+  issues              Issue[]
+  pullRequests        PullRequest[]
+  comments            Comment[]
+  assignedIssues      Issue[]              @relation("IssueAssignees")
+  discussions         Discussion[]
+  pollVotes           PollVote[]
+  releases            Release[]
+  ownedOrganizations  Organization[]       @relation("OrgCreator")
+  organizationMembers OrganizationMember[]
+  teamMembers         TeamMember[]
+  receivedInvitations Invitation[]         @relation("ReceivedInvites")
+  sentInvitations     Invitation[]         @relation("SentInvites")
+  notificationPreference NotificationPreference @default(IMMEDIATE)
+  receivedNotifications Notification[]       @relation("ReceivedNotifications")
+  sentNotifications     Notification[]       @relation("SentNotifications")
+  assignedProjectItems  ProjectItem[]        @relation("ProjectItemAssignee")
 }
 
 model Repository {
-  id           String        @id @default(uuid())
-  name         String
-  description  String?
-  isPrivate    Boolean       @default(false)
-  ownerId      String
-  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  issues       Issue[]
-  pullRequests PullRequest[]
-  webhooks     Webhook[]
-  labels       Label[]
-  milestones   Milestone[]
-  projects     Project[]
-  discussions  Discussion[]
-  releases     Release[]
+  id             String        @id @default(uuid())
+  name           String
+  description    String?
+  isPrivate      Boolean       @default(false)
+  ownerId        String?
+  owner          User?         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  issues         Issue[]
+  pullRequests   PullRequest[]
+  webhooks       Webhook[]
+  labels         Label[]
+  milestones     Milestone[]
+  projects       Project[]
+  discussions    Discussion[]
+  releases       Release[]
+  permissions    Permission[]
+  codeSearchIndices CodeSearchIndex[]
+  notifications  Notification[]
+  packages       Package[]
+  workflows      Workflow[]
+  secrets        RepoSecret[]
+
 
   @@unique([ownerId, name])
+  @@unique([organizationId, name])
 }
 
 model SshKey {
@@ -153,6 +172,7 @@ model Project {
   repositoryId String
   repository   Repository    @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   items        ProjectItem[]
+  views        ProjectView[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -167,6 +187,12 @@ model ProjectItem {
   noteBody     String?  // for notes
   statusColumn String   // "Todo", "In Progress", "Done"
   position     Int
+  startDate    DateTime?
+  dueDate      DateTime?
+  priority     String?  // "LOW", "MEDIUM", "HIGH", "URGENT"
+  isDone       Boolean  @default(false)
+  assigneeId   String?
+  assignee     User?    @relation("ProjectItemAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -264,4 +290,300 @@ model ReleaseAsset {
   release       Release  @relation(fields: [releaseId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+enum OrgRole {
+  OWNER
+  MEMBER
+  BILLING_MANAGER
+}
+
+model Organization {
+  id           String               @id @default(uuid())
+  slug         String               @unique
+  name         String
+  description  String?
+  avatarUrl    String?
+  billingEmail String
+  ownerId      String
+  owner        User                 @relation("OrgCreator", fields: [ownerId], references: [id])
+  plan         String               @default("free")
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  members      OrganizationMember[]
+  teams        Team[]
+  repositories Repository[]
+  invitations  Invitation[]
+}
+
+model OrganizationMember {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           OrgRole      @default(MEMBER)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([organizationId, userId])
+}
+
+enum TeamPrivacy {
+  SECRET
+  VISIBLE
+}
+
+enum TeamRole {
+  MEMBER
+  MAINTAINER
+}
+
+model Team {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parentTeamId   String?
+  parentTeam     Team?        @relation("NestedTeams", fields: [parentTeamId], references: [id], onDelete: Cascade)
+  childTeams     Team[]       @relation("NestedTeams")
+  name           String
+  slug           String
+  privacy        TeamPrivacy  @default(VISIBLE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  members        TeamMember[]
+
+  @@unique([organizationId, slug])
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      TeamRole @default(MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, userId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+model Invitation {
+  id             String           @id @default(uuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedEmail   String?
+  invitedUserId  String?
+  invitedUser    User?            @relation("ReceivedInvites", fields: [invitedUserId], references: [id], onDelete: Cascade)
+  role           OrgRole          @default(MEMBER)
+  invitedById    String
+  invitedBy      User             @relation("SentInvites", fields: [invitedById], references: [id], onDelete: Cascade)
+  status         InvitationStatus @default(PENDING)
+  token          String           @unique
+  expiresAt      DateTime
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+enum GranteeType {
+  USER
+  TEAM
+}
+
+enum AccessLevel {
+  READ
+  TRIAGE
+  WRITE
+  MAINTAIN
+  ADMIN
+}
+
+model Permission {
+  id           String      @id @default(uuid())
+  repositoryId String
+  repository   Repository  @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  granteeType  GranteeType
+  granteeId    String
+  accessLevel  AccessLevel @default(READ)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([repositoryId, granteeType, granteeId])
+}
+
+model CodeSearchIndex {
+  id             String     @id @default(uuid())
+  repositoryId   String
+  repository     Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  filePath       String
+  contentExcerpt String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([repositoryId, filePath])
+}
+
+enum NotificationPreference {
+  IMMEDIATE
+  DAILY_DIGEST
+  OFF
+}
+
+model Notification {
+  id             String      @id @default(uuid())
+  recipientId    String
+  recipient      User        @relation("ReceivedNotifications", fields: [recipientId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User        @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+  repositoryId   String
+  repository     Repository  @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  notifiableType String      // "Issue", "PullRequest", "Discussion", "Organization"
+  notifiableId   String      // PK of the target entity
+  reason         String      // "mention", "assign", "review_requested", "subscribed", "pr_merged", "discussion_reply"
+  title          String
+  body           String
+  url            String
+  isRead         Boolean     @default(false)
+  isUnsubscribed Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model ProjectView {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  viewType     String   // "board" | "roadmap" | "table"
+  name         String
+  isDefault    Boolean  @default(false)
+  config       String   // JSON string configuration
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Package {
+  id           String           @id @default(uuid())
+  name         String
+  packageType  String           // "NPM" | "DOCKER" | "MAVEN" | "PYPI"
+  repositoryId String
+  repository   Repository       @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  versions     PackageVersion[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([repositoryId, name, packageType])
+}
+
+model PackageVersion {
+  id          String   @id @default(uuid())
+  packageId   String
+  package     Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  version     String
+  fileUrl     String   // Pointer to file path inside Storage Service
+  sizeBytes   Int      @default(0)
+  publishedAt DateTime @default(now())
+
+  @@unique([packageId, version])
+}
+
+model Workflow {
+  id           String        @id @default(uuid())
+  name         String
+  filePath     String        // e.g. ".github/workflows/ci.yml"
+  triggers     String        // JSON: parsed 'on:' config
+  repositoryId String
+  repository   Repository    @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  runs         WorkflowRun[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([repositoryId, filePath])
+}
+
+model WorkflowRun {
+  id           String             @id @default(uuid())
+  runNumber    Int                @default(1)
+  workflowId   String
+  workflow     Workflow           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status       String             @default("queued") // queued | in_progress | success | failure | cancelled
+  triggerEvent String             // push | pull_request | workflow_dispatch | schedule
+  headSha      String
+  headBranch   String             @default("main")
+  triggeredBy  String?            // userId
+  jobs         WorkflowJob[]
+  artifacts    WorkflowArtifact[]
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime           @default(now())
+}
+
+model WorkflowJob {
+  id           String         @id @default(uuid())
+  runId        String
+  run          WorkflowRun    @relation(fields: [runId], references: [id], onDelete: Cascade)
+  name         String
+  status       String         @default("queued") // queued | in_progress | success | failure | cancelled
+  runsOn       String         @default("ubuntu-latest")
+  matrixConfig String?        // JSON: matrix values for this specific expansion
+  needs        String?        // JSON: array of job names this depends on
+  steps        WorkflowStep[]
+  runnerName   String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime       @default(now())
+}
+
+model WorkflowStep {
+  id        String   @id @default(uuid())
+  jobId     String
+  job       WorkflowJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name      String
+  status    String   @default("pending") // pending | running | success | failure | skipped
+  command   String?  // the shell command or uses action
+  logOutput String?  // persisted log text (scrubbed of secrets)
+  order     Int      @default(0)
+  startedAt DateTime?
+  completedAt DateTime?
+}
+
+model WorkflowArtifact {
+  id        String      @id @default(uuid())
+  runId     String
+  run       WorkflowRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  name      String
+  fileUrl   String
+  sizeBytes Int         @default(0)
+  expiresAt DateTime?
+  createdAt DateTime    @default(now())
+}
+
+model RepoSecret {
+  id             String     @id @default(uuid())
+  name           String
+  encryptedValue String     // AES-256-GCM encrypted
+  iv             String     // initialization vector
+  authTag        String     // GCM auth tag
+  repositoryId   String
+  repository     Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([repositoryId, name])
+}
+
+model Runner {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  status        String   @default("offline") // online | offline | busy
+  labels        String?  // JSON: ["ubuntu-latest", "self-hosted"]
+  lastHeartbeat DateTime?
+  createdAt     DateTime @default(now())
 }

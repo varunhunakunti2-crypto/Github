@@ -31,6 +31,13 @@ import { EmailServiceModule } from "../services/email/email.module";
 import { SecurityServiceModule } from "../services/security/security.module";
 import { PullsService } from "../services/pulls/pulls.service";
 
+import { NotificationGateway } from "./gateways/notification.gateway";
+import { PackageServiceModule } from "../services/package/package.module";
+import { NpmRegistryController } from "./controllers/npm-registry.controller";
+import { DockerRegistryController } from "./controllers/docker-registry.controller";
+import { MavenRegistryController } from "./controllers/maven-registry.controller";
+import { PypiRegistryController } from "./controllers/pypi-registry.controller";
+
 @Module({
   imports: [
     AuthServiceModule,
@@ -44,6 +51,7 @@ import { PullsService } from "../services/pulls/pulls.service";
     StorageServiceModule,
     EmailServiceModule,
     SecurityServiceModule,
+    PackageServiceModule,
   ],
   controllers: [
     AuthController,
@@ -64,7 +72,11 @@ import { PullsService } from "../services/pulls/pulls.service";
     SearchController,
     ActivityController,
     WikiController,
+    NpmRegistryController,
+    DockerRegistryController,
+    MavenRegistryController,
+    PypiRegistryController,
   ],
-  providers: [PullsService],
+  providers: [PullsService, NotificationGateway],
 })
 export class GatewayModule {}

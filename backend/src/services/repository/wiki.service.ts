@@ -45,7 +45,7 @@ export class WikiService {
       throw new NotFoundException('Repository not found');
     }
 
-    const isOwner = callerUsername && (repository.owner.username === callerUsername || repository.ownerId === callerUsername);
+    const isOwner = callerUsername && (repository.owner?.username === callerUsername || repository.ownerId === callerUsername);
 
     // For private repos, anonymous access is denied (404 to not leak existence)
     if (repository.isPrivate && !callerUsername) {
@@ -72,7 +72,7 @@ export class WikiService {
       }
     }
 
-    return { repositoryId: repository.id, isPrivate: repository.isPrivate, ownerId: repository.ownerId };
+    return { repositoryId: repository.id, isPrivate: repository.isPrivate, ownerId: repository.ownerId || '' };
   }
 
   private async ensureRepo(owner: string, repo: string): Promise<string> {

@@ -100,8 +100,8 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
       <div className="w-full mt-xxs">
         {isOwnProfile ? (
           <Link href="/settings/profile" passHref className="w-full">
-            <Button className="bg-base hover:bg-border text-text-primary border border-border w-full py-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-              Edit profile
+            <Button suppressHydrationWarning={true} className="bg-base hover:bg-border text-text-primary border border-border w-full py-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+               Edit profile
             </Button>
           </Link>
         ) : (
@@ -110,6 +110,7 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             disabled={isPending}
+            suppressHydrationWarning={true}
             className={`w-full py-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
               isFollowing
                 ? "bg-surface hover:bg-danger/10 border border-border hover:border-danger text-text-muted hover:text-danger"

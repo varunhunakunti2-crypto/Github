@@ -4,11 +4,12 @@ import { Injectable } from "@nestjs/common";
 export class AuthService {
   async signup(dto: any) { return { message: "signup" }; }
   async login(dto: any) { 
+    const username = dto.identifier || dto.username || "appi";
     return { 
       message: "login",
-      access_token: "mock_access_token",
+      access_token: `mock_token_for_${username}`,
       refresh_token: "mock_refresh_token",
-      username: dto.identifier || dto.username || "appi"
+      username: username
     }; 
   }
   async logout() { return { message: "logout" }; }
