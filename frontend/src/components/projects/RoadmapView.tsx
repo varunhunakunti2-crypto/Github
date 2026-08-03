@@ -183,20 +183,20 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
     <div className="flex flex-col gap-md select-none">
       
       {/* Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-sm bg-surface border border-border p-sm rounded-sm">
+      <div className="flex flex-wrap items-center justify-between gap-sm bg-canvas-soft border border-hairline p-sm rounded-sm">
         <div className="flex items-center gap-xs">
           <button
             onClick={() => shiftTimeline(-1)}
-            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary"
+            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-ink"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <span className="font-space-grotesk text-xs font-bold text-text-primary">
+          <span className="font-sans text-xs font-bold text-ink">
             {viewDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
           </span>
           <button
             onClick={() => shiftTimeline(1)}
-            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary"
+            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-ink"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -204,13 +204,13 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
 
         <div className="flex items-center gap-sm">
           {/* Zoom Selector */}
-          <div className="flex bg-canvas border border-border rounded-xs p-[2px]">
+          <div className="flex bg-canvas border border-hairline rounded-xs p-[2px]">
             {(["week", "month", "quarter"] as const).map(z => (
               <button
                 key={z}
                 onClick={() => setZoom(z)}
                 className={`font-sans text-[10px] font-bold uppercase px-xs py-xxs rounded-xs transition-colors ${
-                  zoom === z ? "bg-accent text-white" : "text-text-muted hover:text-text-primary"
+                  zoom === z ? "bg-primary text-white" : "text-body hover:text-ink"
                 }`}
               >
                 {z}
@@ -220,11 +220,11 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
 
           {/* Group By selector */}
           <div className="flex items-center gap-xxs">
-            <span className="font-sans text-[10px] font-bold text-text-muted uppercase">Group:</span>
+            <span className="font-sans text-[10px] font-bold text-body uppercase">Group:</span>
             <select
               value={groupBy}
               onChange={(e) => setGroupBy(e.target.value as any)}
-              className="bg-canvas border border-border rounded-xs px-xs py-xxs text-[10px] text-text-primary focus:outline-none"
+              className="bg-canvas border border-hairline rounded-xs px-xs py-xxs text-[10px] text-ink focus:outline-none"
             >
               <option value="none">Ungrouped</option>
               <option value="status">Status</option>
@@ -238,18 +238,18 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
       <div className="flex flex-col lg:flex-row gap-md items-start">
         
         {/* Horizontal Scrollable Timeline View */}
-        <div className="flex-1 w-full bg-surface border border-border rounded-sm overflow-hidden flex flex-col min-w-0">
+        <div className="flex-1 w-full bg-canvas-soft border border-hairline rounded-sm overflow-hidden flex flex-col min-w-0">
           
           {/* Timeline Headers */}
           <div className="flex border-b border-hairline bg-canvas-soft">
-            <div className="w-[180px] shrink-0 p-sm border-r border-hairline font-space-grotesk text-[10px] font-bold text-text-muted uppercase">
+            <div className="w-[180px] shrink-0 p-sm border-r border-hairline font-sans text-[10px] font-bold text-body uppercase">
               Item Details
             </div>
             <div className="flex-1 flex relative h-10">
               {headers.map(h => (
                 <div
                   key={h.label}
-                  className="absolute top-0 bottom-0 border-r border-hairline/50 p-xs text-center font-sans text-[9px] font-semibold text-text-muted flex items-center justify-center truncate"
+                  className="absolute top-0 bottom-0 border-r border-hairline/50 p-xs text-center font-sans text-[9px] font-semibold text-body flex items-center justify-center truncate"
                   style={{ left: `${headers.indexOf(h) * h.widthPercent}%`, width: `${h.widthPercent}%` }}
                 >
                   {h.label}
@@ -261,7 +261,7 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
           {/* Timeline Items Grid */}
           <div className="divide-y divide-hairline">
             {scheduledItems.length === 0 ? (
-              <div className="p-xl text-center text-text-muted font-inter text-xs">
+              <div className="p-xl text-center text-body font-sans text-xs">
                 No scheduled items for this timeline view. Add dates below to schedule them.
               </div>
             ) : (
@@ -270,8 +270,8 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
                 return (
                   <div key={item.id} className="flex min-h-[44px] items-center hover:bg-canvas-soft/30 transition-colors relative">
                     {/* Sticky left label */}
-                    <div className="w-[180px] shrink-0 p-xs pr-sm border-r border-hairline flex flex-col gap-xxs min-w-0 z-10 bg-surface">
-                      <span className="font-sans font-bold text-[11px] text-text-primary truncate" title={getTitle(item)}>
+                    <div className="w-[180px] shrink-0 p-xs pr-sm border-r border-hairline flex flex-col gap-xxs min-w-0 z-10 bg-canvas-soft">
+                      <span className="font-sans font-bold text-[11px] text-ink truncate" title={getTitle(item)}>
                         {getTitle(item)}
                       </span>
                       <div className="flex items-center gap-xxs">
@@ -280,7 +280,7 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
                             {item.priority.toLowerCase()}
                           </span>
                         )}
-                        <span className="text-[8px] text-text-muted font-mono">{item.statusColumn}</span>
+                        <span className="text-[8px] text-body font-mono">{item.statusColumn}</span>
                       </div>
                     </div>
 
@@ -289,7 +289,7 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
                       {/* Gantt Bar */}
                       {barStyle.display !== "none" && (
                         <div
-                          className="absolute top-[10px] h-6 bg-accent-soft/30 border border-accent/20 rounded-xs flex items-center px-sm text-[9px] font-bold text-accent truncate cursor-pointer shadow-sm group"
+                          className="absolute top-[10px] h-6 bg-primary-soft/30 border border-accent/20 rounded-xs flex items-center px-sm text-[9px] font-bold text-primary truncate cursor-pointer shadow-sm group"
                           style={barStyle}
                         >
                           <span className="truncate">{getTitle(item)}</span>
@@ -309,9 +309,9 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
         </div>
 
         {/* Sidebar for Unscheduled Items */}
-        <div className="w-full lg:w-[300px] shrink-0 bg-surface border border-border p-sm rounded-sm space-y-sm">
+        <div className="w-full lg:w-[300px] shrink-0 bg-canvas-soft border border-hairline p-sm rounded-sm space-y-sm">
           <div className="flex items-center justify-between border-b border-hairline pb-xs">
-            <span className="font-space-grotesk text-xs font-bold text-text-primary flex items-center gap-xs">
+            <span className="font-sans text-xs font-bold text-ink flex items-center gap-xs">
               <Clock className="w-3.5 h-3.5 text-warning" />
               Unscheduled Items ({unscheduledItems.length})
             </span>
@@ -319,28 +319,28 @@ export default function RoadmapView({ project, onUpdateItem }: RoadmapViewProps)
 
           <div className="space-y-xs max-h-[400px] overflow-y-auto pr-xxs">
             {unscheduledItems.length === 0 ? (
-              <p className="font-inter text-xs text-text-muted text-center py-md">All items have been scheduled!</p>
+              <p className="font-sans text-xs text-body text-center py-md">All items have been scheduled!</p>
             ) : (
               unscheduledItems.map(item => (
-                <div key={item.id} className="p-xs bg-canvas border border-border rounded-sm flex flex-col gap-xs">
-                  <span className="font-sans font-bold text-xs text-text-primary block truncate">{getTitle(item)}</span>
+                <div key={item.id} className="p-xs bg-canvas border border-hairline rounded-sm flex flex-col gap-xs">
+                  <span className="font-sans font-bold text-xs text-ink block truncate">{getTitle(item)}</span>
                   
                   {/* Keyboard date selectors for accessibility */}
                   <div className="grid grid-cols-2 gap-xxs">
                     <div>
-                      <label className="text-[9px] text-text-muted font-bold block uppercase">Start Date</label>
+                      <label className="text-[9px] text-body font-bold block uppercase">Start Date</label>
                       <input
                         type="date"
-                        className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                        className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink focus:outline-none"
                         value={item.startDate ? item.startDate.split("T")[0] : ""}
                         onChange={(e) => handleKeyboardReschedule(item.id, "startDate", e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="text-[9px] text-text-muted font-bold block uppercase">Due Date</label>
+                      <label className="text-[9px] text-body font-bold block uppercase">Due Date</label>
                       <input
                         type="date"
-                        className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                        className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink focus:outline-none"
                         value={item.dueDate ? item.dueDate.split("T")[0] : ""}
                         onChange={(e) => handleKeyboardReschedule(item.id, "dueDate", e.target.value)}
                       />

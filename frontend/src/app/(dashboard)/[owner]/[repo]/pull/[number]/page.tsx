@@ -286,12 +286,12 @@ export default function PullRequestDetailPage({ params }: { params: Promise<{ ow
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500 animate-pulse font-space-grotesk">Loading pull request...</div>;
+    return <div className="p-8 text-center text-gray-500 animate-pulse font-sans">Loading pull request...</div>;
   }
 
   if (error || !pr) {
     return (
-      <div className="p-8 text-center text-red-400 font-space-grotesk">
+      <div className="p-8 text-center text-red-400 font-sans">
         Error: {error || 'Pull Request could not be loaded.'}
       </div>
     );
@@ -304,7 +304,7 @@ export default function PullRequestDetailPage({ params }: { params: Promise<{ ow
                           'bg-red-950/40 text-red-400 border-red-500/30';
 
   return (
-    <div className="flex flex-col gap-6 font-space-grotesk max-w-6xl mx-auto p-4 md:p-6 text-gray-200">
+    <div className="flex flex-col gap-6 font-sans max-w-6xl mx-auto p-4 md:p-6 text-gray-200">
       
       {/* 1. Header Area */}
       <div className="flex flex-col gap-3 border-b border-[#232830] pb-5">

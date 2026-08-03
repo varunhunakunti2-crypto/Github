@@ -148,7 +148,7 @@ export default function AdminRepositoriesPage() {
       {isLoading ? (
         <div className="text-center py-xl text-gray-400">Loading repositories...</div>
       ) : error ? (
-        <div className="p-md bg-danger/10 border border-danger text-danger text-sm rounded-sm">{error}</div>
+        <div className="p-md bg-error/10 border border-error text-error text-sm rounded-sm">{error}</div>
       ) : (
         <div className="flex flex-col gap-sm">
           {repos.map((repoRecord) => {
@@ -181,7 +181,7 @@ export default function AdminRepositoriesPage() {
                   <div className="flex gap-xs flex-wrap">
                     <Button
                       onClick={() => setConfirmingAction({ type: "transfer", repo: repoRecord })}
-                      className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-border"
+                      className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-hairline"
                     >
                       Transfer
                     </Button>
@@ -189,7 +189,7 @@ export default function AdminRepositoriesPage() {
                     {repoRecord.isArchived ? (
                       <Button
                         onClick={() => setConfirmingAction({ type: "unarchive", repo: repoRecord })}
-                        className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-border"
+                        className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-hairline"
                       >
                         Unarchive
                       </Button>
@@ -204,7 +204,7 @@ export default function AdminRepositoriesPage() {
 
                     <Button
                       onClick={() => setConfirmingAction({ type: "delete", repo: repoRecord })}
-                      className="bg-transparent hover:bg-danger/10 text-danger border border-danger/20 text-xs px-xs py-xxs rounded-sm"
+                      className="bg-transparent hover:bg-error/10 text-error border border-error/20 text-xs px-xs py-xxs rounded-sm"
                     >
                       Delete
                     </Button>
@@ -241,7 +241,7 @@ export default function AdminRepositoriesPage() {
       {confirmingAction && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-md z-50">
           <Card className="bg-[#161B22] border-[#30363D] p-lg max-w-md w-full rounded-sm text-left flex flex-col gap-md">
-            <h3 className="font-space-grotesk font-bold text-md text-white">
+            <h3 className="font-sans font-bold text-md text-white">
               Confirm Action: {confirmingAction.type.toUpperCase()}
             </h3>
 
@@ -285,7 +285,7 @@ export default function AdminRepositoriesPage() {
               {/* Delete verification text */}
               {confirmingAction.type === "delete" && (
                 <div className="flex flex-col gap-xs">
-                  <div className="bg-danger/10 border border-danger/20 p-sm rounded-sm text-xs text-danger">
+                  <div className="bg-error/10 border border-error/20 p-sm rounded-sm text-xs text-error">
                     <strong>⚠️ DANGER:</strong> Deletion is irreversible. All branches, LFS files, commits, and artifacts will be deleted.
                   </div>
                   <label className="text-xs font-semibold text-gray-300">
@@ -308,7 +308,7 @@ export default function AdminRepositoriesPage() {
                     setActionReason("");
                     setDeleteConfirmationText("");
                   }}
-                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm"
+                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm"
                 >
                   Cancel
                 </Button>
@@ -321,7 +321,7 @@ export default function AdminRepositoriesPage() {
                   }
                   className={`${
                     confirmingAction.type === "delete"
-                      ? "bg-danger hover:bg-danger/90"
+                      ? "bg-error hover:bg-error/90"
                       : confirmingAction.type === "archive" || confirmingAction.type === "transfer"
                       ? "bg-orange-500 hover:bg-orange-600"
                       : "bg-success hover:bg-success/90"

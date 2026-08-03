@@ -74,7 +74,7 @@ export default function CommitsTimelinePage({ params }: { params: Promise<{ owne
   const groupedCommits = groupCommitsByDate();
 
   return (
-    <div className="flex flex-col gap-6 font-space-grotesk max-w-4xl mx-auto p-4 md:p-6 text-gray-200">
+    <div className="flex flex-col gap-6 font-sans max-w-4xl mx-auto p-4 md:p-6 text-gray-200">
       {/* Header and selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#14171C] p-4 border border-[#232830] rounded-lg">
         <div>

@@ -180,7 +180,7 @@ export default async function OwnerProfilePage({ params, searchParams }: PagePro
   ];
 
   return (
-    <div className="min-h-screen bg-base text-text-primary p-md md:p-lg font-inter">
+    <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-lg font-sans">
       {/* Outer container matches 1280px maximum width */}
       <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row gap-lg">
         
@@ -190,7 +190,7 @@ export default async function OwnerProfilePage({ params, searchParams }: PagePro
             <ProfileHeader user={user} isOwnProfile={isOwnProfile} />
           </Suspense>
           
-          <div className="border-t border-border pt-md">
+          <div className="border-t border-hairline pt-md">
             <OrganizationsList organizations={orgs} isOwnProfile={isOwnProfile} />
           </div>
         </div>
@@ -199,7 +199,7 @@ export default async function OwnerProfilePage({ params, searchParams }: PagePro
         <div className="flex-1 min-w-0 flex flex-col gap-md">
           
           {/* Tab Navigation Row */}
-          <div className="flex border-b border-border select-none">
+          <div className="flex border-b border-hairline select-none">
             {tabs.map((t) => {
               const Icon = t.icon;
               const isActive = tab === t.id;
@@ -207,10 +207,10 @@ export default async function OwnerProfilePage({ params, searchParams }: PagePro
                 <Link
                   key={t.id}
                   href={`/${owner}?tab=${t.id}`}
-                  className={`flex items-center gap-xs px-md py-sm text-xs font-semibold border-b-2 transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                  className={`flex items-center gap-xs px-md py-sm text-xs font-semibold border-b-2 transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary-focus ${
                     isActive
-                      ? "border-accent text-text-primary font-bold"
-                      : "border-transparent text-text-muted hover:text-text-primary"
+                      ? "border-accent text-ink font-bold"
+                      : "border-transparent text-body hover:text-ink"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -278,38 +278,38 @@ async function RepositoriesTabContent({ username }: { username: string }) {
 
   return (
     <div className="flex flex-col gap-md text-left">
-      <div className="flex justify-between items-center border-b border-border pb-xs">
-        <h2 className="font-space-grotesk text-sm font-bold text-text-muted">
+      <div className="flex justify-between items-center border-b border-hairline pb-xs">
+        <h2 className="font-sans text-sm font-bold text-body">
           Repositories
         </h2>
       </div>
       
       {repos.length === 0 ? (
-        <Card className="bg-surface border-border p-xl text-center border-dashed rounded-sm">
-          <p className="text-text-muted text-sm font-inter">No repositories found.</p>
+        <Card className="bg-canvas-soft border-hairline p-xl text-center border-dashed rounded-sm">
+          <p className="text-body text-sm font-sans">No repositories found.</p>
         </Card>
       ) : (
-        <div className="flex flex-col border border-border bg-surface rounded-sm divide-y divide-border">
+        <div className="flex flex-col border border-hairline bg-canvas-soft rounded-sm divide-y divide-border">
           {repos.map((repo: any) => (
             <div key={repo.id} className="p-md flex justify-between items-start gap-md">
               <div className="flex flex-col gap-xxs min-w-0">
                 <div className="flex items-center gap-xs">
                   <Link
                     href={`/${username}/${repo.name}`}
-                    className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent hover:underline rounded-xs outline-none focus-visible:ring-2 focus-visible:ring-accent break-all"
+                    className="font-sans font-bold text-sm text-ink hover:text-primary hover:underline rounded-xs outline-none focus-visible:ring-2 focus-visible:ring-primary-focus break-all"
                   >
                     {repo.name}
                   </Link>
-                  <span className="text-[9px] font-mono px-xs py-[1px] bg-base border border-border text-text-muted rounded-full uppercase">
+                  <span className="text-[9px] font-mono px-xs py-[1px] bg-canvas-soft-2 border border-hairline text-body rounded-full uppercase">
                     {repo.is_private ? "Private" : "Public"}
                   </span>
                 </div>
                 {repo.description && (
-                  <p className="font-inter text-xs text-text-muted leading-relaxed line-clamp-2 max-w-[500px]">
+                  <p className="font-sans text-xs text-body leading-relaxed line-clamp-2 max-w-[500px]">
                     {repo.description}
                   </p>
                 )}
-                <div className="flex items-center gap-md text-[10px] text-text-muted font-mono mt-xs">
+                <div className="flex items-center gap-md text-[10px] text-body font-mono mt-xs">
                   {repo.language && (
                     <span className="flex items-center gap-xs">
                       <span

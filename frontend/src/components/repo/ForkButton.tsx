@@ -103,12 +103,12 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
 
   if (isOwnRepo) {
     return (
-      <div className="flex items-center border border-border bg-surface rounded-sm">
-        <div className="flex items-center gap-xs px-xs py-xxs border-r border-border text-text-muted font-space-grotesk text-xs select-none">
+      <div className="flex items-center border border-hairline bg-canvas-soft rounded-sm">
+        <div className="flex items-center gap-xs px-xs py-xxs border-r border-hairline text-body font-sans text-xs select-none">
           <GitFork className="w-3.5 h-3.5" />
           <span>Fork</span>
         </div>
-        <span className="px-xs py-xxs font-mono text-xs text-text-primary select-none">
+        <span className="px-xs py-xxs font-mono text-xs text-ink select-none">
           {forksCount}
         </span>
       </div>
@@ -120,7 +120,7 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
     return (
       <Button
         onClick={() => router.push(`/${existingForkOwner}/${repo}`)}
-        className="bg-surface hover:bg-border border border-border text-text-primary py-xxs px-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-accent outline-none"
+        className="bg-canvas-soft hover:bg-border border border-hairline text-ink py-xxs px-xs rounded-sm font-sans font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-primary-focus outline-none"
       >
         <GitFork className="w-3.5 h-3.5" />
         <span>View your fork</span>
@@ -131,7 +131,7 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
   return (
     <div className="relative inline-flex items-center">
       
-      <div className="flex items-center border border-border bg-surface rounded-sm overflow-hidden shadow-none">
+      <div className="flex items-center border border-hairline bg-canvas-soft rounded-sm overflow-hidden shadow-none">
         
         {/* Main Fork Button */}
         <button
@@ -143,21 +143,21 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
             }
           }}
           disabled={isLoading}
-          className="flex items-center gap-xs px-xs py-xxs hover:bg-border text-text-primary font-space-grotesk text-xs font-semibold transition-all border-none outline-none focus:bg-border cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-xs px-xs py-xxs hover:bg-border text-ink font-sans text-xs font-semibold transition-all border-none outline-none focus:bg-border cursor-pointer disabled:opacity-50"
         >
           <GitFork className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
           <span>{isLoading ? "Forking..." : "Fork"}</span>
         </button>
 
         {/* Forks Counter Badge */}
-        <span className="px-xs py-xxs font-mono text-xs text-text-primary border-l border-border bg-surface select-none">
+        <span className="px-xs py-xxs font-mono text-xs text-ink border-l border-hairline bg-canvas-soft select-none">
           {forksCount}
         </span>
 
       </div>
 
       {error && (
-        <span className="absolute -bottom-lg left-0 text-[10px] text-danger animate-pulse flex items-center gap-xxs mt-xxs z-50 bg-base px-xxs py-[2px] border border-border rounded-sm">
+        <span className="absolute -bottom-lg left-0 text-[10px] text-error animate-pulse flex items-center gap-xxs mt-xxs z-50 bg-canvas-soft-2 px-xxs py-[2px] border border-hairline rounded-sm">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           {error}
         </span>
@@ -165,22 +165,22 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
 
       {/* Destination Picker Popover */}
       {showPicker && (
-        <Card className="absolute right-0 top-full mt-xs p-md bg-surface border-border shadow-md rounded-sm w-[240px] z-50 flex flex-col gap-xs">
-          <span className="font-space-grotesk font-bold text-xs border-b border-border pb-xxs mb-xxs select-none">
+        <Card className="absolute right-0 top-full mt-xs p-md bg-canvas-soft border-hairline shadow-md rounded-sm w-[240px] z-50 flex flex-col gap-xs">
+          <span className="font-sans font-bold text-xs border-b border-hairline pb-xxs mb-xxs select-none">
             Fork destination
           </span>
 
           {/* Personal Account Option */}
           <button
             onClick={() => handleFork("appi")}
-            className="flex items-center gap-xs p-xs text-left hover:bg-base rounded-sm transition-colors text-xs font-space-grotesk text-text-primary w-full outline-none focus:bg-base cursor-pointer"
+            className="flex items-center gap-xs p-xs text-left hover:bg-canvas-soft-2 rounded-sm transition-colors text-xs font-sans text-ink w-full outline-none focus:bg-canvas-soft-2 cursor-pointer"
           >
-            <div className="w-5 h-5 rounded-full bg-accent/20 border border-border text-[9px] flex items-center justify-center font-bold text-accent uppercase shrink-0">
+            <div className="w-5 h-5 rounded-full bg-primary/20 border border-hairline text-[9px] flex items-center justify-center font-bold text-primary uppercase shrink-0">
               AP
             </div>
             <div className="flex flex-col">
               <span className="font-bold">appi</span>
-              <span className="text-[9px] text-text-muted">Personal account</span>
+              <span className="text-[9px] text-body">Personal account</span>
             </div>
           </button>
 
@@ -189,12 +189,12 @@ export default function ForkButton({ owner, repo, forksCount }: ForkButtonProps)
             <button
               key={org}
               onClick={() => handleFork(org)}
-              className="flex items-center gap-xs p-xs text-left hover:bg-base rounded-sm transition-colors text-xs font-space-grotesk text-text-primary w-full outline-none focus:bg-base cursor-pointer border-t border-border/40 mt-xxs"
+              className="flex items-center gap-xs p-xs text-left hover:bg-canvas-soft-2 rounded-sm transition-colors text-xs font-sans text-ink w-full outline-none focus:bg-canvas-soft-2 cursor-pointer border-t border-hairline/40 mt-xxs"
             >
-              <Users className="w-4 h-4 text-text-muted shrink-0" />
+              <Users className="w-4 h-4 text-body shrink-0" />
               <div className="flex flex-col">
                 <span className="font-bold">{org}</span>
-                <span className="text-[9px] text-text-muted">Organization</span>
+                <span className="text-[9px] text-body">Organization</span>
               </div>
             </button>
           ))}

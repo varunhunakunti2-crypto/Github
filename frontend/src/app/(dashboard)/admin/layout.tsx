@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isAdmin === null) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0B0D10] text-gray-400 font-inter">
+      <div className="flex items-center justify-center min-h-screen bg-[#0B0D10] text-gray-400 font-sans">
         Verifying administrator privileges...
       </div>
     );
@@ -39,14 +39,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isAdmin === false) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0D10] text-gray-200 font-inter p-lg text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0B0D10] text-gray-200 font-sans p-lg text-center">
         <span className="text-4xl mb-sm">🚫</span>
-        <h1 className="font-space-grotesk text-2xl font-bold text-white mb-xs">403 — Forbidden</h1>
+        <h1 className="font-sans text-2xl font-bold text-white mb-xs">403 — Forbidden</h1>
         <p className="text-gray-400 text-sm max-w-sm mb-md">
           You do not have the required platform administrator permissions to view this resource.
         </p>
         <Link href="/">
-          <span className="text-accent hover:underline text-sm cursor-pointer">Return to Dashboard</span>
+          <span className="text-primary hover:underline text-sm cursor-pointer">Return to Dashboard</span>
         </Link>
       </div>
     );
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-screen bg-[#0B0D10] text-gray-300 font-inter flex flex-col">
+    <div className="min-h-screen bg-[#0B0D10] text-gray-300 font-sans flex flex-col">
       {/* Distinct Administrator Warning Banner */}
       <div className="bg-[#7A1A1C] border-b border-[#A12B2E] text-white text-xs px-md py-xs font-semibold flex justify-between items-center select-none shadow-md">
         <span className="flex items-center gap-xs">

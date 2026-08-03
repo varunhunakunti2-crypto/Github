@@ -192,7 +192,7 @@ export default function MergeActionArea({
 
   if (pr.status === 'MERGED') {
     return (
-      <div className="bg-green-950/20 border border-green-500/30 rounded-lg p-5 flex flex-col gap-3 font-space-grotesk text-xs">
+      <div className="bg-green-950/20 border border-green-500/30 rounded-lg p-5 flex flex-col gap-3 font-sans text-xs">
         <div className="flex items-center gap-2">
           <span className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center font-bold text-green-400 text-xs">✓</span>
           <span className="font-bold text-gray-200 text-sm">Pull Request Merged Successfully</span>
@@ -216,7 +216,7 @@ export default function MergeActionArea({
 
   if (pr.status === 'CLOSED') {
     return (
-      <div className="bg-red-950/20 border border-red-500/30 rounded-lg p-5 flex flex-col gap-2 font-space-grotesk text-xs">
+      <div className="bg-red-950/20 border border-red-500/30 rounded-lg p-5 flex flex-col gap-2 font-sans text-xs">
         <div className="flex items-center gap-2">
           <span className="font-bold text-red-400 text-sm">Pull Request Closed</span>
         </div>
@@ -227,7 +227,7 @@ export default function MergeActionArea({
 
   if (pr.status === 'DRAFT') {
     return (
-      <div className="bg-gray-800/40 border border-gray-700 rounded-lg p-5 flex flex-col gap-2 font-space-grotesk text-xs">
+      <div className="bg-gray-800/40 border border-gray-700 rounded-lg p-5 flex flex-col gap-2 font-sans text-xs">
         <span className="font-bold text-gray-300 text-sm">PR is in Draft State</span>
         <p className="text-gray-400">Draft PRs cannot be merged. Click "Ready for review" in the header to allow merging.</p>
       </div>
@@ -235,7 +235,7 @@ export default function MergeActionArea({
   }
 
   return (
-    <div className="bg-[#14171C] border border-[#232830] rounded-lg p-5 flex flex-col gap-4 font-space-grotesk text-xs">
+    <div className="bg-[#14171C] border border-[#232830] rounded-lg p-5 flex flex-col gap-4 font-sans text-xs">
       <div>
         <span className="font-bold text-gray-300 uppercase tracking-wider">Merge Action Area</span>
         <p className="text-gray-500 mt-0.5">Approve requirements, branch protections, and merge strategies.</p>

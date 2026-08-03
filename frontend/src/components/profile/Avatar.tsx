@@ -29,7 +29,7 @@ export default function Avatar({ src, name, size = "md", className }: AvatarProp
     sm: "w-8 h-8 text-xs font-semibold",
     md: "w-10 h-10 text-sm font-semibold",
     lg: "w-12 h-12 text-base font-semibold",
-    xl: "w-24 h-24 text-2xl font-bold font-space-grotesk",
+    xl: "w-24 h-24 text-2xl font-bold font-sans",
   };
 
   const showImage = src && !hasError;
@@ -37,7 +37,7 @@ export default function Avatar({ src, name, size = "md", className }: AvatarProp
   return (
     <div
       className={cn(
-        "relative rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-border select-none bg-surface",
+        "relative rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-hairline select-none bg-canvas-soft",
         sizeClasses[size],
         className
       )}
@@ -51,7 +51,7 @@ export default function Avatar({ src, name, size = "md", className }: AvatarProp
           draggable={false}
         />
       ) : (
-        <span className="text-accent font-medium select-none uppercase tracking-wide">
+        <span className="text-primary font-medium select-none uppercase tracking-wide">
           {getInitials()}
         </span>
       )}

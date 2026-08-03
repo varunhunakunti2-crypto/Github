@@ -103,8 +103,8 @@ export default function InvitationPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center gap-xs font-sans text-text-muted">
-          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <div className="flex flex-col items-center gap-xs font-sans text-body">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span>Validating invitation...</span>
         </div>
       </div>
@@ -113,18 +113,18 @@ export default function InvitationPage() {
 
   return (
     <div className="max-w-[500px] mx-auto py-4xl px-lg">
-      <Card className="bg-surface border-border text-text-primary p-xl rounded-sm shadow-none flex flex-col gap-lg items-center text-center">
-        <div className="w-12 h-12 bg-accent-soft rounded-full flex items-center justify-center text-accent">
+      <Card className="bg-canvas-soft border-hairline text-ink p-xl rounded-sm shadow-none flex flex-col gap-lg items-center text-center">
+        <div className="w-12 h-12 bg-accent-soft rounded-full flex items-center justify-center text-primary">
           <Mail className="w-6 h-6" />
         </div>
 
         {error ? (
           <div className="flex flex-col gap-sm items-center">
-            <XCircle className="w-8 h-8 text-danger" />
-            <h1 className="font-space-grotesk text-xl font-bold tracking-tight">
+            <XCircle className="w-8 h-8 text-error" />
+            <h1 className="font-sans text-xl font-bold tracking-tight">
               Invitation Error
             </h1>
-            <p className="font-inter text-text-muted text-xs leading-relaxed max-w-[340px]">
+            <p className="font-sans text-body text-xs leading-relaxed max-w-[340px]">
               {error}
             </p>
             <div className="mt-md">
@@ -136,29 +136,29 @@ export default function InvitationPage() {
         ) : successMessage ? (
           <div className="flex flex-col gap-sm items-center py-md">
             <CheckCircle className="w-8 h-8 text-success" />
-            <h2 className="font-space-grotesk text-md font-bold tracking-tight">
+            <h2 className="font-sans text-md font-bold tracking-tight">
               {successMessage}
             </h2>
           </div>
         ) : (
           <div className="flex flex-col gap-md w-full">
             <div>
-              <h1 className="font-space-grotesk text-xl font-bold tracking-tight">
+              <h1 className="font-sans text-xl font-bold tracking-tight">
                 Join {invite.orgName}
               </h1>
-              <p className="font-inter text-text-muted text-xs mt-xs">
+              <p className="font-sans text-body text-xs mt-xs">
                 @{invite.invitedBy} has invited you to join the organization as a{" "}
-                <strong className="text-text-primary">{invite.role.toLowerCase()}</strong>.
+                <strong className="text-ink">{invite.role.toLowerCase()}</strong>.
               </p>
             </div>
 
             <div className="bg-canvas border border-hairline p-md rounded-sm text-left flex items-start gap-md mt-sm">
-              <Building className="w-6 h-6 text-accent shrink-0 mt-xxs" />
+              <Building className="w-6 h-6 text-primary shrink-0 mt-xxs" />
               <div className="flex flex-col">
-                <span className="font-space-grotesk font-bold text-sm text-text-primary">
+                <span className="font-sans font-bold text-sm text-ink">
                   {invite.orgName}
                 </span>
-                <span className="font-inter text-xs text-text-muted">
+                <span className="font-sans text-xs text-body">
                   gitforge.dev/orgs/{invite.orgSlug}
                 </span>
               </div>
@@ -168,7 +168,7 @@ export default function InvitationPage() {
               <Button
                 variant="secondary"
                 onClick={handleDecline}
-                className="w-full font-semibold border-danger/35 hover:bg-danger/5 hover:text-danger"
+                className="w-full font-semibold border-error/35 hover:bg-error/5 hover:text-error"
                 disabled={isProcessing}
               >
                 Decline

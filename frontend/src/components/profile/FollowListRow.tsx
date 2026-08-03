@@ -59,24 +59,24 @@ export default function FollowListRow({
   };
 
   return (
-    <div className="relative group border-b border-border py-md flex items-center justify-between gap-md text-left text-text-primary hover:bg-surface/10 px-xs transition-colors rounded-sm">
+    <div className="relative group border-b border-hairline py-md flex items-center justify-between gap-md text-left text-ink hover:bg-canvas-soft/10 px-xs transition-colors rounded-sm">
       {/* Wrapped Link for whole row except button */}
-      <Link href={`/${item.username}`} className="flex-1 flex items-center gap-sm min-w-0 outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-sm">
-        <Avatar src={item.avatar_url} name={item.full_name || item.username} size="sm" className="border-border shadow-none" />
+      <Link href={`/${item.username}`} className="flex-1 flex items-center gap-sm min-w-0 outline-none focus-visible:ring-1 focus-visible:ring-primary-focus rounded-sm">
+        <Avatar src={item.avatar_url} name={item.full_name || item.username} size="sm" className="border-hairline shadow-none" />
         
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-xxs sm:gap-xs">
-            <span className="font-jetbrains-mono text-sm font-semibold text-text-primary hover:text-accent hover:underline">
+            <span className="font-jetbrains-mono text-sm font-semibold text-ink hover:text-primary hover:underline">
               @{item.username}
             </span>
             {item.full_name && (
-              <span className="font-inter text-xs text-text-muted">
+              <span className="font-sans text-xs text-body">
                 {item.full_name}
               </span>
             )}
           </div>
           {item.bio && (
-            <p className="font-inter text-text-muted text-xs truncate mt-xxs max-w-[480px]">
+            <p className="font-sans text-body text-xs truncate mt-xxs max-w-[480px]">
               {item.bio}
             </p>
           )}
@@ -90,10 +90,10 @@ export default function FollowListRow({
             onClick={handleFollowAction}
             disabled={isPending}
             className={cn(
-              "px-sm py-xxs rounded-sm font-space-grotesk font-semibold text-xs transition-colors outline-none focus:ring-1 focus:ring-accent focus:ring-offset-1 focus:ring-offset-base",
+              "px-sm py-xxs rounded-sm font-sans font-semibold text-xs transition-colors outline-none focus:ring-1 focus:ring-primary-focus focus:ring-offset-1 focus:ring-offset-base",
               isFollowing
-                ? "bg-surface hover:bg-danger/10 border border-border hover:border-danger text-text-primary hover:text-danger"
-                : "bg-accent hover:bg-accent/90 text-white border border-transparent"
+                ? "bg-canvas-soft hover:bg-error/10 border border-hairline hover:border-error text-ink hover:text-error"
+                : "bg-primary hover:bg-primary/90 text-white border border-transparent"
             )}
           >
             {isFollowing ? "Unfollow" : "Follow"}
@@ -101,7 +101,7 @@ export default function FollowListRow({
         )}
         
         {rowError && (
-          <span className="font-inter text-[10px] text-danger mt-1 animate-pulse">
+          <span className="font-sans text-[10px] text-error mt-1 animate-pulse">
             {rowError}
           </span>
         )}

@@ -92,21 +92,21 @@ export default function InviteMemberDialog({
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-md py-sm">
         {error && (
-          <div className="p-xs bg-danger/10 border border-danger text-danger text-xs rounded-sm font-inter flex items-center gap-xs">
+          <div className="p-xs bg-error/10 border border-error text-error text-xs rounded-sm font-sans flex items-center gap-xs">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="p-xs bg-success/10 border border-success text-success text-xs rounded-sm font-inter flex items-center gap-xs">
+          <div className="p-xs bg-success/10 border border-success text-success text-xs rounded-sm font-sans flex items-center gap-xs">
             <CheckCircle className="w-4 h-4 shrink-0" />
             <span>{success}</span>
           </div>
         )}
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="invite-target" className="text-text-muted text-xs">
+          <Label htmlFor="invite-target" className="text-body text-xs">
             Username or Email Address
           </Label>
           <div className="relative">
@@ -120,7 +120,7 @@ export default function InviteMemberDialog({
               className="pl-lg"
               required
             />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-text-muted">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-body">
               {emailOrUsername.includes("@") ? (
                 <Mail className="w-4 h-4" />
               ) : (
@@ -131,7 +131,7 @@ export default function InviteMemberDialog({
         </div>
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="invite-role" className="text-text-muted text-xs">
+          <Label htmlFor="invite-role" className="text-body text-xs">
             Organization Role
           </Label>
           <Select

@@ -124,13 +124,13 @@ export default function NotificationsPage() {
   const getReasonColor = (reason: string) => {
     switch (reason.toUpperCase()) {
       case "ASSIGN":
-        return "bg-accent-soft text-accent border border-accent/20";
+        return "bg-primary-soft text-primary border border-accent/20";
       case "MENTION":
         return "bg-success-soft text-success border border-success/20";
       case "REVIEW_REQUESTED":
         return "bg-warning-soft text-warning border border-warning/20";
       default:
-        return "bg-canvas-soft text-text-muted border border-border";
+        return "bg-canvas-soft text-body border border-hairline";
     }
   };
 
@@ -154,20 +154,20 @@ export default function NotificationsPage() {
         <div className="flex items-center gap-sm">
           <button
             onClick={() => router.back()}
-            className="p-xs rounded-full hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors"
+            className="p-xs rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h1 className="font-space-grotesk text-xl font-bold text-text-primary">Notifications Inbox</h1>
-            <p className="font-inter text-xs text-text-muted">Manage mentions, pull request review requests, and subscriptions</p>
+            <h1 className="font-sans text-xl font-bold text-ink">Notifications Inbox</h1>
+            <p className="font-sans text-xs text-body">Manage mentions, pull request review requests, and subscriptions</p>
           </div>
         </div>
 
         <div className="flex gap-xs">
           <button
             onClick={fetchNotifications}
-            className="flex items-center gap-xs font-sans text-xs bg-canvas hover:bg-canvas-soft border border-border px-sm py-xs rounded-sm text-text-primary hover:text-text-primary transition-colors"
+            className="flex items-center gap-xs font-sans text-xs bg-canvas hover:bg-canvas-soft border border-hairline px-sm py-xs rounded-sm text-ink hover:text-ink transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Refresh
@@ -175,7 +175,7 @@ export default function NotificationsPage() {
           <button
             onClick={handleMarkAllRead}
             disabled={notifications.filter(n => !n.isRead).length === 0}
-            className="flex items-center gap-xs font-sans text-xs bg-canvas hover:bg-canvas-soft border border-border px-sm py-xs rounded-sm text-text-primary hover:text-text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-xs font-sans text-xs bg-canvas hover:bg-canvas-soft border border-hairline px-sm py-xs rounded-sm text-ink hover:text-ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Check className="w-3.5 h-3.5" />
             Mark all read
@@ -191,12 +191,12 @@ export default function NotificationsPage() {
             onClick={() => setActiveTab(tab)}
             className={`font-sans text-xs font-semibold px-sm py-xs border-b-2 capitalize transition-colors whitespace-nowrap ${
               activeTab === tab
-                ? "border-accent text-accent"
-                : "border-transparent text-text-muted hover:text-text-primary"
+                ? "border-accent text-primary"
+                : "border-transparent text-body hover:text-ink"
             }`}
           >
             {tab}
-            <span className="ml-xs bg-canvas-soft-2 px-xxs py-[2px] rounded-xs font-mono text-[10px] text-text-muted border border-hairline">
+            <span className="ml-xs bg-canvas-soft-2 px-xxs py-[2px] rounded-xs font-mono text-[10px] text-body border border-hairline">
               {notifications.filter(n => {
                 if (tab === "unread") return !n.isRead;
                 if (tab === "mentions") return n.reason.toUpperCase() === "MENTION";
@@ -209,10 +209,10 @@ export default function NotificationsPage() {
       </div>
 
       {/* Inbox List */}
-      <div className="bg-surface border border-border rounded-sm overflow-hidden shadow-sm">
+      <div className="bg-canvas-soft border border-hairline rounded-sm overflow-hidden shadow-sm">
         {isLoading ? (
-          <div className="p-xl text-center flex flex-col items-center justify-center gap-xs text-text-muted font-inter text-xs">
-            <RefreshCw className="w-6 h-6 animate-spin text-accent" />
+          <div className="p-xl text-center flex flex-col items-center justify-center gap-xs text-body font-sans text-xs">
+            <RefreshCw className="w-6 h-6 animate-spin text-primary" />
             <span>Loading notifications...</span>
           </div>
         ) : filteredNotifications.length === 0 ? (
@@ -220,8 +220,8 @@ export default function NotificationsPage() {
             <div className="w-12 h-12 bg-canvas rounded-full flex items-center justify-center border border-hairline shadow-inner">
               <Check className="w-6 h-6 text-success" />
             </div>
-            <h3 className="font-space-grotesk font-bold text-text-primary text-sm mt-xs">You're all caught up!</h3>
-            <p className="font-inter text-xs text-text-muted max-w-[320px]">
+            <h3 className="font-sans font-bold text-ink text-sm mt-xs">You're all caught up!</h3>
+            <p className="font-sans text-xs text-body max-w-[320px]">
               No {activeTab !== "all" ? `${activeTab} ` : ""}notifications to display. Check back later or adjust filters.
             </p>
           </div>
@@ -232,7 +232,7 @@ export default function NotificationsPage() {
                 key={n.id}
                 onClick={() => handleNotificationClick(n)}
                 className={`p-sm md:p-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-xs cursor-pointer hover:bg-canvas-soft transition-colors ${
-                  !n.isRead ? "bg-accent-soft/10 border-l-2 border-accent" : ""
+                  !n.isRead ? "bg-primary-soft/10 border-l-2 border-accent" : ""
                 }`}
               >
                 <div className="flex gap-xs items-start min-w-0 flex-1">
@@ -241,22 +241,22 @@ export default function NotificationsPage() {
                   </div>
                   <div className="flex-1 min-w-0 space-y-xxs">
                     <div className="flex items-center gap-xs flex-wrap">
-                      <span className="font-sans font-semibold text-[10px] text-text-muted hover:underline">
+                      <span className="font-sans font-semibold text-[10px] text-body hover:underline">
                         {n.repository.name}
                       </span>
                       <span className={`text-[9px] font-mono font-semibold px-xxs py-[1px] rounded-xs ${getReasonColor(n.reason)}`}>
                         {n.reason.toLowerCase().replace("_", " ")}
                       </span>
                       {n.isUnsubscribed && (
-                        <span className="text-[9px] font-mono font-semibold px-xxs py-[1px] rounded-xs bg-danger-soft text-danger border border-danger/20">
+                        <span className="text-[9px] font-mono font-semibold px-xxs py-[1px] rounded-xs bg-error-soft text-error border border-error/20">
                           muted
                         </span>
                       )}
                     </div>
-                    <h4 className="font-sans font-bold text-xs text-text-primary line-clamp-1">
+                    <h4 className="font-sans font-bold text-xs text-ink line-clamp-1">
                       {n.title}
                     </h4>
-                    <p className="font-inter text-xs text-text-muted line-clamp-2">
+                    <p className="font-sans text-xs text-body line-clamp-2">
                       {n.body}
                     </p>
                   </div>
@@ -269,10 +269,10 @@ export default function NotificationsPage() {
                       e.stopPropagation();
                       handleMarkRead(n.id, !n.isRead);
                     }}
-                    className="p-xs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors"
+                    className="p-xs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors"
                     title={n.isRead ? "Mark as unread" : "Mark as read"}
                   >
-                    <Check className={`w-4 h-4 ${n.isRead ? "text-text-muted" : "text-success font-bold"}`} />
+                    <Check className={`w-4 h-4 ${n.isRead ? "text-body" : "text-success font-bold"}`} />
                   </button>
                   <button
                     onClick={(e) => {
@@ -280,7 +280,7 @@ export default function NotificationsPage() {
                       handleMute(n.id, !n.isUnsubscribed);
                     }}
                     className={`p-xs rounded-xs hover:bg-canvas-soft-2 transition-colors ${
-                      n.isUnsubscribed ? "text-danger hover:text-danger-hover" : "text-text-muted hover:text-text-primary"
+                      n.isUnsubscribed ? "text-error hover:text-error-hover" : "text-body hover:text-ink"
                     }`}
                     title={n.isUnsubscribed ? "Unmute thread" : "Mute thread"}
                   >
@@ -291,7 +291,7 @@ export default function NotificationsPage() {
                       e.stopPropagation();
                       handleDelete(n.id);
                     }}
-                    className="p-xs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-danger transition-colors"
+                    className="p-xs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-error transition-colors"
                     title="Delete notification"
                   >
                     <Trash2 className="w-4 h-4" />

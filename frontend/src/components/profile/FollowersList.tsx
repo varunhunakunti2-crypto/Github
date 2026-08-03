@@ -124,16 +124,16 @@ export default function FollowersList({
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="py-md border-b border-border flex items-center justify-between gap-md"
+            className="py-md border-b border-hairline flex items-center justify-between gap-md"
           >
             <div className="flex items-center gap-sm flex-1">
-              <div className="w-8 h-8 rounded-full bg-surface border border-border"></div>
+              <div className="w-8 h-8 rounded-full bg-canvas-soft border border-hairline"></div>
               <div className="flex flex-col gap-xxs flex-1">
-                <div className="h-4 bg-surface border border-border rounded-sm w-28"></div>
-                <div className="h-3 bg-surface border border-border rounded-sm w-48"></div>
+                <div className="h-4 bg-canvas-soft border border-hairline rounded-sm w-28"></div>
+                <div className="h-3 bg-canvas-soft border border-hairline rounded-sm w-48"></div>
               </div>
             </div>
-            <div className="w-16 h-6 bg-surface border border-border rounded-sm"></div>
+            <div className="w-16 h-6 bg-canvas-soft border border-hairline rounded-sm"></div>
           </div>
         ))}
       </div>
@@ -142,7 +142,7 @@ export default function FollowersList({
 
   if (error) {
     return (
-      <div className="py-lg text-center font-inter text-danger text-sm border border-danger/10 bg-danger/5 rounded-sm">
+      <div className="py-lg text-center font-sans text-error text-sm border border-error/10 bg-error/5 rounded-sm">
         {error}
       </div>
     );
@@ -150,11 +150,11 @@ export default function FollowersList({
 
   if (items.length === 0) {
     return (
-      <div className="py-xl text-center border border-border border-dashed rounded-sm bg-surface/30">
-        <h3 className="font-space-grotesk text-lg font-bold text-text-primary mb-xs">
+      <div className="py-xl text-center border border-hairline border-dashed rounded-sm bg-canvas-soft/30">
+        <h3 className="font-sans text-lg font-bold text-ink mb-xs">
           No followers yet
         </h3>
-        <p className="font-inter text-text-muted text-xs max-w-[280px] mx-auto leading-relaxed">
+        <p className="font-sans text-body text-xs max-w-[280px] mx-auto leading-relaxed">
           {isOwnProfile
             ? "Share your repositories and collaborate with developers to grow your followers list!"
             : "When other developers follow this user, they'll appear here."}
@@ -180,7 +180,7 @@ export default function FollowersList({
         <button
           onClick={handleLoadMore}
           disabled={isMoreLoading}
-          className="mt-md py-sm px-md border border-border bg-surface hover:bg-border text-text-primary font-space-grotesk text-xs font-semibold rounded-sm self-center transition-colors focus:ring-1 focus:ring-accent disabled:opacity-50 disabled:pointer-events-none"
+          className="mt-md py-sm px-md border border-hairline bg-canvas-soft hover:bg-border text-ink font-sans text-xs font-semibold rounded-sm self-center transition-colors focus:ring-1 focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none"
         >
           {isMoreLoading ? "Loading more..." : "Load more followers"}
         </button>

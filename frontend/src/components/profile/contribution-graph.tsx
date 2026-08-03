@@ -128,25 +128,25 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
 
   if (isLoading) {
     return (
-      <Card className="bg-surface border-border p-md rounded-sm animate-pulse w-full">
-        <div className="h-6 bg-base border border-border rounded-sm w-48 mb-md"></div>
-        <div className="h-28 bg-base border border-border rounded-sm w-full"></div>
+      <Card className="bg-canvas-soft border-hairline p-md rounded-sm animate-pulse w-full">
+        <div className="h-6 bg-canvas-soft-2 border border-hairline rounded-sm w-48 mb-md"></div>
+        <div className="h-28 bg-canvas-soft-2 border border-hairline rounded-sm w-full"></div>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-surface border-border text-text-primary p-md rounded-sm shadow-none flex flex-col gap-sm w-full text-left relative">
+    <Card className="bg-canvas-soft border-hairline text-ink p-md rounded-sm shadow-none flex flex-col gap-sm w-full text-left relative">
       
       {/* Top Header stats & Year Selector */}
       <div className="flex justify-between items-center flex-wrap gap-xs">
         <div>
-          <span className="font-space-grotesk text-sm font-bold text-text-muted">
+          <span className="font-sans text-sm font-bold text-body">
             Contributions Graph
           </span>
           <h3 className="font-jetbrains-mono text-xl font-bold mt-xxs">
             {graphData?.total_contributions || 0}{" "}
-            <span className="font-inter text-xs text-text-muted font-normal">
+            <span className="font-sans text-xs text-body font-normal">
               contributions in {selectedYear}
             </span>
           </h3>
@@ -157,7 +157,7 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="appearance-none h-8 pl-sm pr-lg bg-base border border-border text-xs font-semibold rounded-sm outline-none focus:border-accent text-text-primary cursor-pointer font-sans"
+            className="appearance-none h-8 pl-sm pr-lg bg-canvas-soft-2 border border-hairline text-xs font-semibold rounded-sm outline-none focus:border-accent text-ink cursor-pointer font-sans"
           >
             {availableYears.map((y) => (
               <option key={y} value={y}>
@@ -165,7 +165,7 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
               </option>
             ))}
           </select>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-text-muted">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-body">
             <ChevronDown className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
         <div className="min-w-[650px] flex gap-xs pt-xs">
           
           {/* Days of week labels */}
-          <div className="grid grid-rows-7 text-[10px] text-text-muted font-mono h-[88px] pr-xs pt-1 justify-between select-none">
+          <div className="grid grid-rows-7 text-[10px] text-body font-mono h-[88px] pr-xs pt-1 justify-between select-none">
             <span>Sun</span>
             <span></span>
             <span>Tue</span>
@@ -195,13 +195,13 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
                   onMouseEnter={(e) => handleMouseMove(e, day)}
                   onMouseLeave={() => setHoveredDay(null)}
                   style={{ backgroundColor: getLevelColor(day.level) }}
-                  className="w-2.5 h-2.5 rounded-xs transition-colors hover:ring-1 hover:ring-accent cursor-pointer"
+                  className="w-2.5 h-2.5 rounded-xs transition-colors hover:ring-1 hover:ring-primary-focus cursor-pointer"
                 />
               ))}
             </div>
 
             {/* Months labels */}
-            <div className="flex justify-between text-[10px] text-text-muted font-mono select-none pr-md mt-xs">
+            <div className="flex justify-between text-[10px] text-body font-mono select-none pr-md mt-xs">
               <span>Jan</span>
               <span>Feb</span>
               <span>Mar</span>
@@ -220,7 +220,7 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
       </div>
 
       {/* Grid Legend */}
-      <div className="flex items-center gap-xs justify-end text-[10px] text-text-muted font-mono select-none pt-xs">
+      <div className="flex items-center gap-xs justify-end text-[10px] text-body font-mono select-none pt-xs">
         <span>Less</span>
         <div className="w-2.5 h-2.5 rounded-xs bg-[#232830]"></div>
         <div className="w-2.5 h-2.5 rounded-xs bg-[rgba(124,92,255,0.25)]"></div>
@@ -239,12 +239,12 @@ export default function ContributionGraph({ username }: ContributionGraphProps) 
             top: `${tooltipPos.y + 110}px`,
             zIndex: 50,
           }}
-          className="bg-surface border border-border text-[10px] font-mono text-text-primary px-sm py-xxs rounded-xs shadow-lg pointer-events-none whitespace-nowrap"
+          className="bg-canvas-soft border border-hairline text-[10px] font-mono text-ink px-sm py-xxs rounded-xs shadow-lg pointer-events-none whitespace-nowrap"
         >
-          <div className="font-semibold text-accent">
+          <div className="font-semibold text-primary">
             {hoveredDay.count} contributions
           </div>
-          <div className="text-text-muted mt-xxs">
+          <div className="text-body mt-xxs">
             {new Date(hoveredDay.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",

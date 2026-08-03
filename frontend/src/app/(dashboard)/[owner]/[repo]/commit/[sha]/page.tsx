@@ -133,7 +133,7 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto p-12 text-center text-red-400 font-space-grotesk">
+      <div className="max-w-4xl mx-auto p-12 text-center text-red-400 font-sans">
         <h3 className="text-lg font-bold">Error</h3>
         <p className="text-xs mt-2 text-gray-500">{error}</p>
       </div>
@@ -165,7 +165,7 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
   const showCommitter = commit.authorEmail !== commit.committerEmail || commit.authorName !== commit.committerName;
 
   return (
-    <div className="flex flex-col gap-6 font-space-grotesk max-w-4xl mx-auto p-4 md:p-6 text-gray-200">
+    <div className="flex flex-col gap-6 font-sans max-w-4xl mx-auto p-4 md:p-6 text-gray-200">
       {/* 2. Commit Header */}
       <div className="bg-[#14171C] border border-[#232830] rounded-lg p-5 flex flex-col gap-3">
         <div className="flex justify-between items-start gap-4">
@@ -296,7 +296,7 @@ export default function CommitDetailPage({ params }: { params: Promise<{ owner: 
                     </span>
                     <Link
                       href={`/${owner}/${repo}/blob/${commit.hash}/${file.path}`}
-                      className="text-gray-400 hover:text-[#7C5CFF] hover:underline font-space-grotesk text-xs"
+                      className="text-gray-400 hover:text-[#7C5CFF] hover:underline font-sans text-xs"
                       onClick={(e) => e.stopPropagation()}
                     >
                       View file

@@ -162,7 +162,7 @@ export default function AdminReportsPage() {
           </div>
         </div>
 
-        <Button onClick={fetchReports} className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm">
+        <Button onClick={fetchReports} className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm">
           Refresh Queue
         </Button>
       </div>
@@ -170,11 +170,11 @@ export default function AdminReportsPage() {
       {isLoading ? (
         <div className="text-center py-xl text-gray-400">Loading reports queue...</div>
       ) : error ? (
-        <div className="p-md bg-danger/10 border border-danger text-danger text-sm rounded-sm">{error}</div>
+        <div className="p-md bg-error/10 border border-error text-error text-sm rounded-sm">{error}</div>
       ) : reports.length === 0 ? (
         <Card className="bg-[#161B22] border-[#30363D] p-xl rounded-sm text-center">
           <span className="text-3xl">🛡️</span>
-          <h3 className="font-space-grotesk text-lg font-bold text-white mt-sm">Moderation queue empty</h3>
+          <h3 className="font-sans text-lg font-bold text-white mt-sm">Moderation queue empty</h3>
           <p className="text-gray-400 text-xs mt-xxs">No reports match the selected filters.</p>
         </Card>
       ) : (
@@ -186,7 +186,7 @@ export default function AdminReportsPage() {
               <div className="flex justify-between items-start flex-wrap gap-xs">
                 <div>
                   <div className="flex items-center gap-xs">
-                    <span className="font-bold text-white uppercase text-xs font-space-grotesk bg-[#30363D] px-xs py-xxs rounded-sm">
+                    <span className="font-bold text-white uppercase text-xs font-sans bg-[#30363D] px-xs py-xxs rounded-sm">
                       {report.reportedType}
                     </span>
                     <span className="text-xs font-semibold text-gray-300">
@@ -203,7 +203,7 @@ export default function AdminReportsPage() {
                   {report.status === "pending" && (
                     <Button
                       onClick={() => handleReview(report.id)}
-                      className="bg-accent hover:bg-accent/90 text-white text-xs px-xs py-xxs rounded-sm font-semibold"
+                      className="bg-primary hover:bg-primary/90 text-white text-xs px-xs py-xxs rounded-sm font-semibold"
                     >
                       Mark Reviewing
                     </Button>
@@ -219,7 +219,7 @@ export default function AdminReportsPage() {
                       </Button>
                       <Button
                         onClick={() => setDismissingReport(report)}
-                        className="bg-transparent hover:bg-gray-800 text-gray-300 border border-border text-xs px-xs py-xxs rounded-sm"
+                        className="bg-transparent hover:bg-gray-800 text-gray-300 border border-hairline text-xs px-xs py-xxs rounded-sm"
                       >
                         Dismiss
                       </Button>
@@ -232,7 +232,7 @@ export default function AdminReportsPage() {
               <div className="bg-[#0D1117] border border-[#30363D] p-sm rounded-sm flex flex-col gap-xxs text-xs">
                 <div>
                   <span className="text-gray-400 font-semibold mr-xs">Reason:</span>
-                  <span className="text-white uppercase font-bold text-[10px] bg-danger/25 text-danger px-xs py-xxs rounded-full">{report.reason}</span>
+                  <span className="text-white uppercase font-bold text-[10px] bg-error/25 text-error px-xs py-xxs rounded-full">{report.reason}</span>
                 </div>
                 <div className="mt-xxs">
                   <span className="text-gray-400 font-semibold mr-xs">Reported Entity:</span>
@@ -240,7 +240,7 @@ export default function AdminReportsPage() {
                     href={getEntityLink(report)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent hover:underline font-mono"
+                    className="text-primary hover:underline font-mono"
                   >
                     {report.reportedId}
                   </a>
@@ -261,7 +261,7 @@ export default function AdminReportsPage() {
       {actioningReport && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-md z-50">
           <Card className="bg-[#161B22] border-[#30363D] p-lg max-w-md w-full rounded-sm text-left flex flex-col gap-md">
-            <h3 className="font-space-grotesk font-bold text-md text-white">Record Moderation Action</h3>
+            <h3 className="font-sans font-bold text-md text-white">Record Moderation Action</h3>
             <div className="flex flex-col gap-xs">
               <label className="text-xs font-semibold text-gray-300">Action Details (Required for Audit Logs):</label>
               <textarea
@@ -277,7 +277,7 @@ export default function AdminReportsPage() {
                   setActioningReport(null);
                   setActionNote("");
                 }}
-                className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm"
+                className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm"
               >
                 Cancel
               </Button>
@@ -297,7 +297,7 @@ export default function AdminReportsPage() {
       {dismissingReport && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-md z-50">
           <Card className="bg-[#161B22] border-[#30363D] p-lg max-w-md w-full rounded-sm text-left flex flex-col gap-md">
-            <h3 className="font-space-grotesk font-bold text-md text-white">Dismiss Moderation Report</h3>
+            <h3 className="font-sans font-bold text-md text-white">Dismiss Moderation Report</h3>
             
             <div className="flex flex-col gap-xs">
               <label className="text-xs font-semibold text-gray-300">Reason for Dismissal:</label>
@@ -318,13 +318,13 @@ export default function AdminReportsPage() {
                   setDismissingReport(null);
                   setDismissReason("false_positive");
                 }}
-                className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm"
+                className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleDismiss}
-                className="bg-danger hover:bg-danger/90 text-white text-xs px-sm py-xxs rounded-sm"
+                className="bg-error hover:bg-error/90 text-white text-xs px-sm py-xxs rounded-sm"
               >
                 Confirm Dismissal
               </Button>

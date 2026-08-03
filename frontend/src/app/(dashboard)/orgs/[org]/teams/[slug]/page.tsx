@@ -203,8 +203,8 @@ export default function TeamDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center gap-xs font-sans text-text-muted">
-          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <div className="flex flex-col items-center gap-xs font-sans text-body">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span>Loading team details...</span>
         </div>
       </div>
@@ -215,8 +215,8 @@ export default function TeamDetailPage() {
     return (
       <div className="min-h-screen bg-canvas p-3xl">
         <div className="max-w-[600px] mx-auto text-center flex flex-col gap-sm items-center">
-          <h2 className="font-space-grotesk text-2xl font-bold text-danger">Error</h2>
-          <p className="font-inter text-text-muted text-sm">{error || "Team not found"}</p>
+          <h2 className="font-sans text-2xl font-bold text-error">Error</h2>
+          <p className="font-sans text-body text-sm">{error || "Team not found"}</p>
         </div>
       </div>
     );
@@ -228,11 +228,11 @@ export default function TeamDetailPage() {
   return (
     <div className="min-h-screen bg-canvas-soft flex flex-col">
       {/* Subheader */}
-      <div className="bg-canvas border-b border-border py-md px-lg">
+      <div className="bg-canvas border-b border-hairline py-md px-lg">
         <div className="max-w-[1200px] mx-auto flex justify-between items-center">
           <Link
             href={`/orgs/${orgSlug}/teams`}
-            className="flex items-center gap-xs font-sans text-xs text-text-muted hover:text-accent transition-colors"
+            className="flex items-center gap-xs font-sans text-xs text-body hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Teams
@@ -242,7 +242,7 @@ export default function TeamDetailPage() {
             <Button
               variant="secondary-sm"
               onClick={() => setIsDeleteOpen(true)}
-              className="text-danger border-danger/35 hover:bg-danger/5 flex items-center gap-xxs"
+              className="text-error border-error/35 hover:bg-error/5 flex items-center gap-xxs"
             >
               <Trash className="w-4 h-4" />
               Delete Team
@@ -255,14 +255,14 @@ export default function TeamDetailPage() {
         {/* Team Profile Summary */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-sm">
-            <div className="w-12 h-12 bg-accent-soft rounded-sm flex items-center justify-center text-accent">
+            <div className="w-12 h-12 bg-accent-soft rounded-sm flex items-center justify-center text-primary">
               <Users2 className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-text-primary">
+              <h1 className="font-sans text-2xl font-bold tracking-tight text-ink">
                 {team.name}
               </h1>
-              <p className="font-inter text-xs text-text-muted">
+              <p className="font-sans text-xs text-body">
                 Slug: {team.slug} • Privacy: {team.privacy.toLowerCase()}
               </p>
             </div>
@@ -275,12 +275,12 @@ export default function TeamDetailPage() {
 
         {/* CODEOWNERS Notice */}
         <div className="p-md bg-canvas border border-hairline rounded-sm flex items-start gap-md">
-          <FileCode className="w-6 h-6 text-accent shrink-0 mt-xxs" />
+          <FileCode className="w-6 h-6 text-primary shrink-0 mt-xxs" />
           <div className="flex flex-col gap-xxs">
-            <span className="font-space-grotesk font-bold text-sm text-text-primary">
+            <span className="font-sans font-bold text-sm text-ink">
               CODEOWNERS Reference
             </span>
-            <p className="font-inter text-xs text-text-muted leading-relaxed">
+            <p className="font-sans text-xs text-body leading-relaxed">
               If this team is referenced in a repository's `CODEOWNERS` file using `@${org.slug}/${team.slug}`, team members will automatically receive pull request review requests when files under matching patterns are changed.
             </p>
           </div>
@@ -289,7 +289,7 @@ export default function TeamDetailPage() {
         {/* Team Members */}
         <div className="flex flex-col gap-md">
           <div className="flex justify-between items-center">
-            <h2 className="font-space-grotesk text-md font-bold text-text-primary">
+            <h2 className="font-sans text-md font-bold text-ink">
               Members ({team.members?.length || 0})
             </h2>
             {isTeamMaintainer && (
@@ -304,7 +304,7 @@ export default function TeamDetailPage() {
             )}
           </div>
 
-          <Card className="bg-canvas border-border p-xxs rounded-sm">
+          <Card className="bg-canvas border-hairline p-xxs rounded-sm">
             <div className="divide-y divide-hairline">
               {team.members?.map((m: any) => (
                 <div key={m.id} className="flex items-center justify-between p-md">
@@ -313,18 +313,18 @@ export default function TeamDetailPage() {
                       <img
                         src={m.user.avatarUrl}
                         alt={m.user.username}
-                        className="w-8 h-8 rounded-full object-cover border border-border"
+                        className="w-8 h-8 rounded-full object-cover border border-hairline"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-accent-soft text-accent flex items-center justify-center font-bold text-xs">
+                      <div className="w-8 h-8 rounded-full bg-accent-soft text-primary flex items-center justify-center font-bold text-xs">
                         {m.user.username.slice(0, 2).toUpperCase()}
                       </div>
                     )}
                     <div className="flex flex-col">
-                      <span className="font-sans font-bold text-sm text-text-primary">
+                      <span className="font-sans font-bold text-sm text-ink">
                         {m.user.username}
                       </span>
-                      <span className="font-sans text-xs text-text-muted">
+                      <span className="font-sans text-xs text-body">
                         {m.user.name || m.user.email}
                       </span>
                     </div>
@@ -338,7 +338,7 @@ export default function TeamDetailPage() {
                       <Button
                         variant="secondary-sm"
                         onClick={() => setMemberToRemove(m)}
-                        className="text-danger hover:border-danger hover:bg-danger/5"
+                        className="text-error hover:border-error hover:bg-error/5"
                       >
                         <UserMinus className="w-4 h-4" />
                       </Button>
@@ -353,7 +353,7 @@ export default function TeamDetailPage() {
         {/* Repository Permissions */}
         <div className="flex flex-col gap-md">
           <div className="flex justify-between items-center">
-            <h2 className="font-space-grotesk text-md font-bold text-text-primary">
+            <h2 className="font-sans text-md font-bold text-ink">
               Repositories ({team.repositories?.length || 0})
             </h2>
             {isTeamMaintainer && (
@@ -368,18 +368,18 @@ export default function TeamDetailPage() {
             )}
           </div>
 
-          <Card className="bg-canvas border-border p-xxs rounded-sm">
+          <Card className="bg-canvas border-hairline p-xxs rounded-sm">
             <div className="divide-y divide-hairline">
               {team.repositories?.map((repo: any) => (
                 <div key={repo.id} className="flex items-center justify-between p-md">
                   <div className="flex flex-col">
                     <Link
                       href={`/${orgSlug}/${repo.name}`}
-                      className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent hover:underline"
+                      className="font-sans font-bold text-sm text-ink hover:text-primary hover:underline"
                     >
                       {repo.name}
                     </Link>
-                    <span className="font-mono text-[10px] text-text-muted">
+                    <span className="font-mono text-[10px] text-body">
                       {repo.isPrivate ? "Private" : "Public"}
                     </span>
                   </div>
@@ -394,7 +394,7 @@ export default function TeamDetailPage() {
               ))}
 
               {(!team.repositories || team.repositories.length === 0) && (
-                <div className="p-xl text-center font-inter text-text-muted text-sm">
+                <div className="p-xl text-center font-sans text-body text-sm">
                   This team doesn't have access to any repositories yet.
                 </div>
               )}
@@ -428,13 +428,13 @@ export default function TeamDetailPage() {
       >
         <form onSubmit={handleAddMember} className="flex flex-col gap-md py-xs">
           {addMemberError && (
-            <div className="p-xs bg-danger/10 border border-danger text-danger text-xs rounded-sm font-inter">
+            <div className="p-xs bg-error/10 border border-error text-error text-xs rounded-sm font-sans">
               {addMemberError}
             </div>
           )}
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="select-user" className="text-text-muted text-xs">
+            <Label htmlFor="select-user" className="text-body text-xs">
               Select Organization Member
             </Label>
             <Select
@@ -453,7 +453,7 @@ export default function TeamDetailPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="team-role" className="text-text-muted text-xs">
+            <Label htmlFor="team-role" className="text-body text-xs">
               Team Role
             </Label>
             <Select
@@ -494,13 +494,13 @@ export default function TeamDetailPage() {
       >
         <form onSubmit={handleGrantRepoAccess} className="flex flex-col gap-md py-xs">
           {grantRepoError && (
-            <div className="p-xs bg-danger/10 border border-danger text-danger text-xs rounded-sm font-inter">
+            <div className="p-xs bg-error/10 border border-error text-error text-xs rounded-sm font-sans">
               {grantRepoError}
             </div>
           )}
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="select-repo" className="text-text-muted text-xs">
+            <Label htmlFor="select-repo" className="text-body text-xs">
               Select Repository
             </Label>
             <Select
@@ -519,7 +519,7 @@ export default function TeamDetailPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="repo-permission" className="text-text-muted text-xs">
+            <Label htmlFor="repo-permission" className="text-body text-xs">
               Permission Level
             </Label>
             <Select
@@ -552,7 +552,7 @@ export default function TeamDetailPage() {
               variant="primary-sm"
               onClick={handleDeleteTeam}
               disabled={isDeletingTeam}
-              className="bg-danger text-white hover:bg-danger/90 flex items-center gap-xxs"
+              className="bg-error text-white hover:bg-error/90 flex items-center gap-xxs"
             >
               {isDeletingTeam && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Delete team
@@ -560,7 +560,7 @@ export default function TeamDetailPage() {
           </div>
         }
       >
-        <div className="text-sm text-text-muted font-inter leading-relaxed">
+        <div className="text-sm text-body font-sans leading-relaxed">
           Deleting this team will immediately remove all repository access grants associated with it. Subteams will become top-level teams.
         </div>
       </Modal>
@@ -580,7 +580,7 @@ export default function TeamDetailPage() {
               variant="primary-sm"
               onClick={handleRemoveMember}
               disabled={isRemovingMember}
-              className="bg-danger text-white hover:bg-danger/90 flex items-center gap-xxs"
+              className="bg-error text-white hover:bg-error/90 flex items-center gap-xxs"
             >
               {isRemovingMember && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Remove member
@@ -588,7 +588,7 @@ export default function TeamDetailPage() {
           </div>
         }
       >
-        <div className="text-sm text-text-muted font-inter leading-relaxed">
+        <div className="text-sm text-body font-sans leading-relaxed">
           The user will lose any repository permissions granted to them specifically through this team's membership.
         </div>
       </Modal>

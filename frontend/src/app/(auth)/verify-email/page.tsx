@@ -49,8 +49,8 @@ function VerifyEmailContent() {
   }, [token]);
 
   return (
-    <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-      <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+    <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+      <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
         <div>Auth-Step: verify-email</div>
         <div>
           State:{" "}
@@ -64,10 +64,10 @@ function VerifyEmailContent() {
 
       {state === "pending" && (
         <div className="text-left">
-          <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight">
+          <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight">
             Verifying your email
           </h1>
-          <p className="font-inter text-text-muted text-sm mb-md animate-pulse">
+          <p className="font-sans text-body text-sm mb-md animate-pulse">
             Validating your account activation token. Please wait...
           </p>
           <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
@@ -76,15 +76,15 @@ function VerifyEmailContent() {
 
       {state === "success" && (
         <div className="text-left">
-          <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight text-success">
+          <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight text-success">
             Email Verified
           </h1>
-          <p className="font-inter text-text-muted text-sm mb-md">
+          <p className="font-sans text-body text-sm mb-md">
             Thank you! Your email address has been successfully verified. You can now access your dashboard.
           </p>
           <Link
             href="/login"
-            className="inline-block w-full text-center text-sm font-medium bg-accent hover:bg-accent/90 text-white py-sm px-md rounded-sm transition-colors focus:ring-2 focus:ring-accent"
+            className="inline-block w-full text-center text-sm font-medium bg-primary hover:bg-primary/90 text-white py-sm px-md rounded-sm transition-colors focus:ring-2 focus:ring-primary-focus"
           >
             Continue to Sign In
           </Link>
@@ -93,22 +93,22 @@ function VerifyEmailContent() {
 
       {state === "error" && (
         <div className="text-left">
-          <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight text-danger">
+          <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight text-error">
             Verification Failed
           </h1>
-          <p className="font-inter text-text-muted text-sm mb-md">
+          <p className="font-sans text-body text-sm mb-md">
             {errorMessage || "An unexpected error occurred during verification."}
           </p>
           <div className="flex flex-col gap-sm">
             <Link
               href="/signup"
-              className="inline-block w-full text-center text-sm font-medium bg-border hover:bg-border/80 text-text-primary py-xs px-md rounded-sm transition-colors"
+              className="inline-block w-full text-center text-sm font-medium bg-border hover:bg-border/80 text-ink py-xs px-md rounded-sm transition-colors"
             >
               Sign Up Again
             </Link>
             <Link
               href="/login"
-              className="inline-block w-full text-center text-sm font-medium text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-sm"
+              className="inline-block w-full text-center text-sm font-medium text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary-focus rounded-sm"
             >
               Return to Sign In
             </Link>
@@ -122,12 +122,12 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
   return (
     <Suspense fallback={
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+        <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
           <div>Auth-Step: verify-email</div>
           <div>State: loading</div>
         </div>
-        <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight">Verifying...</h1>
+        <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight">Verifying...</h1>
       </Card>
     }>
       <VerifyEmailContent />

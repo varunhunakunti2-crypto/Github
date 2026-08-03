@@ -123,33 +123,33 @@ export default function NewOrganizationPage() {
       <div className="mb-xl">
         <Link
           href="/"
-          className="inline-flex items-center gap-xs font-sans text-xs text-text-muted hover:text-accent transition-colors"
+          className="inline-flex items-center gap-xs font-sans text-xs text-body hover:text-primary transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Home
         </Link>
       </div>
 
-      <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
         <div>Phase 20: Organization Creation</div>
         <div>Creator automatically becomes OWNER</div>
       </div>
 
-      <Card className="bg-surface border-border text-text-primary p-xl rounded-sm shadow-none flex flex-col gap-lg">
+      <Card className="bg-canvas-soft border-hairline text-ink p-xl rounded-sm shadow-none flex flex-col gap-lg">
         <div className="flex items-center gap-sm">
-          <Building className="w-8 h-8 text-accent shrink-0" />
+          <Building className="w-8 h-8 text-primary shrink-0" />
           <div>
-            <h1 className="font-space-grotesk text-2xl font-bold tracking-tight">
+            <h1 className="font-sans text-2xl font-bold tracking-tight">
               Create a new organization
             </h1>
-            <p className="font-inter text-text-muted text-xs">
+            <p className="font-sans text-body text-xs">
               Collaborate on repositories, manage teams, and set up billing.
             </p>
           </div>
         </div>
 
         {globalError && (
-          <div className="p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter flex items-center gap-sm">
+          <div className="p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans flex items-center gap-sm">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{globalError}</span>
           </div>
@@ -157,7 +157,7 @@ export default function NewOrganizationPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-md">
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="org-name" className="text-text-muted font-space-grotesk text-xs">
+            <Label htmlFor="org-name" className="text-body font-sans text-xs">
               Organization Name
             </Label>
             <Input
@@ -172,7 +172,7 @@ export default function NewOrganizationPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="org-slug" className="text-text-muted font-space-grotesk text-xs">
+            <Label htmlFor="org-slug" className="text-body font-sans text-xs">
               Organization Slug (URL identifier)
             </Label>
             <div className="relative">
@@ -188,25 +188,25 @@ export default function NewOrganizationPage() {
                 className="pr-xl"
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                {isCheckingSlug && <Loader2 className="w-4 h-4 text-text-muted animate-spin" />}
+                {isCheckingSlug && <Loader2 className="w-4 h-4 text-body animate-spin" />}
                 {!isCheckingSlug && slugAvailable && <CheckCircle className="w-4 h-4 text-success" />}
-                {!isCheckingSlug && slugError && <AlertCircle className="w-4 h-4 text-danger" />}
+                {!isCheckingSlug && slugError && <AlertCircle className="w-4 h-4 text-error" />}
               </div>
             </div>
             {slugError && (
-              <span className="font-inter text-[11px] text-danger mt-1 leading-relaxed">
+              <span className="font-sans text-[11px] text-error mt-1 leading-relaxed">
                 {slugError}
               </span>
             )}
             {!slugError && slugAvailable && (
-              <span className="font-inter text-[11px] text-success mt-1 leading-relaxed">
+              <span className="font-sans text-[11px] text-success mt-1 leading-relaxed">
                 Slug is available! Your organization will be at: gitforge.dev/orgs/{slug}
               </span>
             )}
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="billing-email" className="text-text-muted font-space-grotesk text-xs">
+            <Label htmlFor="billing-email" className="text-body font-sans text-xs">
               Billing Email (Separate from your personal email)
             </Label>
             <Input

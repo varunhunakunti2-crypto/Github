@@ -58,8 +58,8 @@ export default function NotificationsSettingsPage() {
   if (isLoading) {
     return (
       <div className="max-w-[600px] mx-auto p-md space-y-md text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-accent mx-auto" />
-        <span className="font-inter text-xs text-text-muted">Loading preferences...</span>
+        <Loader2 className="w-6 h-6 animate-spin text-primary mx-auto" />
+        <span className="font-sans text-xs text-body">Loading preferences...</span>
       </div>
     );
   }
@@ -67,16 +67,16 @@ export default function NotificationsSettingsPage() {
   return (
     <div className="max-w-[600px] mx-auto p-md md:p-xl space-y-md">
       <div>
-        <h1 className="font-space-grotesk text-xl font-bold text-text-primary">Notification Settings</h1>
-        <p className="font-inter text-xs text-text-muted">Configure how and when you receive transactional notifications</p>
+        <h1 className="font-sans text-xl font-bold text-ink">Notification Settings</h1>
+        <p className="font-sans text-xs text-body">Configure how and when you receive transactional notifications</p>
       </div>
 
-      <div className="bg-surface border border-border rounded-sm p-md space-y-md shadow-sm">
+      <div className="bg-canvas-soft border border-hairline rounded-sm p-md space-y-md shadow-sm">
         <div className="space-y-sm">
-          <label className="font-sans font-bold text-xs text-text-primary block">
+          <label className="font-sans font-bold text-xs text-ink block">
             Email Notifications Frequency
           </label>
-          <p className="font-inter text-xs text-text-muted">
+          <p className="font-sans text-xs text-body">
             Choose if and how often GitForge sends updates to your registered email address.
           </p>
         </div>
@@ -103,8 +103,8 @@ export default function NotificationsSettingsPage() {
               key={opt.value}
               className={`p-sm rounded-sm border cursor-pointer flex items-start gap-sm transition-colors ${
                 preference === opt.value
-                  ? "border-accent bg-accent-soft/10 text-text-primary"
-                  : "border-border hover:border-text-muted text-text-muted hover:text-text-primary"
+                  ? "border-accent bg-primary-soft/10 text-ink"
+                  : "border-hairline hover:border-text-muted text-body hover:text-ink"
               }`}
             >
               <input
@@ -116,7 +116,7 @@ export default function NotificationsSettingsPage() {
               />
               <div className="space-y-xxs">
                 <span className="font-sans font-bold text-xs block">{opt.label}</span>
-                <span className="font-inter text-xs text-text-muted block">{opt.desc}</span>
+                <span className="font-sans text-xs text-body block">{opt.desc}</span>
               </div>
             </label>
           ))}
@@ -124,7 +124,7 @@ export default function NotificationsSettingsPage() {
 
         <div className="flex justify-between items-center pt-sm border-t border-hairline">
           {saveSuccess ? (
-            <span className="font-inter text-xs text-success flex items-center gap-xs font-semibold">
+            <span className="font-sans text-xs text-success flex items-center gap-xs font-semibold">
               <Check className="w-4 h-4" /> Preferences saved!
             </span>
           ) : (
@@ -134,7 +134,7 @@ export default function NotificationsSettingsPage() {
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="font-sans text-xs bg-accent hover:bg-accent-hover text-white font-semibold px-md py-xs rounded-sm transition-colors disabled:opacity-50 flex items-center gap-xs"
+            className="font-sans text-xs bg-primary hover:bg-primary-hover text-white font-semibold px-md py-xs rounded-sm transition-colors disabled:opacity-50 flex items-center gap-xs"
           >
             {isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             Save Changes

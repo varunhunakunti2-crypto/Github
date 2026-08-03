@@ -167,13 +167,13 @@ export default function NewRepositoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter">
+    <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans">
       <div className="max-w-[620px] mx-auto flex flex-col gap-lg text-left">
         
         {/* Back Link */}
         <Link
           href="/appi"
-          className="flex items-center gap-xs text-xs text-text-muted hover:text-text-primary self-start font-space-grotesk focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+          className="flex items-center gap-xs text-xs text-body hover:text-ink self-start font-sans focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus rounded-sm"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to dashboard
@@ -181,35 +181,35 @@ export default function NewRepositoryPage() {
 
         {/* Header */}
         <div>
-          <h1 className="font-space-grotesk text-3xl font-bold tracking-tight mb-xs">
+          <h1 className="font-sans text-3xl font-bold tracking-tight mb-xs">
             Create a new repository
           </h1>
-          <p className="text-text-muted text-sm font-inter">
+          <p className="text-body text-sm font-sans">
             A repository contains all project files, including the revision history.
           </p>
         </div>
 
         {globalError && (
-          <div className="p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter flex items-center gap-sm">
+          <div className="p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans flex items-center gap-sm">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{globalError}</span>
           </div>
         )}
 
-        <Card className="bg-surface border-border p-lg rounded-sm shadow-none">
+        <Card className="bg-canvas-soft border-hairline p-lg rounded-sm shadow-none">
           <form onSubmit={handleSubmit} className="flex flex-col gap-md" noValidate>
             
             {/* Owner & Repository Name Row */}
             <div className="flex flex-col md:flex-row gap-sm md:items-end">
               <div className="w-full md:w-1/3 flex flex-col gap-xs">
-                <Label htmlFor="owner" className="text-text-muted font-space-grotesk">
+                <Label htmlFor="owner" className="text-body font-sans">
                   Owner
                 </Label>
                 <select
                   id="owner"
                   value={owner}
                   onChange={(e) => setOwner(e.target.value)}
-                  className="bg-base border-border text-text-primary p-[7px] border rounded-sm font-space-grotesk text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="bg-canvas-soft-2 border-hairline text-ink p-[7px] border rounded-sm font-sans text-xs outline-none focus:border-accent focus:ring-1 focus:ring-primary-focus"
                 >
                   {owners.map((o) => (
                     <option key={o} value={o}>
@@ -219,12 +219,12 @@ export default function NewRepositoryPage() {
                 </select>
               </div>
 
-              <div className="text-xl text-text-muted self-center hidden md:block select-none mb-xxs">
+              <div className="text-xl text-body self-center hidden md:block select-none mb-xxs">
                 /
               </div>
 
               <div className="w-full md:w-2/3 flex flex-col gap-xs">
-                <Label htmlFor="name" className="text-text-muted font-space-grotesk">
+                <Label htmlFor="name" className="text-body font-sans">
                   Repository name
                 </Label>
                 <div className="relative">
@@ -234,11 +234,11 @@ export default function NewRepositoryPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="my-awesome-project"
-                    className="bg-base border-border text-text-primary placeholder:text-text-muted/40 font-jetbrains-mono focus:border-accent focus:ring-1 focus:ring-accent rounded-sm pr-lg"
+                    className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 font-jetbrains-mono focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm pr-lg"
                     error={!!nameError}
                   />
                   {isCheckingName && (
-                    <span className="absolute right-xs top-1/2 -translate-y-1/2 text-[10px] text-text-muted animate-pulse font-mono select-none">
+                    <span className="absolute right-xs top-1/2 -translate-y-1/2 text-[10px] text-body animate-pulse font-mono select-none">
                       checking...
                     </span>
                   )}
@@ -248,7 +248,7 @@ export default function NewRepositoryPage() {
 
             {/* Name error block */}
             {nameError && (
-              <span className="text-danger text-xs font-inter flex items-center gap-xxs mt-xxs">
+              <span className="text-error text-xs font-sans flex items-center gap-xxs mt-xxs">
                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                 {nameError}
               </span>
@@ -256,21 +256,21 @@ export default function NewRepositoryPage() {
 
             {/* Description (Optional) */}
             <div className="flex flex-col gap-xs mt-xs">
-              <Label htmlFor="description" className="text-text-muted font-space-grotesk">
-                Description <span className="text-[10px] font-mono text-text-muted/60">(optional)</span>
+              <Label htmlFor="description" className="text-body font-sans">
+                Description <span className="text-[10px] font-mono text-body/60">(optional)</span>
               </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Brief summary of your repository..."
-                className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
+                className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm"
               />
             </div>
 
             {/* Visibility Settings (Radio Cards) */}
             <div className="flex flex-col gap-xs mt-xs">
-              <Label className="text-text-muted font-space-grotesk mb-xxs">
+              <Label className="text-body font-sans mb-xxs">
                 Visibility
               </Label>
               
@@ -281,14 +281,14 @@ export default function NewRepositoryPage() {
                   onClick={() => setVisibility("public")}
                   className={`p-md border rounded-sm cursor-pointer transition-all flex items-start gap-sm select-none ${
                     visibility === "public"
-                      ? "border-accent bg-accent/5"
-                      : "border-border bg-base hover:bg-surface/60"
+                      ? "border-accent bg-primary/5"
+                      : "border-hairline bg-canvas-soft-2 hover:bg-canvas-soft/60"
                   }`}
                 >
-                  <Globe className={`w-5 h-5 shrink-0 mt-xxs ${visibility === "public" ? "text-accent" : "text-text-muted"}`} />
+                  <Globe className={`w-5 h-5 shrink-0 mt-xxs ${visibility === "public" ? "text-primary" : "text-body"}`} />
                   <div className="flex flex-col gap-xxs">
-                    <span className="font-space-grotesk font-bold text-xs">Public</span>
-                    <span className="text-[10px] text-text-muted leading-relaxed">
+                    <span className="font-sans font-bold text-xs">Public</span>
+                    <span className="text-[10px] text-body leading-relaxed">
                       Anyone on the internet can see this repository. You choose who can commit.
                     </span>
                   </div>
@@ -299,14 +299,14 @@ export default function NewRepositoryPage() {
                   onClick={() => setVisibility("private")}
                   className={`p-md border rounded-sm cursor-pointer transition-all flex items-start gap-sm select-none ${
                     visibility === "private"
-                      ? "border-accent bg-accent/5"
-                      : "border-border bg-base hover:bg-surface/60"
+                      ? "border-accent bg-primary/5"
+                      : "border-hairline bg-canvas-soft-2 hover:bg-canvas-soft/60"
                   }`}
                 >
-                  <Lock className={`w-5 h-5 shrink-0 mt-xxs ${visibility === "private" ? "text-accent" : "text-text-muted"}`} />
+                  <Lock className={`w-5 h-5 shrink-0 mt-xxs ${visibility === "private" ? "text-primary" : "text-body"}`} />
                   <div className="flex flex-col gap-xxs">
-                    <span className="font-space-grotesk font-bold text-xs">Private</span>
-                    <span className="text-[10px] text-text-muted leading-relaxed">
+                    <span className="font-sans font-bold text-xs">Private</span>
+                    <span className="text-[10px] text-body leading-relaxed">
                       You choose who can see and commit to this repository.
                     </span>
                   </div>
@@ -316,18 +316,18 @@ export default function NewRepositoryPage() {
             </div>
 
             {/* Initialization Settings */}
-            <div className="border-t border-border pt-md mt-sm flex flex-col gap-sm">
-              <h3 className="font-space-grotesk text-xs font-bold text-text-muted uppercase tracking-wider select-none">
+            <div className="border-t border-hairline pt-md mt-sm flex flex-col gap-sm">
+              <h3 className="font-sans text-xs font-bold text-body uppercase tracking-wider select-none">
                 Initialize this repository with:
               </h3>
 
               {/* README Checkbox */}
-              <label className="flex items-center gap-xs cursor-pointer select-none font-inter text-xs">
+              <label className="flex items-center gap-xs cursor-pointer select-none font-sans text-xs">
                 <input
                   type="checkbox"
                   checked={autoInit}
                   onChange={(e) => setAutoInit(e.target.checked)}
-                  className="rounded-xs accent-accent border-border focus:ring-accent"
+                  className="rounded-xs accent-accent border-hairline focus:ring-primary-focus"
                 />
                 <span>Add a README file</span>
               </label>
@@ -335,14 +335,14 @@ export default function NewRepositoryPage() {
               {/* .gitignore Templates */}
               <div className="flex flex-col sm:flex-row gap-sm">
                 <div className="w-full sm:w-1/2 flex flex-col gap-xs">
-                  <Label htmlFor="gitignore" className="text-text-muted font-space-grotesk text-xs">
+                  <Label htmlFor="gitignore" className="text-body font-sans text-xs">
                     Add .gitignore template
                   </Label>
                   <select
                     id="gitignore"
                     value={gitignoreTemplate}
                     onChange={(e) => setGitignoreTemplate(e.target.value)}
-                    className="bg-base border-border text-text-primary p-xs border rounded-sm font-space-grotesk text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                    className="bg-canvas-soft-2 border-hairline text-ink p-xs border rounded-sm font-sans text-xs outline-none focus:border-accent focus:ring-1 focus:ring-primary-focus"
                   >
                     <option value="None">None</option>
                     <option value="Node">Node</option>
@@ -354,14 +354,14 @@ export default function NewRepositoryPage() {
 
                 {/* Licenses */}
                 <div className="w-full sm:w-1/2 flex flex-col gap-xs">
-                  <Label htmlFor="license" className="text-text-muted font-space-grotesk text-xs">
+                  <Label htmlFor="license" className="text-body font-sans text-xs">
                     Choose a license
                   </Label>
                   <select
                     id="license"
                     value={licenseTemplate}
                     onChange={(e) => setLicenseTemplate(e.target.value)}
-                    className="bg-base border-border text-text-primary p-xs border rounded-sm font-space-grotesk text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                    className="bg-canvas-soft-2 border-hairline text-ink p-xs border rounded-sm font-sans text-xs outline-none focus:border-accent focus:ring-1 focus:ring-primary-focus"
                   >
                     <option value="None">None</option>
                     <option value="MIT">MIT License</option>
@@ -373,11 +373,11 @@ export default function NewRepositoryPage() {
             </div>
 
             {/* Form Actions */}
-            <div className="border-t border-border pt-md mt-sm flex gap-sm justify-end">
+            <div className="border-t border-hairline pt-md mt-sm flex gap-sm justify-end">
               <Link href="/appi">
                 <Button
                   type="button"
-                  className="bg-transparent hover:bg-surface border border-border text-text-primary py-xs px-md rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:ring-2 focus:ring-accent outline-none"
+                  className="bg-transparent hover:bg-canvas-soft border border-hairline text-ink py-xs px-md rounded-sm font-sans font-semibold text-xs transition-colors focus:ring-2 focus:ring-primary-focus outline-none"
                 >
                   Cancel
                 </Button>
@@ -386,7 +386,7 @@ export default function NewRepositoryPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting || !!nameError}
-                className="bg-accent hover:bg-accent/90 text-white py-xs px-md rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:ring-2 focus:ring-accent outline-none disabled:opacity-50"
+                className="bg-primary hover:bg-primary/90 text-white py-xs px-md rounded-sm font-sans font-semibold text-xs transition-colors focus:ring-2 focus:ring-primary-focus outline-none disabled:opacity-50"
               >
                 {isSubmitting ? "Creating..." : "Create repository"}
               </Button>

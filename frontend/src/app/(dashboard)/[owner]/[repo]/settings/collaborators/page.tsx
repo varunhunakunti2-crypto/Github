@@ -205,17 +205,17 @@ export default function CollaboratorsPage({ params }: PageProps) {
   // Access Control: Block rendering if user is not admin
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter flex justify-center items-center">
-        <Card className="max-w-[500px] bg-surface border-border p-lg text-center flex flex-col items-center gap-sm">
-          <ShieldAlert className="w-10 h-10 text-danger" />
-          <h2 className="font-space-grotesk text-lg font-bold text-text-primary">
+      <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans flex justify-center items-center">
+        <Card className="max-w-[500px] bg-canvas-soft border-hairline p-lg text-center flex flex-col items-center gap-sm">
+          <ShieldAlert className="w-10 h-10 text-error" />
+          <h2 className="font-sans text-lg font-bold text-ink">
             Access denied
           </h2>
-          <p className="font-inter text-text-muted text-xs leading-relaxed">
+          <p className="font-sans text-body text-xs leading-relaxed">
             You do not have administrative permissions to configure collaborators for this repository. Please contact the repository owner.
           </p>
           <Link href={`/${owner}/${repo}`}>
-            <Button className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold text-xs py-xs px-md rounded-sm mt-xs">
+            <Button className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold text-xs py-xs px-md rounded-sm mt-xs">
               Back to repository
             </Button>
           </Link>
@@ -226,23 +226,23 @@ export default function CollaboratorsPage({ params }: PageProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter animate-pulse flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans animate-pulse flex flex-col justify-center items-center">
         <div className="w-full max-w-[620px] flex flex-col gap-md">
-          <div className="h-6 bg-surface border border-border rounded-sm w-36"></div>
-          <div className="h-48 bg-surface border border-border rounded-sm w-full"></div>
+          <div className="h-6 bg-canvas-soft border border-hairline rounded-sm w-36"></div>
+          <div className="h-48 bg-canvas-soft border border-hairline rounded-sm w-full"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter">
+    <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans">
       <div className="max-w-[620px] mx-auto flex flex-col gap-lg text-left">
         
         {/* Back Link */}
         <Link
           href={`/${owner}/${repo}/settings`}
-          className="flex items-center gap-xs text-xs text-text-muted hover:text-text-primary self-start font-space-grotesk focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+          className="flex items-center gap-xs text-xs text-body hover:text-ink self-start font-sans focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus rounded-sm"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to settings
@@ -250,17 +250,17 @@ export default function CollaboratorsPage({ params }: PageProps) {
 
         {/* Title */}
         <div>
-          <h1 className="font-space-grotesk text-3xl font-bold tracking-tight mb-xs">
+          <h1 className="font-sans text-3xl font-bold tracking-tight mb-xs">
             Collaborators
           </h1>
-          <p className="text-text-muted text-sm font-inter">
+          <p className="text-body text-sm font-sans">
             Invite and manage access permissions for developers collaborating on this project.
           </p>
         </div>
 
         {/* Success Alert */}
         {successMsg && (
-          <div className="p-sm bg-success/10 border border-success text-success text-sm rounded-sm font-inter flex items-center gap-sm">
+          <div className="p-sm bg-success/10 border border-success text-success text-sm rounded-sm font-sans flex items-center gap-sm">
             <CheckCircle className="w-5 h-5 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -268,22 +268,22 @@ export default function CollaboratorsPage({ params }: PageProps) {
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter flex items-center gap-sm">
+          <div className="p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans flex items-center gap-sm">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* 1. ADD COLLABORATOR CARD */}
-        <Card className="bg-surface border-border p-md flex flex-col gap-sm rounded-sm">
-          <h2 className="font-space-grotesk text-sm font-bold text-text-primary">
+        <Card className="bg-canvas-soft border-hairline p-md flex flex-col gap-sm rounded-sm">
+          <h2 className="font-sans text-sm font-bold text-ink">
             Invite collaborator
           </h2>
 
           <form onSubmit={handleAddCollaborator} className="flex flex-col gap-sm mt-xs">
             <div className="flex flex-col sm:flex-row gap-sm sm:items-end">
               <div className="flex-1 flex flex-col gap-xs">
-                <Label htmlFor="username" className="text-text-muted font-space-grotesk text-xs">
+                <Label htmlFor="username" className="text-body font-sans text-xs">
                   Username or email
                 </Label>
                 <Input
@@ -292,20 +292,20 @@ export default function CollaboratorsPage({ params }: PageProps) {
                   placeholder="e.g. sarah_chen"
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-                  className="bg-base border-border text-text-primary font-space-grotesk focus:border-accent focus:ring-1 focus:ring-accent rounded-sm text-xs py-[5px]"
+                  className="bg-canvas-soft-2 border-hairline text-ink font-sans focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm text-xs py-[5px]"
                   disabled={isActionPending}
                 />
               </div>
 
               <div className="w-full sm:w-[140px] flex flex-col gap-xs">
-                <Label htmlFor="role" className="text-text-muted font-space-grotesk text-xs">
+                <Label htmlFor="role" className="text-body font-sans text-xs">
                   Role
                 </Label>
                 <select
                   id="role"
                   value={newRole}
                   onChange={(e: any) => setNewRole(e.target.value)}
-                  className="bg-base border-border text-text-primary p-[7px] border rounded-sm font-space-grotesk text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                  className="bg-canvas-soft-2 border-hairline text-ink p-[7px] border rounded-sm font-sans text-xs outline-none focus:border-accent focus:ring-1 focus:ring-primary-focus"
                 >
                   <option value="read">Read</option>
                   <option value="triage">Triage</option>
@@ -318,7 +318,7 @@ export default function CollaboratorsPage({ params }: PageProps) {
               <Button
                 type="submit"
                 disabled={isActionPending || !newUsername}
-                className="bg-accent hover:bg-accent/90 text-white py-xs px-md rounded-sm font-space-grotesk font-semibold text-xs transition-colors shrink-0 disabled:opacity-50 flex items-center gap-xs"
+                className="bg-primary hover:bg-primary/90 text-white py-xs px-md rounded-sm font-sans font-semibold text-xs transition-colors shrink-0 disabled:opacity-50 flex items-center gap-xs"
               >
                 <UserPlus className="w-3.5 h-3.5" />
                 Invite
@@ -328,9 +328,9 @@ export default function CollaboratorsPage({ params }: PageProps) {
         </Card>
 
         {/* 2. COLLABORATORS LIST CARD */}
-        <Card className="bg-surface border-border rounded-sm overflow-hidden shadow-none">
-          <div className="bg-base border-b border-border px-md py-sm flex items-center">
-            <h3 className="font-space-grotesk text-xs font-bold text-text-muted uppercase tracking-wider">
+        <Card className="bg-canvas-soft border-hairline rounded-sm overflow-hidden shadow-none">
+          <div className="bg-canvas-soft-2 border-b border-hairline px-md py-sm flex items-center">
+            <h3 className="font-sans text-xs font-bold text-body uppercase tracking-wider">
               Manage Access
             </h3>
           </div>
@@ -339,12 +339,12 @@ export default function CollaboratorsPage({ params }: PageProps) {
             {collaborators.map((collab) => (
               <div
                 key={collab.id}
-                className="p-md flex justify-between items-center gap-md hover:bg-base/20 transition-all"
+                className="p-md flex justify-between items-center gap-md hover:bg-canvas-soft-2/20 transition-all"
               >
                 {/* User avatar and name */}
                 <div className="flex items-center gap-sm">
                   <Avatar src={collab.avatar_url} name={collab.username} size="sm" />
-                  <span className="font-space-grotesk font-bold text-sm text-text-primary">
+                  <span className="font-sans font-bold text-sm text-ink">
                     @{collab.username}
                   </span>
                 </div>
@@ -355,7 +355,7 @@ export default function CollaboratorsPage({ params }: PageProps) {
                     value={collab.role}
                     onChange={(e) => handleRoleChange(collab.username, e.target.value)}
                     disabled={isActionPending || collab.username === "appi"} // Don't let users edit own admin role here
-                    className="bg-base border-border text-text-primary p-xxs border rounded-sm font-space-grotesk text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:opacity-50"
+                    className="bg-canvas-soft-2 border-hairline text-ink p-xxs border rounded-sm font-sans text-xs outline-none focus:border-accent focus:ring-1 focus:ring-primary-focus disabled:opacity-50"
                   >
                     <option value="read">Read</option>
                     <option value="triage">Triage</option>
@@ -367,7 +367,7 @@ export default function CollaboratorsPage({ params }: PageProps) {
                   <button
                     onClick={() => handleRemoveCollaborator(collab.username)}
                     disabled={isActionPending || collab.username === "appi"}
-                    className="p-xs text-text-muted hover:text-danger hover:bg-danger/10 border border-transparent rounded-sm transition-all outline-none focus:ring-1 focus:ring-accent disabled:opacity-30 disabled:pointer-events-none"
+                    className="p-xs text-body hover:text-error hover:bg-error/10 border border-transparent rounded-sm transition-all outline-none focus:ring-1 focus:ring-primary-focus disabled:opacity-30 disabled:pointer-events-none"
                     aria-label={`Remove collaborator ${collab.username}`}
                   >
                     <Trash2 className="w-4 h-4 shrink-0" />
@@ -380,10 +380,10 @@ export default function CollaboratorsPage({ params }: PageProps) {
 
         {/* 3. PENDING INVITATIONS CARD */}
         {pendingInvites.length > 0 && (
-          <Card className="bg-surface border-border rounded-sm overflow-hidden shadow-none">
-            <div className="bg-base border-b border-border px-md py-sm flex items-center">
-              <h3 className="font-space-grotesk text-xs font-bold text-text-muted uppercase tracking-wider flex items-center gap-xxs">
-                <Clock className="w-3.5 h-3.5 text-text-muted" />
+          <Card className="bg-canvas-soft border-hairline rounded-sm overflow-hidden shadow-none">
+            <div className="bg-canvas-soft-2 border-b border-hairline px-md py-sm flex items-center">
+              <h3 className="font-sans text-xs font-bold text-body uppercase tracking-wider flex items-center gap-xxs">
+                <Clock className="w-3.5 h-3.5 text-body" />
                 <span>Pending Invitations</span>
               </h3>
             </div>
@@ -392,21 +392,21 @@ export default function CollaboratorsPage({ params }: PageProps) {
               {pendingInvites.map((invite) => (
                 <div
                   key={invite.username}
-                  className="p-md flex justify-between items-center gap-md hover:bg-base/20 transition-all"
+                  className="p-md flex justify-between items-center gap-md hover:bg-canvas-soft-2/20 transition-all"
                 >
                   <div className="flex items-center gap-sm">
                     <Avatar name={invite.username} size="sm" />
                     <div className="flex flex-col text-left">
-                      <span className="font-space-grotesk font-bold text-sm text-text-primary">
+                      <span className="font-sans font-bold text-sm text-ink">
                         @{invite.username}
                       </span>
-                      <span className="text-[9px] font-mono text-text-muted">
+                      <span className="text-[9px] font-mono text-body">
                         Invited on {new Date(invite.sentAt).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
 
-                  <span className="font-mono text-[9px] px-xs py-xxs bg-base border border-border text-text-muted rounded-full uppercase">
+                  <span className="font-mono text-[9px] px-xs py-xxs bg-canvas-soft-2 border border-hairline text-body rounded-full uppercase">
                     {invite.role} - Pending
                   </span>
                 </div>

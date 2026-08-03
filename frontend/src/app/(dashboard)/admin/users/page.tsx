@@ -152,7 +152,7 @@ export default function AdminUsersPage() {
       {isLoading ? (
         <div className="text-center py-xl text-gray-400">Loading user database...</div>
       ) : error ? (
-        <div className="p-md bg-danger/10 border border-danger text-danger text-sm rounded-sm">{error}</div>
+        <div className="p-md bg-error/10 border border-error text-error text-sm rounded-sm">{error}</div>
       ) : (
         <div className="flex flex-col gap-sm">
           {users.map((userRecord) => (
@@ -167,7 +167,7 @@ export default function AdminUsersPage() {
                     </span>
                   )}
                   {userRecord.isSuspended && (
-                    <span className="bg-danger/20 text-danger border border-danger/30 text-[9px] px-xs font-bold uppercase rounded-sm">
+                    <span className="bg-error/20 text-error border border-error/30 text-[9px] px-xs font-bold uppercase rounded-sm">
                       Suspended
                     </span>
                   )}
@@ -181,13 +181,13 @@ export default function AdminUsersPage() {
               <div className="flex gap-xs flex-wrap">
                 <Button
                   onClick={() => fetchAuditTrail(userRecord)}
-                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-border"
+                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-hairline"
                 >
                   Audit Trail
                 </Button>
                 <Button
                   onClick={() => setConfirmingAction({ type: "reset_password", user: userRecord })}
-                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-border"
+                  className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-xs py-xxs rounded-sm border border-hairline"
                 >
                   Reset Pwd
                 </Button>
@@ -218,7 +218,7 @@ export default function AdminUsersPage() {
                 ) : (
                   <Button
                     onClick={() => setConfirmingAction({ type: "suspend", user: userRecord })}
-                    className="bg-transparent hover:bg-danger/10 text-danger border border-danger/20 text-xs px-xs py-xxs rounded-sm"
+                    className="bg-transparent hover:bg-error/10 text-error border border-error/20 text-xs px-xs py-xxs rounded-sm"
                   >
                     Suspend
                   </Button>
@@ -233,7 +233,7 @@ export default function AdminUsersPage() {
       {confirmingAction && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-md z-50">
           <Card className="bg-[#161B22] border-[#30363D] p-lg max-w-md w-full rounded-sm text-left flex flex-col gap-md">
-            <h3 className="font-space-grotesk font-bold text-md text-white">
+            <h3 className="font-sans font-bold text-md text-white">
               Confirm Action: {confirmingAction.type.replace("_", " ").toUpperCase()}
             </h3>
 
@@ -251,7 +251,7 @@ export default function AdminUsersPage() {
                     setConfirmingAction(null);
                     fetchUsers();
                   }}
-                  className="bg-accent text-white text-xs px-md py-xs rounded-sm w-full"
+                  className="bg-primary text-white text-xs px-md py-xs rounded-sm w-full"
                 >
                   Close & Refresh
                 </Button>
@@ -264,7 +264,7 @@ export default function AdminUsersPage() {
                 </p>
 
                 {(confirmingAction.type === "promote" || confirmingAction.type === "demote") && (
-                  <div className="bg-danger/10 border border-danger/20 p-sm rounded-sm text-xs text-danger flex flex-col gap-xs">
+                  <div className="bg-error/10 border border-error/20 p-sm rounded-sm text-xs text-error flex flex-col gap-xs">
                     <span className="font-bold">⚠️ CRITICAL PRIVILEGE ESCALATION NOTICE:</span>
                     <span>
                       Promoting or demoting a user to platform admin grants or revokes the highest levels of database access.
@@ -287,7 +287,7 @@ export default function AdminUsersPage() {
                       setConfirmingAction(null);
                       setPromoteConfirmCheck(false);
                     }}
-                    className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm"
+                    className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm"
                   >
                     Cancel
                   </Button>
@@ -298,7 +298,7 @@ export default function AdminUsersPage() {
                     }
                     className={`${
                       confirmingAction.type === "suspend" || confirmingAction.type === "demote"
-                        ? "bg-danger hover:bg-danger/90"
+                        ? "bg-error hover:bg-error/90"
                         : "bg-success hover:bg-success/90"
                     } text-white text-xs px-sm py-xxs rounded-sm`}
                   >
@@ -316,7 +316,7 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-end z-50">
           <div className="bg-[#161B22] border-l border-[#30363D] w-full max-w-lg h-full p-lg flex flex-col gap-md text-left overflow-y-auto">
             <div className="flex justify-between items-center border-b border-[#30363D] pb-xs">
-              <h3 className="font-space-grotesk font-bold text-md text-white">
+              <h3 className="font-sans font-bold text-md text-white">
                 Audit Trail: @{activeTrailUser.username}
               </h3>
               <Button

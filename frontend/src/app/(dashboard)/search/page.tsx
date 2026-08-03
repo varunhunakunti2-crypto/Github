@@ -112,7 +112,7 @@ function SearchResultsContent() {
       <>
         {parts.map((part, index) => 
           part.toLowerCase() === term.toLowerCase() ? (
-            <mark key={index} className="bg-warning/35 text-text-primary px-[2px] rounded-xs font-semibold">{part}</mark>
+            <mark key={index} className="bg-warning/35 text-ink px-[2px] rounded-xs font-semibold">{part}</mark>
           ) : part
         )}
       </>
@@ -125,7 +125,7 @@ function SearchResultsContent() {
     <div className="max-w-[1200px] mx-auto py-2xl px-lg flex flex-col gap-lg min-h-screen">
       {/* Page Header & Search Bar */}
       <div className="flex flex-col gap-md">
-        <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-text-primary">
+        <h1 className="font-sans text-2xl font-bold tracking-tight text-ink">
           Search Results
         </h1>
 
@@ -137,7 +137,7 @@ function SearchResultsContent() {
               placeholder="e.g. react language:typescript stars:>500"
               className="pl-lg"
             />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-text-muted">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-body">
               <Search className="w-4 h-4" />
             </div>
           </div>
@@ -148,7 +148,7 @@ function SearchResultsContent() {
       </div>
 
       {/* Tabs navigation bar */}
-      <div className="border-b border-border bg-canvas overflow-x-auto scrollbar-none flex">
+      <div className="border-b border-hairline bg-canvas overflow-x-auto scrollbar-none flex">
         <nav className="flex gap-xxs" aria-label="Search tabs">
           {[
             { id: "repositories", label: "Repositories", icon: Folder },
@@ -167,13 +167,13 @@ function SearchResultsContent() {
                 onClick={() => handleTabChange(tab.id)}
                 className={`font-sans text-xs font-semibold px-md h-[40px] flex items-center justify-center border-b-2 gap-xs whitespace-nowrap transition-all ${
                   isActive
-                    ? "border-accent text-accent font-bold"
-                    : "border-transparent text-text-muted hover:text-text-primary hover:border-border"
+                    ? "border-accent text-primary font-bold"
+                    : "border-transparent text-body hover:text-ink hover:border-hairline"
                 }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
-                <span className="px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-text-muted rounded-full font-mono">
+                <span className="px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-body rounded-full font-mono">
                   {count}
                 </span>
               </button>
@@ -185,22 +185,22 @@ function SearchResultsContent() {
       {/* Results Container */}
       <div className="flex-1 flex flex-col gap-md">
         {isLoading ? (
-          <div className="py-4xl text-center flex flex-col items-center gap-xs text-text-muted">
-            <Loader2 className="w-8 h-8 animate-spin text-accent" />
+          <div className="py-4xl text-center flex flex-col items-center gap-xs text-body">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
             <span>Searching GitForge...</span>
           </div>
         ) : error ? (
-          <div className="p-xl bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+          <div className="p-xl bg-error/10 border border-error text-error text-sm rounded-sm font-sans">
             {error}
           </div>
         ) : results.length === 0 ? (
           /* Empty state */
-          <Card className="bg-surface border-border p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[260px]">
-            <Search className="w-8 h-8 text-text-muted mb-sm" />
-            <h3 className="font-space-grotesk text-md font-semibold mb-xs text-text-primary">
+          <Card className="bg-canvas-soft border-hairline p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[260px]">
+            <Search className="w-8 h-8 text-body mb-sm" />
+            <h3 className="font-sans text-md font-semibold mb-xs text-ink">
               No results found
             </h3>
-            <p className="font-inter text-text-muted text-xs max-w-[380px] mb-md leading-relaxed">
+            <p className="font-sans text-body text-xs max-w-[380px] mb-md leading-relaxed">
               We couldn't find any matches for "{query}". 
               {hasQualifiers ? " Try removing filter qualifiers like language: or stars: to broaden your search." : " Try checking your spelling or using more general terms."}
             </p>
@@ -213,15 +213,15 @@ function SearchResultsContent() {
               results.map((r) => {
                 const owner = r.organization ? r.organization.slug : r.owner?.username;
                 return (
-                  <Card key={r.id} className="bg-surface border-border p-md rounded-sm hover:border-accent/40 transition-colors">
+                  <Card key={r.id} className="bg-canvas-soft border-hairline p-md rounded-sm hover:border-accent/40 transition-colors">
                     <div className="flex justify-between items-start gap-md">
                       <div>
-                        <Link href={`/${owner}/${r.name}`} className="font-space-grotesk font-bold text-sm text-accent hover:underline">
+                        <Link href={`/${owner}/${r.name}`} className="font-sans font-bold text-sm text-primary hover:underline">
                           {owner}/{r.name}
                         </Link>
-                        {r.description && <p className="font-inter text-text-muted text-xs mt-xs leading-relaxed">{r.description}</p>}
+                        {r.description && <p className="font-sans text-body text-xs mt-xs leading-relaxed">{r.description}</p>}
                       </div>
-                      <span className="text-[10px] font-mono text-text-muted px-xs py-[2px] bg-canvas border border-hairline rounded-full uppercase">
+                      <span className="text-[10px] font-mono text-body px-xs py-[2px] bg-canvas border border-hairline rounded-full uppercase">
                         {r.isPrivate ? "Private" : "Public"}
                       </span>
                     </div>
@@ -232,24 +232,24 @@ function SearchResultsContent() {
             {/* Code Tab */}
             {activeTab === "code" &&
               results.map((file) => (
-                <Card key={file.id} className="bg-surface border-border p-md rounded-sm flex flex-col gap-xs font-inter">
+                <Card key={file.id} className="bg-canvas-soft border-hairline p-md rounded-sm flex flex-col gap-xs font-sans">
                   <div className="flex justify-between items-center text-xs border-b border-hairline pb-xs">
                     <div className="flex items-center gap-xxs">
-                      <Link href={`/${file.repository.ownerSlug}/${file.repository.name}`} className="font-space-grotesk font-bold text-accent hover:underline">
+                      <Link href={`/${file.repository.ownerSlug}/${file.repository.name}`} className="font-sans font-bold text-primary hover:underline">
                         {file.repository.ownerSlug}/{file.repository.name}
                       </Link>
-                      <span className="text-text-muted">/</span>
-                      <Link href={`/${file.repository.ownerSlug}/${file.repository.name}/blob/main/${file.filePath}`} className="font-mono text-text-primary hover:text-accent hover:underline">
+                      <span className="text-body">/</span>
+                      <Link href={`/${file.repository.ownerSlug}/${file.repository.name}/blob/main/${file.filePath}`} className="font-mono text-ink hover:text-primary hover:underline">
                         {file.filePath}
                       </Link>
                     </div>
                   </div>
-                  <pre className="p-xs bg-canvas-soft border border-hairline rounded-xs font-mono text-[11px] overflow-x-auto leading-relaxed text-text-primary whitespace-pre-wrap">
+                  <pre className="p-xs bg-canvas-soft border border-hairline rounded-xs font-mono text-[11px] overflow-x-auto leading-relaxed text-ink whitespace-pre-wrap">
                     <code>
                       {/* Show line numbers alongside matching block */}
                       {file.excerpt.split("\n").map((line: string, i: number) => (
                         <div key={i} className="flex gap-md">
-                          <span className="text-text-muted select-none w-8 text-right pr-xs border-r border-hairline">
+                          <span className="text-body select-none w-8 text-right pr-xs border-r border-hairline">
                             {file.startLine + i}
                           </span>
                           <span className="flex-1">
@@ -267,22 +267,22 @@ function SearchResultsContent() {
               results.map((issue) => {
                 const owner = issue.repository.organization ? issue.repository.organization.slug : issue.repository.owner?.username;
                 return (
-                  <Card key={issue.id} className="bg-surface border-border p-md rounded-sm hover:border-accent/40 transition-colors">
+                  <Card key={issue.id} className="bg-canvas-soft border-hairline p-md rounded-sm hover:border-accent/40 transition-colors">
                     <div className="flex justify-between items-start gap-md">
                       <div>
                         <div className="flex items-center gap-xs">
-                          <Link href={`/${owner}/${issue.repository.name}/issues/${issue.number}`} className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent">
+                          <Link href={`/${owner}/${issue.repository.name}/issues/${issue.number}`} className="font-sans font-bold text-sm text-ink hover:text-primary">
                             {issue.title}
                           </Link>
                           <span className={`text-[10px] font-mono px-xs py-[2px] rounded-full uppercase border ${
-                            issue.status === "OPEN" ? "border-success/35 bg-success/5 text-success" : "border-danger/35 bg-danger/5 text-danger"
+                            issue.status === "OPEN" ? "border-success/35 bg-success/5 text-success" : "border-error/35 bg-error/5 text-error"
                           }`}>
                             {issue.status}
                           </span>
                         </div>
-                        <p className="font-inter text-text-muted text-xs mt-xs">
+                        <p className="font-sans text-body text-xs mt-xs">
                           #{issue.number} opened in{" "}
-                          <Link href={`/${owner}/${issue.repository.name}`} className="font-semibold text-text-muted hover:text-accent">
+                          <Link href={`/${owner}/${issue.repository.name}`} className="font-semibold text-body hover:text-primary">
                             {owner}/{issue.repository.name}
                           </Link>{" "}
                           by @{issue.creator.username}
@@ -296,16 +296,16 @@ function SearchResultsContent() {
             {/* Users Tab */}
             {activeTab === "users" &&
               results.map((u) => (
-                <Card key={u.id} className="bg-surface border-border p-md rounded-sm hover:border-accent/40 transition-colors flex items-center justify-between">
+                <Card key={u.id} className="bg-canvas-soft border-hairline p-md rounded-sm hover:border-accent/40 transition-colors flex items-center justify-between">
                   <div className="flex items-center gap-md">
-                    <div className="w-10 h-10 rounded-full bg-accent-soft text-accent flex items-center justify-center font-bold font-space-grotesk text-sm border border-hairline">
+                    <div className="w-10 h-10 rounded-full bg-primary-soft text-primary flex items-center justify-center font-bold font-sans text-sm border border-hairline">
                       {u.username.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="flex flex-col">
-                      <Link href={`/${u.username}`} className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent">
+                      <Link href={`/${u.username}`} className="font-sans font-bold text-sm text-ink hover:text-primary">
                         {u.name || u.username}
                       </Link>
-                      <span className="font-mono text-xs text-text-muted">@{u.username}</span>
+                      <span className="font-mono text-xs text-body">@{u.username}</span>
                     </div>
                   </div>
                   <Link href={`/${u.username}`}>
@@ -317,16 +317,16 @@ function SearchResultsContent() {
             {/* Organizations Tab */}
             {activeTab === "organizations" &&
               results.map((org) => (
-                <Card key={org.id} className="bg-surface border-border p-md rounded-sm hover:border-accent/40 transition-colors flex items-center justify-between">
+                <Card key={org.id} className="bg-canvas-soft border-hairline p-md rounded-sm hover:border-accent/40 transition-colors flex items-center justify-between">
                   <div className="flex items-center gap-md">
-                    <div className="w-10 h-10 rounded-sm bg-accent-soft text-accent flex items-center justify-center font-bold border border-hairline">
+                    <div className="w-10 h-10 rounded-sm bg-primary-soft text-primary flex items-center justify-center font-bold border border-hairline">
                       <Building className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col">
-                      <Link href={`/orgs/${org.slug}`} className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent">
+                      <Link href={`/orgs/${org.slug}`} className="font-sans font-bold text-sm text-ink hover:text-primary">
                         {org.name}
                       </Link>
-                      <span className="font-mono text-xs text-text-muted">gitforge.dev/orgs/{org.slug}</span>
+                      <span className="font-mono text-xs text-body">gitforge.dev/orgs/{org.slug}</span>
                     </div>
                   </div>
                   <Link href={`/orgs/${org.slug}`}>
@@ -345,7 +345,7 @@ export default function SearchResultsPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     }>
       <SearchResultsContent />

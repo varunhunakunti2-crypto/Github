@@ -35,25 +35,25 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "primary", className, children, ...props }, ref) => {
     const baseStyle =
-      "font-sans font-medium transition-all duration-200 select-none flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-link disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]";
+      "font-sans font-medium transition-all duration-200 select-none flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-focus focus-visible:ring-offset-canvas disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]";
 
     const variants = {
       primary:
-        "bg-primary text-on-primary rounded-pill px-sm h-[48px] font-button-lg hover:bg-ink/90 dark:hover:bg-on-primary/90",
+        "bg-primary text-on-primary rounded-md px-[14px] h-[40px] font-button-md hover:bg-primary-hover active:bg-primary-focus",
       secondary:
-        "bg-canvas text-ink border border-hairline rounded-pill px-sm h-[48px] font-button-lg hover:bg-canvas-soft shadow-level-2 hover:border-hairline-strong",
+        "bg-canvas-soft text-ink border border-hairline rounded-md px-[14px] h-[40px] font-button-md hover:bg-canvas-soft-2 hover:border-hairline-strong",
       "primary-sm":
-        "bg-primary text-on-primary rounded-pill px-xs h-[32px] font-button-md hover:bg-ink/90 dark:hover:bg-on-primary/90",
+        "bg-primary text-on-primary rounded-md px-[14px] h-[32px] font-button-md hover:bg-primary-hover active:bg-primary-focus",
       "secondary-sm":
-        "bg-canvas text-ink border border-hairline rounded-pill px-xs h-[32px] font-button-md hover:bg-canvas-soft shadow-level-1 hover:border-hairline-strong",
+        "bg-canvas-soft text-ink border border-hairline rounded-md px-[14px] h-[32px] font-button-md hover:bg-canvas-soft-2 hover:border-hairline-strong",
       "nav-signup":
-        "bg-primary text-on-primary rounded-sm px-xs h-[28px] font-body-sm-strong hover:bg-ink/90 dark:hover:bg-on-primary/90",
+        "bg-primary text-on-primary rounded-md px-xs h-[28px] font-body-sm-strong hover:bg-primary-hover",
       "nav-login":
-        "bg-canvas text-ink rounded-sm px-xs h-[28px] font-body-sm-strong hover:bg-canvas-soft",
+        "bg-canvas text-ink rounded-md px-xs h-[28px] font-body-sm-strong hover:bg-canvas-soft",
       "nav-ask-ai":
-        "bg-canvas text-ink border border-hairline rounded-sm px-xs h-[28px] font-body-sm-strong hover:bg-canvas-soft hover:border-hairline-strong shadow-level-1",
+        "bg-canvas-soft text-ink border border-hairline rounded-md px-xs h-[28px] font-body-sm-strong hover:bg-canvas-soft-2 hover:border-hairline-strong",
       "tab-ghost":
-        "bg-transparent hover:bg-canvas-soft-2 text-body hover:text-ink rounded-pill-sm px-md h-[36px] font-body-sm active:bg-canvas-soft-2",
+        "bg-transparent hover:bg-canvas-soft-2 text-body hover:text-ink rounded-md px-md h-[36px] font-body-sm active:bg-canvas-soft-2",
     };
 
     return (
@@ -127,7 +127,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          "bg-canvas text-ink border border-hairline rounded-md p-lg transition-shadow duration-200",
+          "bg-canvas-soft text-ink border border-hairline rounded-lg p-lg transition-all duration-200",
           shadows[elevation],
           className,
         )}
@@ -144,7 +144,7 @@ Card.displayName = "Card";
 export const CardMarketing = ({ className, children, ...props }: CardProps) => (
   <Card
     elevation={3}
-    className={cn("rounded-md p-lg border-hairline bg-canvas", className)}
+    className={cn("rounded-lg p-lg border-hairline bg-canvas-soft", className)}
     {...props}
   >
     {children}
@@ -158,7 +158,7 @@ export const CardMarketingLarge = ({
 }: CardProps) => (
   <Card
     elevation={4}
-    className={cn("rounded-lg p-xl border-hairline bg-canvas", className)}
+    className={cn("rounded-xl p-xl border-hairline bg-canvas-soft", className)}
     {...props}
   >
     {children}
@@ -172,7 +172,7 @@ export const CardSoft = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-canvas-soft text-ink rounded-md p-lg border border-hairline/10",
+      "bg-canvas-soft-2 text-ink rounded-lg p-lg border border-hairline",
       className,
     )}
     {...props}
@@ -194,7 +194,7 @@ export const TemplateCard = ({
 } & React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "bg-canvas text-ink border border-hairline rounded-md p-md shadow-level-2 hover:shadow-level-3 hover:border-hairline-strong transition-all duration-200 cursor-pointer group flex flex-col gap-3",
+      "bg-canvas-soft text-ink border border-hairline rounded-lg p-md hover:bg-canvas-soft-2 hover:border-hairline-strong transition-all duration-200 cursor-pointer group flex flex-col gap-3",
       className,
     )}
     {...props}
@@ -383,7 +383,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ sizeVariant = "md", error, className, ...props }, ref) => {
     const baseStyle =
-      "w-full bg-canvas text-ink border rounded-sm transition-colors duration-200 outline-none placeholder:text-mute focus:border-ink dark:focus:border-on-primary disabled:opacity-50 disabled:bg-canvas-soft font-sans";
+      "w-full bg-canvas-soft text-ink border rounded-md transition-colors duration-200 outline-none placeholder:text-mute focus:border-primary-focus focus:ring-2 focus:ring-primary-focus/50 disabled:opacity-50 disabled:bg-canvas-soft-2 font-sans";
 
     const sizes = {
       sm: "h-[32px] px-sm font-body-sm",
@@ -419,7 +419,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         ref={ref}
         className={cn(
-          "w-full min-h-[100px] p-sm bg-canvas text-ink border rounded-sm transition-colors duration-200 outline-none placeholder:text-mute focus:border-ink dark:focus:border-on-primary disabled:opacity-50 disabled:bg-canvas-soft font-sans font-body-sm",
+          "w-full min-h-[100px] p-sm bg-canvas-soft text-ink border rounded-md transition-colors duration-200 outline-none placeholder:text-mute focus:border-primary-focus focus:ring-2 focus:ring-primary-focus/50 disabled:opacity-50 disabled:bg-canvas-soft-2 font-sans font-body-sm",
           error
             ? "border-error focus:border-error-deep focus:ring-1 focus:ring-error"
             : "border-hairline",
@@ -444,7 +444,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           className={cn(
-            "w-full h-[40px] pl-sm pr-lg bg-canvas text-ink border border-hairline rounded-sm transition-colors duration-200 outline-none focus:border-ink dark:focus:border-on-primary disabled:opacity-50 disabled:bg-canvas-soft font-sans font-body-sm appearance-none",
+            "w-full h-[40px] pl-sm pr-lg bg-canvas-soft text-ink border border-hairline rounded-md transition-colors duration-200 outline-none focus:border-primary-focus focus:ring-2 focus:ring-primary-focus/50 disabled:opacity-50 disabled:bg-canvas-soft-2 font-sans font-body-sm appearance-none",
             error && "border-error focus:border-error",
             className,
           )}
@@ -483,7 +483,7 @@ export const Checkbox = React.forwardRef<
       type="checkbox"
       ref={ref}
       className={cn(
-        "w-4 h-4 rounded-xs border border-hairline text-primary focus:ring-link focus:ring-2 focus:ring-offset-1 focus:ring-offset-canvas checked:bg-primary accent-primary bg-canvas cursor-pointer transition-all duration-200 outline-none",
+        "w-4 h-4 rounded-xs border border-hairline text-primary focus:ring-primary-focus focus:ring-2 focus:ring-offset-1 focus:ring-offset-canvas checked:bg-primary accent-primary bg-canvas-soft cursor-pointer transition-all duration-200 outline-none",
         className,
       )}
       {...props}

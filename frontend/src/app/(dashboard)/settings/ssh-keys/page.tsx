@@ -167,71 +167,71 @@ export default function SSHKeysPage() {
   };
 
   return (
-    <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter">
+    <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans">
       <div className="max-w-[760px] mx-auto flex flex-col gap-lg">
         
         {/* Header */}
         <div>
-          <h1 className="font-space-grotesk text-3xl font-bold tracking-tight mb-xs">
+          <h1 className="font-sans text-3xl font-bold tracking-tight mb-xs">
             SSH Keys
           </h1>
-          <p className="text-text-muted text-sm">
+          <p className="text-body text-sm">
             Manage SSH public keys associated with your account to securely pull/push repository files.
           </p>
         </div>
 
         {error && (
-          <div className="p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+          <div className="p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans">
             {error}
           </div>
         )}
 
         {/* Add SSH Key Form Card */}
-        <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-          <h2 className="font-space-grotesk text-xl font-bold mb-md">
+        <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+          <h2 className="font-sans text-xl font-bold mb-md">
             Add SSH key
           </h2>
           <form onSubmit={handleAddKey} className="flex flex-col gap-md">
             <div className="flex flex-col gap-xs">
-              <Label htmlFor="title" className="text-text-muted font-space-grotesk">
+              <Label htmlFor="title" className="text-body font-sans">
                 Title
               </Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
+                className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm"
                 placeholder="e.g. Work Macbook Pro"
                 disabled={isAdding}
                 error={!!formErrors.title}
               />
               {formErrors.title && (
-                <span className="text-danger text-xs mt-1 font-inter">{formErrors.title}</span>
+                <span className="text-error text-xs mt-1 font-sans">{formErrors.title}</span>
               )}
             </div>
 
             <div className="flex flex-col gap-xs">
-              <Label htmlFor="publicKey" className="text-text-muted font-space-grotesk">
+              <Label htmlFor="publicKey" className="text-body font-sans">
                 Key
               </Label>
               <Textarea
                 id="publicKey"
                 value={publicKey}
                 onChange={(e) => setPublicKey(e.target.value)}
-                className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm font-mono text-xs"
+                className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm font-mono text-xs"
                 placeholder="Begins with 'ssh-rsa', 'ssh-ed25519', 'ecdsa-sha2-nistp256', etc."
                 disabled={isAdding}
                 error={!!formErrors.key}
               />
               {formErrors.key && (
-                <span className="text-danger text-xs mt-1 font-inter">{formErrors.key}</span>
+                <span className="text-error text-xs mt-1 font-sans">{formErrors.key}</span>
               )}
             </div>
 
             <Button
               type="submit"
               disabled={isAdding}
-              className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold py-sm rounded-sm transition-colors focus:ring-2 focus:ring-accent self-start px-lg"
+              className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold py-sm rounded-sm transition-colors focus:ring-2 focus:ring-primary-focus self-start px-lg"
             >
               {isAdding ? "Adding key..." : "Add SSH key"}
             </Button>
@@ -239,15 +239,15 @@ export default function SSHKeysPage() {
         </Card>
 
         {/* Existing SSH Keys List Card */}
-        <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-          <h2 className="font-space-grotesk text-xl font-bold mb-md">
+        <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+          <h2 className="font-sans text-xl font-bold mb-md">
             SSH Keys
           </h2>
 
           {isLoading ? (
-            <p className="text-text-muted text-sm font-inter">Loading keys...</p>
+            <p className="text-body text-sm font-sans">Loading keys...</p>
           ) : keys.length === 0 ? (
-            <p className="text-text-muted text-sm font-inter">
+            <p className="text-body text-sm font-sans">
               There are no SSH keys associated with your account.
             </p>
           ) : (
@@ -256,26 +256,26 @@ export default function SSHKeysPage() {
                 <div key={key.id} className="py-md flex justify-between items-center first:pt-0 last:pb-0">
                   <div className="flex flex-col gap-xs text-left">
                     <div className="flex items-center gap-sm">
-                      <span className="font-space-grotesk font-semibold text-sm">
+                      <span className="font-sans font-semibold text-sm">
                         {key.title}
                       </span>
-                      <span className="font-jetbrains-mono text-[10px] px-xs bg-base border border-border text-text-muted rounded-full">
+                      <span className="font-jetbrains-mono text-[10px] px-xs bg-canvas-soft-2 border border-hairline text-body rounded-full">
                         {key.key_type}
                       </span>
                     </div>
 
-                    <div className="font-jetbrains-mono text-xs text-text-muted select-all break-all pr-sm">
+                    <div className="font-jetbrains-mono text-xs text-body select-all break-all pr-sm">
                       Fingerprint: {key.fingerprint}
                     </div>
 
-                    <div className="text-[11px] text-text-muted font-mono">
+                    <div className="text-[11px] text-body font-mono">
                       Added: {new Date(key.created_at).toLocaleDateString()}
                     </div>
                   </div>
 
                   <Button
                     onClick={() => handleDeleteKey(key.id)}
-                    className="bg-transparent hover:bg-danger/10 border border-border hover:border-danger text-text-muted hover:text-danger px-sm py-xxs rounded-sm font-space-grotesk text-xs"
+                    className="bg-transparent hover:bg-error/10 border border-hairline hover:border-error text-body hover:text-error px-sm py-xxs rounded-sm font-sans text-xs"
                   >
                     Delete
                   </Button>

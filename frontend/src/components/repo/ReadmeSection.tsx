@@ -93,13 +93,13 @@ export default function ReadmeSection({
         }
 
         elements.push(
-          <div key={`table-${keyIndex}`} className="overflow-x-auto my-sm border border-border rounded-sm">
-            <table className="w-full text-left text-xs text-text-primary border-collapse">
+          <div key={`table-${keyIndex}`} className="overflow-x-auto my-sm border border-hairline rounded-sm">
+            <table className="w-full text-left text-xs text-ink border-collapse">
               {headers.length > 0 && (
-                <thead className="bg-base border-b border-border">
+                <thead className="bg-canvas-soft-2 border-b border-hairline">
                   <tr>
                     {headers.map((th, i) => (
-                      <th key={i} className="px-sm py-xs font-space-grotesk font-bold border-r border-border last:border-r-0">
+                      <th key={i} className="px-sm py-xs font-sans font-bold border-r border-hairline last:border-r-0">
                         {parseInlineFormatting(th.trim())}
                       </th>
                     ))}
@@ -108,9 +108,9 @@ export default function ReadmeSection({
               )}
               <tbody>
                 {rows.map((row, rIdx) => (
-                  <tr key={rIdx} className="border-b border-border last:border-b-0 hover:bg-surface/50">
+                  <tr key={rIdx} className="border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50">
                     {row.map((td, cIdx) => (
-                      <td key={cIdx} className="px-sm py-xs border-r border-border last:border-r-0">
+                      <td key={cIdx} className="px-sm py-xs border-r border-hairline last:border-r-0">
                         {parseInlineFormatting(td.trim())}
                       </td>
                     ))}
@@ -134,7 +134,7 @@ export default function ReadmeSection({
           elements.push(
             <pre
               key={`code-${index}`}
-              className="bg-base border border-border p-md rounded-sm font-jetbrains-mono text-xs overflow-x-auto my-sm text-left select-all"
+              className="bg-canvas-soft-2 border border-hairline p-md rounded-sm font-jetbrains-mono text-xs overflow-x-auto my-sm text-left select-all"
             >
               <code>{codeBlockContent.join("\n")}</code>
             </pre>
@@ -169,7 +169,7 @@ export default function ReadmeSection({
           <h1
             key={index}
             id={id}
-            className="font-space-grotesk text-2xl font-bold text-text-primary border-b border-border pb-xxs mt-md mb-sm group flex items-center"
+            className="font-sans text-2xl font-bold text-ink border-b border-hairline pb-xxs mt-md mb-sm group flex items-center"
           >
             <a href={`#${id}`} className="hover:underline">
               {text}
@@ -187,7 +187,7 @@ export default function ReadmeSection({
           <h2
             key={index}
             id={id}
-            className="font-space-grotesk text-lg font-bold text-text-primary border-b border-border pb-xxs mt-sm mb-xs group flex items-center"
+            className="font-sans text-lg font-bold text-ink border-b border-hairline pb-xxs mt-sm mb-xs group flex items-center"
           >
             <a href={`#${id}`} className="hover:underline">
               {text}
@@ -205,7 +205,7 @@ export default function ReadmeSection({
           <h3
             key={index}
             id={id}
-            className="font-space-grotesk text-sm font-bold text-text-primary mt-sm mb-xxs group flex items-center"
+            className="font-sans text-sm font-bold text-ink mt-sm mb-xxs group flex items-center"
           >
             <a href={`#${id}`} className="hover:underline">
               {text}
@@ -218,7 +218,7 @@ export default function ReadmeSection({
       // Bullet points
       if (line.startsWith("- ") || line.startsWith("* ")) {
         elements.push(
-          <ul key={index} className="list-disc pl-md text-xs text-text-primary my-xxs text-left leading-relaxed">
+          <ul key={index} className="list-disc pl-md text-xs text-ink my-xxs text-left leading-relaxed">
             <li>{parseInlineFormatting(line.slice(2))}</li>
           </ul>
         );
@@ -227,14 +227,14 @@ export default function ReadmeSection({
 
       // Horizontal Rule
       if (line.trim() === "---") {
-        elements.push(<hr key={index} className="border-border my-md" />);
+        elements.push(<hr key={index} className="border-hairline my-md" />);
         return;
       }
 
       // Standard Paragraph
       if (line.trim()) {
         elements.push(
-          <p key={index} className="text-xs text-text-primary leading-relaxed my-xxs text-left">
+          <p key={index} className="text-xs text-ink leading-relaxed my-xxs text-left">
             {parseInlineFormatting(line)}
           </p>
         );
@@ -288,19 +288,19 @@ export default function ReadmeSection({
 
     // Images first
     parts = applyRegex(parts, imgRegex, (m, i) => (
-      <img key={`img-${i}`} src={m[2]} alt={m[1]} className="max-w-full h-auto rounded-sm border border-border my-xs" />
+      <img key={`img-${i}`} src={m[2]} alt={m[1]} className="max-w-full h-auto rounded-sm border border-hairline my-xs" />
     ));
 
     // Then links
     parts = applyRegex(parts, linkRegex, (m, i) => (
-      <Link key={`link-${i}`} href={m[2]} className="text-accent hover:underline outline-none focus-visible:ring-1 focus-visible:ring-accent">
+      <Link key={`link-${i}`} href={m[2]} className="text-primary hover:underline outline-none focus-visible:ring-1 focus-visible:ring-primary-focus">
         {m[1]}
       </Link>
     ));
 
     // Then inline code
     parts = applyRegex(parts, codeRegex, (m, i) => (
-      <code key={`code-${i}`} className="bg-base border border-border px-xxs py-[2px] rounded-xs font-jetbrains-mono text-[10px] text-text-primary">
+      <code key={`code-${i}`} className="bg-canvas-soft-2 border border-hairline px-xxs py-[2px] rounded-xs font-jetbrains-mono text-[10px] text-ink">
         {m[1]}
       </code>
     ));
@@ -315,41 +315,41 @@ export default function ReadmeSection({
 
   if (isLoading) {
     return (
-      <Card className="bg-surface border-border p-md flex flex-col gap-sm animate-pulse rounded-sm w-full">
-        <div className="h-6 bg-base border border-border rounded-sm w-1/3"></div>
-        <div className="h-4 bg-base border border-border rounded-sm w-full"></div>
-        <div className="h-4 bg-base border border-border rounded-sm w-4/5"></div>
+      <Card className="bg-canvas-soft border-hairline p-md flex flex-col gap-sm animate-pulse rounded-sm w-full">
+        <div className="h-6 bg-canvas-soft-2 border border-hairline rounded-sm w-1/3"></div>
+        <div className="h-4 bg-canvas-soft-2 border border-hairline rounded-sm w-full"></div>
+        <div className="h-4 bg-canvas-soft-2 border border-hairline rounded-sm w-4/5"></div>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-surface border-border overflow-hidden rounded-sm w-full shadow-none">
+    <Card className="bg-canvas-soft border-hairline overflow-hidden rounded-sm w-full shadow-none">
       
       {/* Header Bar */}
-      <div className="bg-base border-b border-border px-md py-sm flex items-center gap-xs font-space-grotesk text-xs font-bold text-text-primary select-none text-left">
-        <BookOpen className="w-4 h-4 text-text-muted" />
+      <div className="bg-canvas-soft-2 border-b border-hairline px-md py-sm flex items-center gap-xs font-sans text-xs font-bold text-ink select-none text-left">
+        <BookOpen className="w-4 h-4 text-body" />
         <span>README.md</span>
       </div>
 
       <div className="p-md flex flex-col gap-sm">
         {content ? (
-          <div className="flex flex-col gap-sm font-inter text-text-primary">
+          <div className="flex flex-col gap-sm font-sans text-ink">
             {renderMarkdown(content)}
           </div>
         ) : (
           /* Empty state */
           <div className="py-xl text-center flex flex-col items-center justify-center gap-sm">
-            <FileText className="w-8 h-8 text-text-muted/60" />
-            <h4 className="font-space-grotesk text-sm font-bold text-text-primary">
+            <FileText className="w-8 h-8 text-body/60" />
+            <h4 className="font-sans text-sm font-bold text-ink">
               No README found
             </h4>
-            <p className="font-inter text-text-muted text-xs max-w-[280px] leading-relaxed">
+            <p className="font-sans text-body text-xs max-w-[280px] leading-relaxed">
               Help others understand this project by describing its purpose and instructions.
             </p>
             {canEdit && (
               <Link href={`/${owner}/${repo}/new/${branch}/README.md`}>
-                <Button className="bg-accent hover:bg-accent/90 text-white py-xs px-md rounded-sm font-space-grotesk font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-accent outline-none">
+                <Button className="bg-primary hover:bg-primary/90 text-white py-xs px-md rounded-sm font-sans font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-primary-focus outline-none">
                   <Plus className="w-3.5 h-3.5" />
                   Add a README
                 </Button>

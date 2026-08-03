@@ -146,7 +146,7 @@ export default function AdminAnalyticsPage() {
       {/* Header and Controls */}
       <div className="flex justify-between items-center flex-wrap gap-sm">
         <div>
-          <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-white mb-xs">
+          <h1 className="font-sans text-2xl font-bold tracking-tight text-white mb-xs">
             Platform Analytics
           </h1>
           <p className="text-gray-400 text-xs">
@@ -168,7 +168,7 @@ export default function AdminAnalyticsPage() {
           <Button
             onClick={triggerRollup}
             disabled={isTriggeringRollup}
-            className="bg-accent hover:bg-accent/90 text-white text-xs px-md py-xs rounded-sm font-semibold"
+            className="bg-primary hover:bg-primary/90 text-white text-xs px-md py-xs rounded-sm font-semibold"
           >
             {isTriggeringRollup ? "Aggregating..." : "Run Rollup Now"}
           </Button>
@@ -178,11 +178,11 @@ export default function AdminAnalyticsPage() {
       {isLoading ? (
         <div className="text-center py-xl text-gray-400">Loading daily metrics...</div>
       ) : error ? (
-        <div className="p-md bg-danger/10 border border-danger text-danger text-sm rounded-sm">{error}</div>
+        <div className="p-md bg-error/10 border border-error text-error text-sm rounded-sm">{error}</div>
       ) : metrics.length === 0 ? (
         <Card className="bg-[#161B22] border-[#30363D] p-xl rounded-sm text-center">
           <span className="text-3xl">📊</span>
-          <h3 className="font-space-grotesk text-lg font-bold text-white mt-sm">No analytics metrics found</h3>
+          <h3 className="font-sans text-lg font-bold text-white mt-sm">No analytics metrics found</h3>
           <p className="text-gray-400 text-xs mt-xxs">
             Run the daily rollup aggregator job to calculate and generate platform analytics metrics.
           </p>

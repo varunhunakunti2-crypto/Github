@@ -82,10 +82,10 @@ export default function SecretsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-space-grotesk text-xl font-bold text-ink flex items-center gap-xs">
+          <h1 className="font-sans text-xl font-bold text-ink flex items-center gap-xs">
             <Shield className="w-5 h-5 text-link" /> Secrets
           </h1>
-          <p className="font-inter text-xs text-mute mt-xxs">
+          <p className="font-sans text-xs text-mute mt-xxs">
             Encrypted environment variables for workflow runs. Values are write-only — once saved, they can never be viewed again.
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function SecretsPage() {
 
       {/* Create Form */}
       {showCreate && (
-        <form onSubmit={handleCreate} className="bg-surface border border-hairline rounded-sm p-sm space-y-xs">
+        <form onSubmit={handleCreate} className="bg-canvas-soft border border-hairline rounded-sm p-sm space-y-xs">
           <div>
             <label className="font-sans text-[10px] font-bold text-mute uppercase block mb-xxs">Name</label>
             <input
@@ -140,7 +140,7 @@ export default function SecretsPage() {
 
       <div className="flex gap-xs items-start p-xs bg-warning/5 border border-warning/20 rounded-xs">
         <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-xxs" />
-        <p className="font-inter text-[10px] text-mute">
+        <p className="font-sans text-[10px] text-mute">
           Secret values are encrypted at rest with AES-256-GCM and injected into workflow runs as environment variables.
           If a secret value appears in step output, it will be automatically masked as <code className="text-warning">***</code>.
           Values cannot be retrieved after creation — update a secret by overwriting it.
@@ -151,17 +151,17 @@ export default function SecretsPage() {
       {secrets.length === 0 ? (
         <div className="text-center py-xl text-mute">
           <Lock className="w-8 h-8 mx-auto mb-xs" />
-          <p className="font-inter text-sm">No secrets configured yet.</p>
+          <p className="font-sans text-sm">No secrets configured yet.</p>
         </div>
       ) : (
         <div className="space-y-xxs">
           {secrets.map(secret => (
-            <div key={secret.id} className="flex items-center justify-between p-sm bg-surface border border-hairline rounded-sm">
+            <div key={secret.id} className="flex items-center justify-between p-sm bg-canvas-soft border border-hairline rounded-sm">
               <div className="flex items-center gap-sm">
                 <Lock className="w-4 h-4 text-mute" />
                 <div>
                   <span className="font-mono text-sm font-bold text-ink">{secret.name}</span>
-                  <span className="font-inter text-[10px] text-mute block">
+                  <span className="font-sans text-[10px] text-mute block">
                     Updated {new Date(secret.updatedAt).toLocaleDateString()}
                   </span>
                 </div>

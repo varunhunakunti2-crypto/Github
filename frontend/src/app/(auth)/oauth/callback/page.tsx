@@ -51,18 +51,18 @@ function OAuthCallbackContent() {
   }, [code, provider, router]);
 
   return (
-    <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-      <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+    <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+      <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
         <div>Auth-Step: oauth-callback</div>
         <div>State: {state === "exchanging" ? "exchange-pending" : "error"}</div>
       </div>
 
       {state === "exchanging" && (
         <div className="text-left">
-          <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight">
+          <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight">
             Connecting account
           </h1>
-          <p className="font-inter text-text-muted text-sm mb-md animate-pulse">
+          <p className="font-sans text-body text-sm mb-md animate-pulse">
             Exchanging authorization code with {provider === "github" ? "GitHub" : "Google"}. Please wait...
           </p>
           <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
@@ -71,16 +71,16 @@ function OAuthCallbackContent() {
 
       {state === "error" && (
         <div className="text-left">
-          <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight text-danger">
+          <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight text-error">
             OAuth Error
           </h1>
-          <p className="font-inter text-text-muted text-sm mb-md">
+          <p className="font-sans text-body text-sm mb-md">
             {errorMessage || "An unexpected error occurred during third-party authentication."}
           </p>
           <div className="flex flex-col gap-sm">
             <Link
               href="/login"
-              className="inline-block w-full text-center text-sm font-medium bg-accent hover:bg-accent/90 text-white py-xs px-md rounded-sm transition-colors"
+              className="inline-block w-full text-center text-sm font-medium bg-primary hover:bg-primary/90 text-white py-xs px-md rounded-sm transition-colors"
             >
               Back to Sign In
             </Link>
@@ -94,12 +94,12 @@ function OAuthCallbackContent() {
 export default function OAuthCallbackPage() {
   return (
     <Suspense fallback={
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+        <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
           <div>Auth-Step: oauth-callback</div>
           <div>State: loading</div>
         </div>
-        <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight">Loading callback...</h1>
+        <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight">Loading callback...</h1>
       </Card>
     }>
       <OAuthCallbackContent />

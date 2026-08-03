@@ -308,8 +308,8 @@ export default function ProjectBoardPage() {
     return (
       <span className={`text-[10px] font-mono font-semibold px-xxs py-[1px] rounded-xs border ${
         isOverdue 
-          ? "bg-danger-soft text-danger border-danger/20" 
-          : "bg-canvas-soft text-text-muted border-border"
+          ? "bg-error-soft text-error border-error/20" 
+          : "bg-canvas-soft text-body border-hairline"
       }`}>
         Due: {due.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
       </span>
@@ -317,7 +317,7 @@ export default function ProjectBoardPage() {
   };
 
   const getPriorityColor = (p: string | null | undefined) => {
-    if (p === "LOW") return "bg-canvas-soft text-text-muted border border-border";
+    if (p === "LOW") return "bg-canvas-soft text-body border border-hairline";
     if (p === "MEDIUM") return "bg-blue-600 text-blue-100";
     if (p === "HIGH") return "bg-amber-600/30 text-amber-400 border border-amber-500/20";
     if (p === "URGENT") return "bg-red-600/30 text-red-400 border border-red-500/20 animate-pulse";
@@ -326,8 +326,8 @@ export default function ProjectBoardPage() {
 
   if (isLoading) {
     return (
-      <div className="p-xl text-center flex flex-col items-center justify-center gap-xs text-text-muted">
-        <Loader2 className="w-6 h-6 animate-spin text-accent" />
+      <div className="p-xl text-center flex flex-col items-center justify-center gap-xs text-body">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
         <span>Loading project details...</span>
       </div>
     );
@@ -336,8 +336,8 @@ export default function ProjectBoardPage() {
   if (!project) {
     return (
       <div className="py-xl text-center space-y-md">
-        <h3 className="font-space-grotesk font-bold text-text-primary">Project Not Found</h3>
-        <Link href={`/${owner}/${repo}/projects`} className="text-accent hover:underline">
+        <h3 className="font-sans font-bold text-ink">Project Not Found</h3>
+        <Link href={`/${owner}/${repo}/projects`} className="text-primary hover:underline">
           Back to Projects
         </Link>
       </div>
@@ -351,20 +351,20 @@ export default function ProjectBoardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm border-b border-hairline pb-sm">
         <div className="space-y-xxs">
           <div className="flex items-center gap-xs text-xs">
-            <Link href={`/${owner}/${repo}/projects`} className="text-accent hover:underline">Projects</Link>
-            <span className="text-text-muted">/</span>
-            <span className="text-text-muted capitalize">{currentView}</span>
+            <Link href={`/${owner}/${repo}/projects`} className="text-primary hover:underline">Projects</Link>
+            <span className="text-body">/</span>
+            <span className="text-body capitalize">{currentView}</span>
           </div>
-          <h1 className="font-space-grotesk text-xl font-bold text-text-primary">{project.title}</h1>
-          <p className="font-inter text-xs text-text-muted">{project.description || "No description provided."}</p>
+          <h1 className="font-sans text-xl font-bold text-ink">{project.title}</h1>
+          <p className="font-sans text-xs text-body">{project.description || "No description provided."}</p>
         </div>
 
         {/* View Switcher Tabs Bar */}
-        <div className="flex bg-canvas border border-border p-[2px] rounded-xs self-start sm:self-center">
+        <div className="flex bg-canvas border border-hairline p-[2px] rounded-xs self-start sm:self-center">
           <button
             onClick={() => setCurrentView("board")}
             className={`font-sans text-xs font-semibold px-sm py-xs rounded-xs transition-colors ${
-              currentView === "board" ? "bg-accent text-white" : "text-text-muted hover:text-text-primary"
+              currentView === "board" ? "bg-primary text-white" : "text-body hover:text-ink"
             }`}
           >
             Board
@@ -372,7 +372,7 @@ export default function ProjectBoardPage() {
           <button
             onClick={() => setCurrentView("roadmap")}
             className={`font-sans text-xs font-semibold px-sm py-xs rounded-xs transition-colors ${
-              currentView === "roadmap" ? "bg-accent text-white" : "text-text-muted hover:text-text-primary"
+              currentView === "roadmap" ? "bg-primary text-white" : "text-body hover:text-ink"
             }`}
           >
             Roadmap
@@ -394,19 +394,19 @@ export default function ProjectBoardPage() {
                 key={col}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, col)}
-                className="w-80 shrink-0 bg-surface border border-border rounded-sm p-sm flex flex-col gap-sm max-h-[75vh]"
+                className="w-80 shrink-0 bg-canvas-soft border border-hairline rounded-sm p-sm flex flex-col gap-sm max-h-[75vh]"
               >
                 {/* Column Header */}
                 <div className="flex justify-between items-center px-xxs">
-                  <span className="font-sans font-bold text-text-primary text-xs flex items-center gap-xs">
+                  <span className="font-sans font-bold text-ink text-xs flex items-center gap-xs">
                     {col}
-                    <span className="px-xs py-[1px] text-[9px] bg-canvas text-text-muted rounded-full font-mono border border-hairline">
+                    <span className="px-xs py-[1px] text-[9px] bg-canvas text-body rounded-full font-mono border border-hairline">
                       {colItems.length}
                     </span>
                   </span>
                   <button
                     onClick={() => setShowAddCard(col)}
-                    className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors text-xs"
+                    className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors text-xs"
                   >
                     ➕
                   </button>
@@ -414,13 +414,13 @@ export default function ProjectBoardPage() {
 
                 {/* Add Card Form inline */}
                 {showAddCard === col && (
-                  <div className="bg-canvas border border-border rounded-sm p-sm flex flex-col gap-sm">
+                  <div className="bg-canvas border border-hairline rounded-sm p-sm flex flex-col gap-sm">
                     <div className="flex gap-xs border-b border-hairline pb-xs">
                       <button
                         type="button"
                         onClick={() => setAddType("note")}
                         className={`text-[9px] font-bold uppercase pb-xxs border-b ${
-                          addType === "note" ? "border-accent text-accent" : "border-transparent text-text-muted"
+                          addType === "note" ? "border-accent text-primary" : "border-transparent text-body"
                         }`}
                       >
                         Task
@@ -429,7 +429,7 @@ export default function ProjectBoardPage() {
                         type="button"
                         onClick={() => setAddType("issue")}
                         className={`text-[9px] font-bold uppercase pb-xxs border-b ${
-                          addType === "issue" ? "border-accent text-accent" : "border-transparent text-text-muted"
+                          addType === "issue" ? "border-accent text-primary" : "border-transparent text-body"
                         }`}
                       >
                         Issue
@@ -441,24 +441,24 @@ export default function ProjectBoardPage() {
                         <input
                           type="text"
                           placeholder="Task title"
-                          className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                          className="w-full px-xs py-xxs bg-canvas-soft border border-hairline rounded-xs text-ink text-xs focus:outline-none"
                           value={noteTitle}
                           onChange={(e) => setNoteTitle(e.target.value)}
                         />
                         <textarea
                           rows={2}
                           placeholder="Details..."
-                          className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none resize-none"
+                          className="w-full px-xs py-xxs bg-canvas-soft border border-hairline rounded-xs text-ink text-xs focus:outline-none resize-none"
                           value={noteBody}
                           onChange={(e) => setNoteBody(e.target.value)}
                         />
                         <div className="grid grid-cols-2 gap-xxs">
                           <div>
-                            <label className="text-[9px] text-text-muted font-bold block uppercase">Priority</label>
+                            <label className="text-[9px] text-body font-bold block uppercase">Priority</label>
                             <select
                               value={taskPriority}
                               onChange={(e) => setTaskPriority(e.target.value as any)}
-                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                              className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink focus:outline-none"
                             >
                               <option value="LOW">Low</option>
                               <option value="MEDIUM">Medium</option>
@@ -467,10 +467,10 @@ export default function ProjectBoardPage() {
                             </select>
                           </div>
                           <div>
-                            <label className="text-[9px] text-text-muted font-bold block uppercase">Due Date</label>
+                            <label className="text-[9px] text-body font-bold block uppercase">Due Date</label>
                             <input
                               type="date"
-                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                              className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink focus:outline-none"
                               value={taskDueDate}
                               onChange={(e) => setTaskDueDate(e.target.value)}
                             />
@@ -478,11 +478,11 @@ export default function ProjectBoardPage() {
                         </div>
 
                         <div>
-                          <label className="text-[9px] text-text-muted font-bold block uppercase">Assignee</label>
+                          <label className="text-[9px] text-body font-bold block uppercase">Assignee</label>
                           <select
                             value={taskAssignee}
                             onChange={(e) => setTaskAssignee(e.target.value)}
-                            className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary focus:outline-none"
+                            className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink focus:outline-none"
                           >
                             <option value="">Select Assignee...</option>
                             {collaborators.map(c => (
@@ -495,7 +495,7 @@ export default function ProjectBoardPage() {
                       </div>
                     ) : (
                       <select
-                        className="w-full px-xs py-xxs bg-surface border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                        className="w-full px-xs py-xxs bg-canvas-soft border border-hairline rounded-xs text-ink text-xs focus:outline-none"
                         value={selectedIssueNumber}
                         onChange={(e) => setSelectedIssueNumber(e.target.value)}
                       >
@@ -512,14 +512,14 @@ export default function ProjectBoardPage() {
                       <button
                         type="button"
                         onClick={() => handleCreateCard(col)}
-                        className="px-sm py-xxs bg-accent hover:bg-accent-hover text-white rounded-xs font-semibold"
+                        className="px-sm py-xxs bg-primary hover:bg-accent-hover text-white rounded-xs font-semibold"
                       >
                         Create
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowAddCard(null)}
-                        className="px-sm py-xxs bg-canvas rounded-xs border border-border hover:bg-canvas-soft-2"
+                        className="px-sm py-xxs bg-canvas rounded-xs border border-hairline hover:bg-canvas-soft-2"
                       >
                         Cancel
                       </button>
@@ -534,12 +534,12 @@ export default function ProjectBoardPage() {
                       key={item.id}
                       draggable
                       onDragStart={(e) => handleDragStart(e, item.id)}
-                      className="bg-canvas border border-border rounded-sm p-sm hover:border-text-muted cursor-grab active:cursor-grabbing transition-colors flex flex-col gap-sm relative group"
+                      className="bg-canvas border border-hairline rounded-sm p-sm hover:border-text-muted cursor-grab active:cursor-grabbing transition-colors flex flex-col gap-sm relative group"
                     >
                       {/* Delete icon */}
                       <button
                         onClick={() => handleDeleteCard(item.id)}
-                        className="absolute right-xs top-xs opacity-0 group-hover:opacity-100 text-text-muted hover:text-danger text-xs transition-opacity"
+                        className="absolute right-xs top-xs opacity-0 group-hover:opacity-100 text-body hover:text-error text-xs transition-opacity"
                         title="Remove item"
                       >
                         ×
@@ -556,11 +556,11 @@ export default function ProjectBoardPage() {
                               className="mt-xxs accent-success"
                             />
                             <div>
-                              <h4 className={`font-sans font-bold text-xs text-text-primary leading-tight ${item.isDone ? "line-through text-text-muted" : ""}`}>
+                              <h4 className={`font-sans font-bold text-xs text-ink leading-tight ${item.isDone ? "line-through text-body" : ""}`}>
                                 {item.noteTitle}
                               </h4>
                               {item.noteBody && (
-                                <p className="font-inter text-[11px] text-text-muted mt-xxs whitespace-pre-wrap">{item.noteBody}</p>
+                                <p className="font-sans text-[11px] text-body mt-xxs whitespace-pre-wrap">{item.noteBody}</p>
                               )}
                             </div>
                           </div>
@@ -568,7 +568,7 @@ export default function ProjectBoardPage() {
                           {/* Quick Convert Task to Issue */}
                           <button
                             onClick={() => handleConvertToIssue(item.id)}
-                            className="font-sans text-[9px] text-accent hover:underline flex items-center gap-xxs"
+                            className="font-sans text-[9px] text-primary hover:underline flex items-center gap-xxs"
                             title="Convert note to real issue"
                           >
                             <ArrowRight className="w-3 h-3" /> Convert to Issue
@@ -583,12 +583,12 @@ export default function ProjectBoardPage() {
                             <span className="text-xs text-success shrink-0">🟢</span>
                             <Link
                               href={`/${owner}/${repo}/issues/${item.issue.number}`}
-                              className="font-sans font-bold text-xs text-text-primary hover:text-accent hover:underline leading-tight"
+                              className="font-sans font-bold text-xs text-ink hover:text-primary hover:underline leading-tight"
                             >
                               {item.issue.title}
                             </Link>
                           </div>
-                          <span className="text-[10px] text-text-muted block">#{item.issue.number}</span>
+                          <span className="text-[10px] text-body block">#{item.issue.number}</span>
                         </div>
                       )}
 
@@ -596,15 +596,15 @@ export default function ProjectBoardPage() {
                       {item.itemType === "pull_request" && item.pullRequest && (
                         <div className="space-y-xs">
                           <div className="flex items-start gap-xs">
-                            <span className="text-xs text-accent shrink-0">🔄</span>
+                            <span className="text-xs text-primary shrink-0">🔄</span>
                             <Link
                               href={`/${owner}/${repo}/pull/${item.pullRequest.number}`}
-                              className="font-sans font-bold text-xs text-text-primary hover:text-accent hover:underline leading-tight"
+                              className="font-sans font-bold text-xs text-ink hover:text-primary hover:underline leading-tight"
                             >
                               {item.pullRequest.title}
                             </Link>
                           </div>
-                          <span className="text-[10px] text-text-muted block">#{item.pullRequest.number}</span>
+                          <span className="text-[10px] text-body block">#{item.pullRequest.number}</span>
                         </div>
                       )}
 
@@ -622,7 +622,7 @@ export default function ProjectBoardPage() {
                         {/* Assignee Avatar */}
                         {item.assignee && (
                           <span
-                            className="w-5 h-5 rounded-full bg-canvas-soft-2 border border-hairline text-[8px] flex items-center justify-center font-bold text-text-primary"
+                            className="w-5 h-5 rounded-full bg-canvas-soft-2 border border-hairline text-[8px] flex items-center justify-center font-bold text-ink"
                             title={`Assigned to @${item.assignee.username}`}
                           >
                             {item.assignee.username[0].toUpperCase()}
@@ -631,17 +631,17 @@ export default function ProjectBoardPage() {
                       </div>
 
                       {/* Inline metadata editors */}
-                      <div className="flex justify-between items-center text-[9px] text-text-muted pt-xxs">
+                      <div className="flex justify-between items-center text-[9px] text-body pt-xxs">
                         {editingCardId === item.id ? (
-                          <div className="w-full flex flex-col gap-xxs bg-canvas border border-border p-xxs rounded-xs z-15">
+                          <div className="w-full flex flex-col gap-xxs bg-canvas border border-hairline p-xxs rounded-xs z-15">
                             <div className="flex justify-between items-center">
                               <span className="font-bold text-[8px] uppercase">Edit Card</span>
-                              <button onClick={() => setEditingCardId(null)} className="text-text-muted hover:text-text-primary">×</button>
+                              <button onClick={() => setEditingCardId(null)} className="text-body hover:text-ink">×</button>
                             </div>
                             <select
                               value={editingPriority}
                               onChange={(e) => setEditingPriority(e.target.value as any)}
-                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary"
+                              className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink"
                             >
                               <option value="LOW">Low</option>
                               <option value="MEDIUM">Medium</option>
@@ -650,13 +650,13 @@ export default function ProjectBoardPage() {
                             </select>
                             <input
                               type="date"
-                              className="w-full bg-surface border border-border rounded-xs px-xxs py-[2px] text-[10px] text-text-primary"
+                              className="w-full bg-canvas-soft border border-hairline rounded-xs px-xxs py-[2px] text-[10px] text-ink"
                               value={editingDueDate}
                               onChange={(e) => setEditingDueDate(e.target.value)}
                             />
                             <button
                               onClick={() => handleUpdateCardMetadata(item.id)}
-                              className="w-full bg-accent text-white text-[9px] py-[2px] font-bold rounded-xs"
+                              className="w-full bg-primary text-white text-[9px] py-[2px] font-bold rounded-xs"
                             >
                               Apply
                             </button>
@@ -668,19 +668,19 @@ export default function ProjectBoardPage() {
                               setEditingPriority(item.priority || "MEDIUM");
                               setEditingDueDate(item.dueDate ? item.dueDate.split("T")[0] : "");
                             }}
-                            className="text-accent hover:underline"
+                            className="text-primary hover:underline"
                           >
                             Quick Edit
                           </button>
                         )}
 
-                        <span className="font-mono text-[8px] text-text-muted">Move to:</span>
+                        <span className="font-mono text-[8px] text-body">Move to:</span>
                         <div className="flex gap-[2px]">
                           {columns.filter(c => c !== col).map(c => (
                             <button
                               key={c}
                               onClick={() => handleMoveCard(item.id, c)}
-                              className="px-xxs py-[1px] bg-canvas border border-border rounded-xs hover:bg-canvas-soft-2 font-mono text-[8px]"
+                              className="px-xxs py-[1px] bg-canvas border border-hairline rounded-xs hover:bg-canvas-soft-2 font-mono text-[8px]"
                             >
                               {c.split(" ").map(w => w[0]).join("")}
                             </button>
@@ -699,20 +699,20 @@ export default function ProjectBoardPage() {
           {/* Add Column button form */}
           <div className="w-80 shrink-0">
             {isAddingColumn ? (
-              <form onSubmit={handleAddColumn} className="bg-surface border border-border p-sm rounded-sm flex flex-col gap-xs">
+              <form onSubmit={handleAddColumn} className="bg-canvas-soft border border-hairline p-sm rounded-sm flex flex-col gap-xs">
                 <input
                   type="text"
                   required
                   placeholder="Column name..."
-                  className="px-xs py-xxs bg-canvas border border-border rounded-xs text-text-primary text-xs focus:outline-none"
+                  className="px-xs py-xxs bg-canvas border border-hairline rounded-xs text-ink text-xs focus:outline-none"
                   value={newColumnName}
                   onChange={(e) => setNewColumnName(e.target.value)}
                 />
                 <div className="flex gap-xs text-[10px] justify-end">
-                  <button type="submit" className="px-sm py-xxs bg-accent hover:bg-accent-hover text-white rounded-xs font-semibold">
+                  <button type="submit" className="px-sm py-xxs bg-primary hover:bg-accent-hover text-white rounded-xs font-semibold">
                     Add
                   </button>
-                  <button type="button" onClick={() => setIsAddingColumn(false)} className="px-sm py-xxs bg-canvas rounded-xs border border-border">
+                  <button type="button" onClick={() => setIsAddingColumn(false)} className="px-sm py-xxs bg-canvas rounded-xs border border-hairline">
                     Cancel
                   </button>
                 </div>
@@ -720,7 +720,7 @@ export default function ProjectBoardPage() {
             ) : (
               <button
                 onClick={() => setIsAddingColumn(true)}
-                className="w-full p-sm bg-surface border border-dashed border-border rounded-sm hover:border-text-muted text-text-muted hover:text-text-primary font-semibold text-xs transition-colors"
+                className="w-full p-sm bg-canvas-soft border border-dashed border-hairline rounded-sm hover:border-text-muted text-body hover:text-ink font-semibold text-xs transition-colors"
               >
                 + Add column
               </button>

@@ -131,13 +131,13 @@ export default function NotificationBell() {
   const getReasonIcon = (reason: string) => {
     switch (reason.toUpperCase()) {
       case "ASSIGN":
-        return <Inbox className="w-3.5 h-3.5 text-accent" />;
+        return <Inbox className="w-3.5 h-3.5 text-primary" />;
       case "MENTION":
         return <MessageSquare className="w-3.5 h-3.5 text-success" />;
       case "REVIEW_REQUESTED":
         return <GitPullRequest className="w-3.5 h-3.5 text-warning" />;
       default:
-        return <FileText className="w-3.5 h-3.5 text-text-muted" />;
+        return <FileText className="w-3.5 h-3.5 text-body" />;
     }
   };
 
@@ -146,12 +146,12 @@ export default function NotificationBell() {
       {/* Bell Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-xs rounded-full hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors focus-visible:outline focus-visible:outline-accent"
+        className="relative p-xs rounded-full hover:bg-canvas-soft-2 text-body hover:text-ink transition-colors focus-visible:outline focus-visible:outline-accent"
         aria-label="Open notifications menu"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-xxs right-xxs flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white font-mono animate-pulse">
+          <span className="absolute top-xxs right-xxs flex h-4 w-4 items-center justify-center rounded-full bg-error text-[9px] font-bold text-white font-mono animate-pulse">
             {unreadCount}
           </span>
         )}
@@ -164,13 +164,13 @@ export default function NotificationBell() {
 
       {/* Preview Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-xs w-[320px] bg-surface border border-border shadow-xl rounded-sm z-50 overflow-hidden flex flex-col">
+        <div className="absolute right-0 mt-xs w-[320px] bg-canvas-soft border border-hairline shadow-xl rounded-sm z-50 overflow-hidden flex flex-col">
           <div className="p-sm border-b border-hairline flex justify-between items-center bg-canvas-soft">
-            <span className="font-space-grotesk text-xs font-bold text-text-primary">
+            <span className="font-sans text-xs font-bold text-ink">
               Notifications
             </span>
             {unreadCount > 0 && (
-              <span className="text-[10px] font-mono text-text-muted">
+              <span className="text-[10px] font-mono text-body">
                 {unreadCount} unread
               </span>
             )}
@@ -178,8 +178,8 @@ export default function NotificationBell() {
 
           <div className="max-h-[280px] overflow-y-auto divide-y divide-hairline">
             {notifications.length === 0 ? (
-              <div className="p-xl text-center flex flex-col items-center gap-xs text-text-muted font-inter text-xs">
-                <Bell className="w-6 h-6 text-text-muted opacity-50" />
+              <div className="p-xl text-center flex flex-col items-center gap-xs text-body font-sans text-xs">
+                <Bell className="w-6 h-6 text-body opacity-50" />
                 <span>You're all caught up!</span>
               </div>
             ) : (
@@ -188,7 +188,7 @@ export default function NotificationBell() {
                   key={n.id}
                   onClick={() => handleNotificationClick(n)}
                   className={`p-sm flex gap-xs cursor-pointer hover:bg-canvas-soft transition-colors ${
-                    !n.isRead ? "bg-accent-soft/20 border-l-2 border-accent" : ""
+                    !n.isRead ? "bg-primary-soft/20 border-l-2 border-accent" : ""
                   }`}
                 >
                   <div className="w-6 h-6 rounded-full bg-canvas border border-hairline flex items-center justify-center shrink-0 mt-xxs">
@@ -196,10 +196,10 @@ export default function NotificationBell() {
                   </div>
 
                   <div className="flex-1 flex flex-col gap-xxs min-w-0">
-                    <span className="font-sans font-semibold text-[11px] text-text-primary truncate">
+                    <span className="font-sans font-semibold text-[11px] text-ink truncate">
                       {n.title}
                     </span>
-                    <span className="font-inter text-[10px] text-text-muted line-clamp-2">
+                    <span className="font-sans text-[10px] text-body line-clamp-2">
                       {n.body}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ export default function NotificationBell() {
                   {!n.isRead && (
                     <button
                       onClick={(e) => handleMarkAsRead(n.id, e)}
-                      className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary self-start mt-xxs shrink-0"
+                      className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-body hover:text-ink self-start mt-xxs shrink-0"
                       title="Mark as read"
                     >
                       <Check className="w-3.5 h-3.5" />
@@ -220,7 +220,7 @@ export default function NotificationBell() {
 
           <Link
             href="/notifications"
-            className="p-xs text-center font-sans text-xs text-accent hover:underline border-t border-hairline bg-canvas-soft font-semibold block"
+            className="p-xs text-center font-sans text-xs text-primary hover:underline border-t border-hairline bg-canvas-soft font-semibold block"
             onClick={() => setIsOpen(false)}
           >
             See all notifications

@@ -71,7 +71,7 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px] text-gray-400 font-inter">
+      <div className="flex items-center justify-center min-h-[400px] text-gray-400 font-sans">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-accent mr-3"></div>
         Loading findings...
       </div>
@@ -80,18 +80,18 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
 
   if (error) {
     return (
-      <div className="p-lg bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+      <div className="p-lg bg-error/10 border border-error text-error text-sm rounded-sm font-sans">
         Error loading findings: {error}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-lg font-inter text-gray-200">
+    <div className="flex flex-col gap-lg font-sans text-gray-200">
       
       {/* Header */}
       <div>
-        <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-white mb-xs">
+        <h1 className="font-sans text-2xl font-bold tracking-tight text-white mb-xs">
           Secret Scanning Findings
         </h1>
         <p className="text-gray-400 text-sm">
@@ -102,7 +102,7 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
       {findings.length === 0 ? (
         <Card className="bg-[#161B22] border-[#30363D] p-xl rounded-sm text-center">
           <span className="text-3xl">🎉</span>
-          <h3 className="font-space-grotesk text-lg font-bold text-white mt-sm">No secrets found</h3>
+          <h3 className="font-sans text-lg font-bold text-white mt-sm">No secrets found</h3>
           <p className="text-gray-400 text-xs mt-xs">
             Push protection scanner hasn't matched any credential patterns in files.
           </p>
@@ -116,11 +116,11 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-sm">
-                    <span className="font-space-grotesk font-bold text-md text-white">
+                    <span className="font-sans font-bold text-md text-white">
                       {finding.secretType}
                     </span>
                     <span className={`text-[10px] px-xs font-bold uppercase rounded-full ${
-                      finding.status === 'open' ? 'bg-danger/20 text-danger' : 'bg-gray-700 text-gray-400'
+                      finding.status === 'open' ? 'bg-error/20 text-error' : 'bg-gray-700 text-gray-400'
                     }`}>
                       {finding.status}
                     </span>
@@ -142,7 +142,7 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
                     </Button>
                     <Button
                       onClick={() => handleResolve(finding.id, "false_positive")}
-                      className="bg-transparent hover:bg-gray-800 border border-border text-gray-300 text-xs px-sm py-xxs rounded-sm"
+                      className="bg-transparent hover:bg-gray-800 border border-hairline text-gray-300 text-xs px-sm py-xxs rounded-sm"
                     >
                       False Positive
                     </Button>
@@ -151,7 +151,7 @@ export default function SecretsPage({ params }: { params: Promise<{ owner: strin
               </div>
 
               {/* Masked Preview */}
-              <div className="bg-[#0D1117] border border-[#30363D] p-sm rounded-sm font-mono text-xs text-danger break-all">
+              <div className="bg-[#0D1117] border border-[#30363D] p-sm rounded-sm font-mono text-xs text-error break-all">
                 Found matched pattern: {finding.matchedPatternMasked}
               </div>
 

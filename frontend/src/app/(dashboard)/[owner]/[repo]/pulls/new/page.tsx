@@ -193,7 +193,7 @@ export default function NewPullRequestPage({ params }: { params: Promise<{ owner
   );
 
   return (
-    <div className="flex flex-col gap-6 font-space-grotesk max-w-5xl mx-auto p-4 md:p-6 text-gray-200">
+    <div className="flex flex-col gap-6 font-sans max-w-5xl mx-auto p-4 md:p-6 text-gray-200">
       <div>
         <h2 className="text-xl font-bold text-gray-100">Open a Pull Request</h2>
         <p className="text-xs text-gray-500 mt-1">Create a new pull request to merge changes from a feature branch.</p>

@@ -139,36 +139,36 @@ export default function TokensPage() {
   };
 
   return (
-    <div className="min-h-screen bg-base text-text-primary p-md md:p-xl font-inter">
+    <div className="min-h-screen bg-canvas-soft-2 text-ink p-md md:p-xl font-sans">
       <div className="max-w-[760px] mx-auto flex flex-col gap-lg">
         
         {/* Header */}
         <div>
-          <h1 className="font-space-grotesk text-3xl font-bold tracking-tight mb-xs">
+          <h1 className="font-sans text-3xl font-bold tracking-tight mb-xs">
             Personal Access Tokens
           </h1>
-          <p className="text-text-muted text-sm">
+          <p className="text-body text-sm">
             Manage personal tokens used to authenticate requests via Git CLI or HTTP APIs.
           </p>
         </div>
 
         {error && (
-          <div className="p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+          <div className="p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans">
             {error}
           </div>
         )}
 
         {/* Raw Token Show-Once Alert Box */}
         {newRawToken && (
-          <div className="p-lg bg-accent/10 border border-accent rounded-sm text-left">
-            <h3 className="font-space-grotesk text-lg font-bold text-accent mb-xs">
+          <div className="p-lg bg-primary/10 border border-accent rounded-sm text-left">
+            <h3 className="font-sans text-lg font-bold text-primary mb-xs">
               New Personal Access Token Generated
             </h3>
-            <p className="text-text-primary text-sm mb-md font-inter">
-              Make sure to copy your personal access token now. <span className="font-bold text-danger">You won't be able to see it again!</span>
+            <p className="text-ink text-sm mb-md font-sans">
+              Make sure to copy your personal access token now. <span className="font-bold text-error">You won't be able to see it again!</span>
             </p>
             <div className="flex gap-sm items-center">
-              <code className="flex-1 p-sm bg-base border border-border rounded-sm font-jetbrains-mono text-sm text-success select-all break-all">
+              <code className="flex-1 p-sm bg-canvas-soft-2 border border-hairline rounded-sm font-jetbrains-mono text-sm text-success select-all break-all">
                 {newRawToken}
               </code>
               <Button
@@ -176,14 +176,14 @@ export default function TokensPage() {
                   navigator.clipboard.writeText(newRawToken);
                   alert("Token copied to clipboard!");
                 }}
-                className="bg-accent hover:bg-accent/90 text-white px-md py-xs rounded-sm font-space-grotesk text-xs"
+                className="bg-primary hover:bg-primary/90 text-white px-md py-xs rounded-sm font-sans text-xs"
               >
                 Copy
               </Button>
             </div>
             <button
               onClick={() => setNewRawToken(null)}
-              className="mt-sm text-xs text-text-muted hover:text-text-primary hover:underline"
+              className="mt-sm text-xs text-body hover:text-ink hover:underline"
             >
               I have saved this token
             </button>
@@ -191,31 +191,31 @@ export default function TokensPage() {
         )}
 
         {/* Generate Token Form Card */}
-        <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-          <h2 className="font-space-grotesk text-xl font-bold mb-md">
+        <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+          <h2 className="font-sans text-xl font-bold mb-md">
             Generate new token
           </h2>
           <form onSubmit={handleCreateToken} className="flex flex-col gap-md">
             <div className="flex flex-col gap-xs">
-              <Label htmlFor="name" className="text-text-muted font-space-grotesk">
+              <Label htmlFor="name" className="text-body font-sans">
                 Description / Name
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
+                className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm"
                 placeholder="What is this token for?"
                 disabled={isCreating}
                 error={!!formErrors.name}
               />
               {formErrors.name && (
-                <span className="text-danger text-xs mt-1 font-inter">{formErrors.name}</span>
+                <span className="text-error text-xs mt-1 font-sans">{formErrors.name}</span>
               )}
             </div>
 
             <div className="flex flex-col gap-xs">
-              <Label htmlFor="expiration" className="text-text-muted font-space-grotesk">
+              <Label htmlFor="expiration" className="text-body font-sans">
                 Expiration
               </Label>
               <select
@@ -223,7 +223,7 @@ export default function TokensPage() {
                 value={expiration}
                 onChange={(e) => setExpiration(e.target.value)}
                 disabled={isCreating}
-                className="w-full h-[40px] px-sm bg-base text-text-primary border border-border rounded-sm transition-colors duration-200 outline-none focus:border-accent font-sans font-body-sm"
+                className="w-full h-[40px] px-sm bg-canvas-soft-2 text-ink border border-hairline rounded-sm transition-colors duration-200 outline-none focus:border-accent font-sans font-body-sm"
               >
                 <option value="7">7 days</option>
                 <option value="30">30 days</option>
@@ -233,10 +233,10 @@ export default function TokensPage() {
             </div>
 
             <div className="flex flex-col gap-xs">
-              <Label className="text-text-muted font-space-grotesk mb-xs">
+              <Label className="text-body font-sans mb-xs">
                 Select Scopes
               </Label>
-              <div className="flex flex-col gap-sm border border-border bg-base p-sm rounded-sm">
+              <div className="flex flex-col gap-sm border border-hairline bg-canvas-soft-2 p-sm rounded-sm">
                 {availableScopes.map((scope) => (
                   <div key={scope.id} className="flex items-start gap-sm">
                     <Checkbox
@@ -249,11 +249,11 @@ export default function TokensPage() {
                     <div className="flex flex-col">
                       <label
                         htmlFor={`scope-${scope.id}`}
-                        className="font-jetbrains-mono text-xs font-semibold text-text-primary cursor-pointer"
+                        className="font-jetbrains-mono text-xs font-semibold text-ink cursor-pointer"
                       >
                         {scope.label}
                       </label>
-                      <span className="text-text-muted text-[11px] font-inter">
+                      <span className="text-body text-[11px] font-sans">
                         {scope.description}
                       </span>
                     </div>
@@ -265,7 +265,7 @@ export default function TokensPage() {
             <Button
               type="submit"
               disabled={isCreating}
-              className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold py-sm rounded-sm transition-colors focus:ring-2 focus:ring-accent self-start px-lg"
+              className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold py-sm rounded-sm transition-colors focus:ring-2 focus:ring-primary-focus self-start px-lg"
             >
               {isCreating ? "Generating..." : "Generate Token"}
             </Button>
@@ -273,15 +273,15 @@ export default function TokensPage() {
         </Card>
 
         {/* Existing Tokens List Card */}
-        <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-          <h2 className="font-space-grotesk text-xl font-bold mb-md">
+        <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+          <h2 className="font-sans text-xl font-bold mb-md">
             Active Tokens
           </h2>
 
           {isLoading ? (
-            <p className="text-text-muted text-sm font-inter">Loading tokens...</p>
+            <p className="text-body text-sm font-sans">Loading tokens...</p>
           ) : tokens.length === 0 ? (
-            <p className="text-text-muted text-sm font-inter">
+            <p className="text-body text-sm font-sans">
               You haven't generated any personal access tokens yet.
             </p>
           ) : (
@@ -290,10 +290,10 @@ export default function TokensPage() {
                 <div key={token.id} className="py-md flex justify-between items-center first:pt-0 last:pb-0">
                   <div className="flex flex-col gap-xs text-left">
                     <div className="flex items-center gap-sm">
-                      <span className="font-space-grotesk font-semibold text-sm">
+                      <span className="font-sans font-semibold text-sm">
                         {token.name}
                       </span>
-                      <code className="font-jetbrains-mono text-xs px-xs py-xxs bg-base border border-border rounded-sm text-text-muted">
+                      <code className="font-jetbrains-mono text-xs px-xs py-xxs bg-canvas-soft-2 border border-hairline rounded-sm text-body">
                         {token.masked_token || "gitforge_••••••••"}
                       </code>
                     </div>
@@ -302,14 +302,14 @@ export default function TokensPage() {
                       {token.scopes.map((scope) => (
                         <span
                           key={scope}
-                          className="font-jetbrains-mono text-[10px] px-xs bg-accent/15 border border-accent/20 text-accent rounded-full"
+                          className="font-jetbrains-mono text-[10px] px-xs bg-primary/15 border border-accent/20 text-primary rounded-full"
                         >
                           {scope}
                         </span>
                       ))}
                     </div>
 
-                    <div className="text-[11px] text-text-muted font-mono flex gap-md">
+                    <div className="text-[11px] text-body font-mono flex gap-md">
                       <span>
                         Created: {new Date(token.created_at).toLocaleDateString()}
                       </span>
@@ -330,7 +330,7 @@ export default function TokensPage() {
 
                   <Button
                     onClick={() => handleRevokeToken(token.id)}
-                    className="bg-transparent hover:bg-danger/10 border border-border hover:border-danger text-text-muted hover:text-danger px-sm py-xxs rounded-sm font-space-grotesk text-xs"
+                    className="bg-transparent hover:bg-error/10 border border-hairline hover:border-error text-body hover:text-error px-sm py-xxs rounded-sm font-sans text-xs"
                   >
                     Revoke
                   </Button>

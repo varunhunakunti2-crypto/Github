@@ -20,16 +20,16 @@ export default function PinnedRepositories({
   const hasPins = pins && pins.length > 0;
 
   return (
-    <div className="flex flex-col gap-md text-left text-text-primary">
+    <div className="flex flex-col gap-md text-left text-ink">
       <div className="flex justify-between items-center">
-        <h2 className="font-space-grotesk text-lg font-bold flex items-center gap-xs">
-          <Pin className="w-4 h-4 text-accent rotate-45" />
+        <h2 className="font-sans text-lg font-bold flex items-center gap-xs">
+          <Pin className="w-4 h-4 text-primary rotate-45" />
           Pinned
         </h2>
         {isOwnProfile && hasPins && (
           <button
             onClick={onManagePinsClick}
-            className="text-xs text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-xs"
+            className="text-xs text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary-focus rounded-xs"
           >
             Customize pins
           </button>
@@ -37,12 +37,12 @@ export default function PinnedRepositories({
       </div>
 
       {!hasPins ? (
-        <Card className="bg-surface border-border p-xl rounded-sm flex flex-col items-center justify-center text-center border-dashed min-h-[180px]">
-          <Pin className="w-8 h-8 text-text-muted mb-sm rotate-45" />
-          <h3 className="font-space-grotesk text-md font-semibold mb-xs">
+        <Card className="bg-canvas-soft border-hairline p-xl rounded-sm flex flex-col items-center justify-center text-center border-dashed min-h-[180px]">
+          <Pin className="w-8 h-8 text-body mb-sm rotate-45" />
+          <h3 className="font-sans text-md font-semibold mb-xs">
             No pinned repositories
           </h3>
-          <p className="font-inter text-text-muted text-xs max-w-[320px] mb-md leading-relaxed">
+          <p className="font-sans text-body text-xs max-w-[320px] mb-md leading-relaxed">
             {isOwnProfile
               ? "Select and pin up to six public or private repositories to showcase on your profile page."
               : "This user hasn't pinned any repositories to show on their profile overview."}
@@ -50,7 +50,7 @@ export default function PinnedRepositories({
           {isOwnProfile && (
             <Button
               onClick={onManagePinsClick}
-              className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold text-xs py-xs px-md rounded-sm"
+              className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold text-xs py-xs px-md rounded-sm"
             >
               Pin repositories
             </Button>
@@ -61,18 +61,18 @@ export default function PinnedRepositories({
           {pins.map((repo) => (
             <Card
               key={repo.id}
-              className="bg-surface border-border p-md rounded-sm shadow-none flex flex-col justify-between hover:border-accent/40 transition-colors group relative"
+              className="bg-canvas-soft border-hairline p-md rounded-sm shadow-none flex flex-col justify-between hover:border-accent/40 transition-colors group relative"
             >
               <div className="flex flex-col gap-xs">
                 {/* Repository Name and Visibility */}
                 <div className="flex items-center justify-between gap-sm">
                   <Link
                     href={`/${repo.owner_username}/${repo.name}`}
-                    className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent hover:underline break-all"
+                    className="font-sans font-bold text-sm text-ink hover:text-primary hover:underline break-all"
                   >
                     {repo.name}
                   </Link>
-                  <span className="flex items-center gap-xxs px-xs py-[2px] bg-base border border-border text-[10px] text-text-muted rounded-full font-mono uppercase">
+                  <span className="flex items-center gap-xxs px-xs py-[2px] bg-canvas-soft-2 border border-hairline text-[10px] text-body rounded-full font-mono uppercase">
                     {repo.is_private && <Lock className="w-2.5 h-2.5" />}
                     {repo.is_private ? "Private" : "Public"}
                   </span>
@@ -80,14 +80,14 @@ export default function PinnedRepositories({
 
                 {/* Description */}
                 {repo.description && (
-                  <p className="font-inter text-text-muted text-xs leading-relaxed line-clamp-2 min-h-[36px]">
+                  <p className="font-sans text-body text-xs leading-relaxed line-clamp-2 min-h-[36px]">
                     {repo.description}
                   </p>
                 )}
               </div>
 
               {/* Language and Stats footer */}
-              <div className="flex items-center justify-between mt-md pt-xs border-t border-border/40 font-mono text-[11px] text-text-muted">
+              <div className="flex items-center justify-between mt-md pt-xs border-t border-hairline/40 font-mono text-[11px] text-body">
                 <div className="flex items-center gap-md">
                   {repo.language && (
                     <span className="flex items-center gap-xs">
@@ -122,7 +122,7 @@ export default function PinnedRepositories({
 function Button({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
-      className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold text-xs py-xs px-md rounded-sm transition-colors focus:ring-2 focus:ring-accent outline-none"
+      className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold text-xs py-xs px-md rounded-sm transition-colors focus:ring-2 focus:ring-primary-focus outline-none"
       {...props}
     >
       {children}

@@ -1,122 +1,101 @@
 @import "tailwindcss";
 
 :root {
-  --theme-primary: #171717;
+  /* ── Linear Design System ─────────────────────────────── */
+
+  /* Brand & Accent */
+  --theme-primary: #5e6ad2;
   --theme-on-primary: #ffffff;
-  --theme-ink: #171717;
-  --theme-body: #4d4d4d;
-  --theme-mute: #888888;
-  --theme-hairline: #ebebeb;
-  --theme-hairline-strong: #a1a1a1;
-  --theme-canvas: #ffffff;
-  --theme-canvas-soft: #fafafa;
-  --theme-canvas-soft-2: #f5f5f5;
-  --theme-link: #0070f3;
-  --theme-link-deep: #0761d1;
-  --theme-link-bg-soft: #d3e5ff;
-  --theme-success: #0070f3;
-  --theme-error: #ee0000;
-  --theme-error-soft: #f7d4d6;
-  --theme-error-deep: #c50000;
-  --theme-warning: #f5a623;
-  --theme-warning-soft: #ffefcf;
-  --theme-warning-deep: #ab570a;
-  --theme-violet: #7928ca;
-  --theme-violet-soft: #d8ccf1;
-  --theme-violet-deep: #4c2889;
-  --theme-cyan: #50e3c2;
-  --theme-cyan-soft: #aaffec;
-  --theme-cyan-deep: #29bc9b;
-  --theme-highlight-pink: #ff0080;
-  --theme-highlight-magenta: #eb367f;
+  --theme-primary-hover: #828fff;
+  --theme-primary-focus: #5e69d1;
 
-  --theme-gradient-develop-start: #007cf0;
-  --theme-gradient-develop-end: #00dfd8;
-  --theme-gradient-preview-start: #7928ca;
-  --theme-gradient-preview-end: #ff0080;
-  --theme-gradient-ship-start: #ff4d4d;
-  --theme-gradient-ship-end: #f9cb28;
+  /* Text / Ink */
+  --theme-ink: #f7f8f8;
+  --theme-body: #d0d6e0;
+  --theme-mute: #8a8f98;
+  --theme-ink-tertiary: #62666d;
 
-  --theme-selection-bg: #171717;
-  --theme-selection-fg: #f2f2f2;
+  /* Surface Ladder */
+  --theme-canvas: #010102;
+  --theme-canvas-soft: #0f1011;
+  --theme-canvas-soft-2: #141516;
+  --theme-surface-3: #18191a;
+  --theme-surface-4: #191a1b;
 
-  --shadow-1: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  --shadow-2:
-    0px 1px 1px rgba(0, 0, 0, 0.02), 0px 2px 2px rgba(0, 0, 0, 0.04),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  --shadow-3:
-    0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  --shadow-4:
-    0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-  --shadow-5:
-    0px 1px 1px rgba(0, 0, 0, 0.02), 0px 8px 16px -4px rgba(0, 0, 0, 0.04),
-    0px 24px 32px -8px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(0, 0, 0, 0.08);
-}
+  /* Borders */
+  --theme-hairline: #23252a;
+  --theme-hairline-strong: #34343a;
+  --theme-hairline-tertiary: #3e3e44;
 
-/* Polarity flipped dark theme */
-[data-theme="dark"],
-.dark {
-  --theme-primary: #ffffff;
-  --theme-on-primary: #171717;
-  --theme-ink: #ffffff;
-  --theme-body: #a1a1a1;
-  --theme-mute: #707070;
-  --theme-hairline: #2e2e2e;
-  --theme-hairline-strong: #4a4a4a;
-  --theme-canvas: #121212;
-  --theme-canvas-soft: #080808;
-  --theme-canvas-soft-2: #1a1a1a;
-  --theme-link: #3291ff;
-  --theme-link-deep: #0070f3;
-  --theme-link-bg-soft: #002b5c;
-  --theme-success: #3291ff;
-  --theme-error: #ff1a1a;
-  --theme-error-soft: #4d0000;
-  --theme-error-deep: #ee0000;
-  --theme-warning: #f7b955;
-  --theme-warning-soft: #5c3e00;
-  --theme-warning-deep: #f5a623;
+  /* Links */
+  --theme-link: #5e6ad2;
+  --theme-link-deep: #828fff;
+  --theme-link-bg-soft: rgba(94, 106, 210, 0.12);
+
+  /* Semantic */
+  --theme-success: #27a644;
+  --theme-error: #f0554c;
+  --theme-error-soft: rgba(240, 85, 76, 0.12);
+  --theme-error-deep: #e5443c;
+  --theme-warning: #e5a136;
+  --theme-warning-soft: rgba(229, 161, 54, 0.12);
+  --theme-warning-deep: #c48a24;
+
+  /* Extended palette */
   --theme-violet: #8a63d2;
-  --theme-violet-soft: #2b005c;
+  --theme-violet-soft: rgba(138, 99, 210, 0.12);
   --theme-violet-deep: #7928ca;
   --theme-cyan: #79ffe1;
-  --theme-cyan-soft: #005c48;
+  --theme-cyan-soft: rgba(121, 255, 225, 0.08);
   --theme-cyan-deep: #50e3c2;
   --theme-highlight-pink: #ff0080;
   --theme-highlight-magenta: #eb367f;
 
-  --theme-selection-bg: #ffffff;
-  --theme-selection-fg: #171717;
+  /* Inverse (for rare white-on-dark CTAs) */
+  --theme-inverse-canvas: #ffffff;
+  --theme-inverse-ink: #000000;
 
-  --shadow-1: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  /* Brand secure */
+  --theme-brand-secure: #7a7fad;
+
+  /* Selection */
+  --theme-selection-bg: #5e6ad2;
+  --theme-selection-fg: #ffffff;
+
+  /* Shadows – Linear uses surface lift, not drop shadows.
+     These are minimal inset borders for card structure. */
+  --shadow-1: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   --shadow-2:
-    0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   --shadow-3:
-    0px 2px 2px rgba(0, 0, 0, 0.4), 0px 8px 8px -8px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   --shadow-4:
-    0px 2px 2px rgba(0, 0, 0, 0.4), 0px 8px 16px -4px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   --shadow-5:
-    0px 1px 1px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.4),
-    0px 24px 32px -8px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 @theme {
   --color-primary: var(--theme-primary);
   --color-on-primary: var(--theme-on-primary);
+  --color-primary-hover: var(--theme-primary-hover);
+  --color-primary-focus: var(--theme-primary-focus);
   --color-ink: var(--theme-ink);
   --color-body: var(--theme-body);
   --color-mute: var(--theme-mute);
+  --color-ink-tertiary: var(--theme-ink-tertiary);
   --color-hairline: var(--theme-hairline);
   --color-hairline-strong: var(--theme-hairline-strong);
+  --color-hairline-tertiary: var(--theme-hairline-tertiary);
   --color-canvas: var(--theme-canvas);
   --color-canvas-soft: var(--theme-canvas-soft);
   --color-canvas-soft-2: var(--theme-canvas-soft-2);
+  --color-surface-3: var(--theme-surface-3);
+  --color-surface-4: var(--theme-surface-4);
   --color-link: var(--theme-link);
   --color-link-deep: var(--theme-link-deep);
   --color-link-bg-soft: var(--theme-link-bg-soft);
@@ -135,21 +114,18 @@
   --color-cyan-deep: var(--theme-cyan-deep);
   --color-highlight-pink: var(--theme-highlight-pink);
   --color-highlight-magenta: var(--theme-highlight-magenta);
-
-  --color-gradient-develop-start: var(--theme-gradient-develop-start);
-  --color-gradient-develop-end: var(--theme-gradient-develop-end);
-  --color-gradient-preview-start: var(--theme-gradient-preview-start);
-  --color-gradient-preview-end: var(--theme-gradient-preview-end);
-  --color-gradient-ship-start: var(--theme-gradient-ship-start);
-  --color-gradient-ship-end: var(--theme-gradient-ship-end);
+  --color-brand-secure: var(--theme-brand-secure);
+  --color-inverse-canvas: var(--theme-inverse-canvas);
+  --color-inverse-ink: var(--theme-inverse-ink);
 
   --color-selection-bg: var(--theme-selection-bg);
   --color-selection-fg: var(--theme-selection-fg);
 
-  --font-sans: Geist, Inter, system-ui, -apple-system, sans-serif;
-  --font-mono:
-    Geist Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  /* Fonts – Inter as Linear Display/Text substitute, JetBrains Mono as Linear Mono */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 
+  /* Spacing – 4px base unit per DESIGN.md */
   --spacing-xxs: 4px;
   --spacing-xs: 8px;
   --spacing-sm: 12px;
@@ -163,158 +139,182 @@
   --spacing-6xl: 128px;
   --spacing-section: 192px;
 
+  /* Border Radius – per DESIGN.md rounded tokens */
   --radius-none: 0px;
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  --radius-xxl: 24px;
   --radius-pill-sm: 64px;
-  --radius-pill: 100px;
+  --radius-pill: 9999px;
   --radius-full: 9999px;
 
+  /* Shadows */
   --shadow-level-1: var(--shadow-1);
   --shadow-level-2: var(--shadow-2);
   --shadow-level-3: var(--shadow-3);
   --shadow-level-4: var(--shadow-4);
   --shadow-level-5: var(--shadow-5);
 
-  --breakpoint-sm: 600px;
-  --breakpoint-md: 960px;
-  --breakpoint-lg: 1200px;
-  --breakpoint-xl: 1400px;
+  /* Breakpoints */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
 }
 
-@keyframes mesh-pulse {
-  0%,
-  100% {
-    opacity: 0.15;
-    transform: translate(-50%, -20%) scale(1);
-  }
-  50% {
-    opacity: 0.25;
-    transform: translate(-45%, -25%) scale(1.15);
-  }
-}
+/* ── Typography Utilities ─────────────────────────────── */
+/* Aligned to DESIGN.md hierarchy with aggressive negative tracking on display */
 
-.animate-mesh-pulse {
-  animation: mesh-pulse 10s ease-in-out infinite;
-}
-
-/* Custom typography utility classes */
 @utility font-display-xl {
   font-family: var(--font-sans);
-  font-size: 48px;
+  font-size: 80px;
   font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
+  line-height: 1.05;
+  letter-spacing: -3.0px;
 }
 
 @utility font-display-lg {
   font-family: var(--font-sans);
-  font-size: 32px;
+  font-size: 56px;
   font-weight: 600;
-  line-height: 40px;
-  letter-spacing: -1.28px;
+  line-height: 1.10;
+  letter-spacing: -1.8px;
 }
 
 @utility font-display-md {
   font-family: var(--font-sans);
-  font-size: 24px;
+  font-size: 40px;
   font-weight: 600;
-  line-height: 32px;
-  letter-spacing: -0.96px;
+  line-height: 1.15;
+  letter-spacing: -1.0px;
 }
 
-@utility font-display-sm {
+@utility font-headline {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.20;
+  letter-spacing: -0.6px;
+}
+
+@utility font-card-title {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+}
+
+@utility font-subhead {
   font-family: var(--font-sans);
   font-size: 20px;
-  font-weight: 600;
-  line-height: 28px;
-  letter-spacing: -0.6px;
+  font-weight: 400;
+  line-height: 1.40;
+  letter-spacing: -0.2px;
 }
 
 @utility font-body-lg {
   font-family: var(--font-sans);
   font-size: 18px;
   font-weight: 400;
-  line-height: 28px;
-  letter-spacing: 0px;
+  line-height: 1.50;
+  letter-spacing: -0.1px;
 }
 
 @utility font-body-md {
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 400;
-  line-height: 24px;
-  letter-spacing: 0px;
+  line-height: 1.50;
+  letter-spacing: -0.05px;
 }
 
 @utility font-body-md-strong {
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0px;
+  line-height: 1.50;
+  letter-spacing: -0.05px;
 }
 
 @utility font-body-sm {
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
-  letter-spacing: -0.28px;
+  line-height: 1.50;
+  letter-spacing: 0;
 }
 
 @utility font-body-sm-strong {
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.28px;
+  line-height: 1.50;
+  letter-spacing: 0;
 }
 
 @utility font-caption {
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 400;
-  line-height: 16px;
-  letter-spacing: 0px;
+  line-height: 1.40;
+  letter-spacing: 0;
 }
 
 @utility font-caption-mono {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 400;
-  line-height: 16px;
-  letter-spacing: 0px;
+  line-height: 1.40;
+  letter-spacing: 0;
 }
 
 @utility font-code {
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 400;
-  line-height: 20px;
-  letter-spacing: 0px;
+  line-height: 1.50;
+  letter-spacing: 0;
 }
 
 @utility font-button-md {
   font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 500;
-  line-height: 20px;
-  letter-spacing: 0px;
+  line-height: 1.20;
+  letter-spacing: 0;
 }
 
 @utility font-button-lg {
   font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0px;
+  line-height: 1.20;
+  letter-spacing: 0;
 }
 
-/* Reduced motion accessibility rules */
+@utility font-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.30;
+  letter-spacing: 0.4px;
+}
+
+/* Display size aliases for legacy classes */
+@utility font-display-sm {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.20;
+  letter-spacing: -0.6px;
+}
+
+/* ── Reduced Motion ─────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

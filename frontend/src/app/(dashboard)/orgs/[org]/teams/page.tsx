@@ -108,8 +108,8 @@ export default function OrgTeamsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center gap-xs font-sans text-text-muted">
-          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <div className="flex flex-col items-center gap-xs font-sans text-body">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span>Loading teams page...</span>
         </div>
       </div>
@@ -120,8 +120,8 @@ export default function OrgTeamsPage() {
     return (
       <div className="min-h-screen bg-canvas p-3xl">
         <div className="max-w-[600px] mx-auto text-center flex flex-col gap-sm items-center">
-          <h2 className="font-space-grotesk text-2xl font-bold text-danger">Error</h2>
-          <p className="font-inter text-text-muted text-sm">{error || "Organization not found"}</p>
+          <h2 className="font-sans text-2xl font-bold text-error">Error</h2>
+          <p className="font-sans text-body text-sm">{error || "Organization not found"}</p>
         </div>
       </div>
     );
@@ -141,7 +141,7 @@ export default function OrgTeamsPage() {
       <main className="max-w-[1200px] w-full mx-auto py-xl px-lg flex-1 flex flex-col gap-lg">
         {/* Actions bar */}
         <div className="flex justify-between items-center">
-          <h2 className="font-space-grotesk text-lg font-bold text-text-primary">
+          <h2 className="font-sans text-lg font-bold text-ink">
             Teams
           </h2>
           {isOwner && (
@@ -158,12 +158,12 @@ export default function OrgTeamsPage() {
 
         {/* Teams List */}
         {teams.length === 0 ? (
-          <Card className="bg-surface border-border p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[220px]">
-            <Users2 className="w-8 h-8 text-text-muted mb-sm" />
-            <h3 className="font-space-grotesk text-md font-semibold mb-xs text-text-primary">
+          <Card className="bg-canvas-soft border-hairline p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[220px]">
+            <Users2 className="w-8 h-8 text-body mb-sm" />
+            <h3 className="font-sans text-md font-semibold mb-xs text-ink">
               No teams created yet
             </h3>
-            <p className="font-inter text-text-muted text-xs max-w-[340px] mb-md leading-relaxed">
+            <p className="font-sans text-body text-xs max-w-[340px] mb-md leading-relaxed">
               Teams allow you to group organization members and manage repository access control collectively.
             </p>
             {isOwner && (
@@ -177,30 +177,30 @@ export default function OrgTeamsPage() {
             {teams.map((team) => (
               <Card
                 key={team.id}
-                className="bg-canvas border-border p-md rounded-sm flex items-center justify-between hover:border-accent/40 transition-all group"
+                className="bg-canvas border-hairline p-md rounded-sm flex items-center justify-between hover:border-accent/40 transition-all group"
               >
                 <div className="flex flex-col gap-xs">
                   <div className="flex items-center gap-sm">
                     <Link
                       href={`/orgs/${org.slug}/teams/${team.slug}`}
-                      className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent hover:underline"
+                      className="font-sans font-bold text-sm text-ink hover:text-primary hover:underline"
                     >
                       {team.name}
                     </Link>
-                    <span className="flex items-center gap-xxs px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-text-muted rounded-full font-mono uppercase">
+                    <span className="flex items-center gap-xxs px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-body rounded-full font-mono uppercase">
                       {team.privacy === "SECRET" ? <Lock className="w-2.5 h-2.5" /> : <Eye className="w-2.5 h-2.5" />}
                       {team.privacy}
                     </span>
                   </div>
 
-                  <p className="font-inter text-text-muted text-xs flex items-center gap-xs">
+                  <p className="font-sans text-body text-xs flex items-center gap-xs">
                     <Users2 className="w-3.5 h-3.5" />
                     {team.members?.length || 0} members
                   </p>
 
                   {team.parentTeam && (
-                    <span className="font-mono text-[10px] text-text-muted flex items-center gap-xxs mt-xxs">
-                      <Network className="w-3 h-3 text-accent" />
+                    <span className="font-mono text-[10px] text-body flex items-center gap-xxs mt-xxs">
+                      <Network className="w-3 h-3 text-primary" />
                       Child of {team.parentTeam.name}
                     </span>
                   )}
@@ -242,13 +242,13 @@ export default function OrgTeamsPage() {
       >
         <form onSubmit={handleCreateTeam} className="flex flex-col gap-md py-xs">
           {createError && (
-            <div className="p-xs bg-danger/10 border border-danger text-danger text-xs rounded-sm font-inter">
+            <div className="p-xs bg-error/10 border border-error text-error text-xs rounded-sm font-sans">
               {createError}
             </div>
           )}
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="team-name" className="text-text-muted text-xs">
+            <Label htmlFor="team-name" className="text-body text-xs">
               Team Name
             </Label>
             <Input
@@ -263,7 +263,7 @@ export default function OrgTeamsPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="team-slug" className="text-text-muted text-xs">
+            <Label htmlFor="team-slug" className="text-body text-xs">
               Team Slug
             </Label>
             <Input
@@ -278,7 +278,7 @@ export default function OrgTeamsPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="team-privacy" className="text-text-muted text-xs">
+            <Label htmlFor="team-privacy" className="text-body text-xs">
               Privacy Settings
             </Label>
             <Select
@@ -293,7 +293,7 @@ export default function OrgTeamsPage() {
           </div>
 
           <div className="flex flex-col gap-xs">
-            <Label htmlFor="parent-team" className="text-text-muted text-xs">
+            <Label htmlFor="parent-team" className="text-body text-xs">
               Parent Team (Optional, for nested structures)
             </Label>
             <Select

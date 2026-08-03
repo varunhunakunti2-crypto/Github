@@ -67,7 +67,7 @@ export function MergeBranchDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 font-space-grotesk">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 font-sans">
       <div className="w-full max-w-md bg-[#14171C] border border-[#232830] rounded-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-gray-200">
         <div className="px-6 py-4 border-b border-[#232830] bg-[#0B0D10] flex justify-between items-center">
           <h3 className="text-sm font-bold text-gray-200 uppercase tracking-wider">Merge branches</h3>

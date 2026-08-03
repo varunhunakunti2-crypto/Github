@@ -75,23 +75,23 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
   };
 
   return (
-    <div className="flex flex-col gap-sm text-text-primary w-full text-left">
+    <div className="flex flex-col gap-sm text-ink w-full text-left">
       {/* Large Avatar (e.g. 230px on desktop, md/lg on mobile) */}
       <div className="relative group self-center md:self-start mb-xs">
         <Avatar 
           src={avatarUrlVal} 
           name={fullNameVal} 
           size="xl" 
-          className="w-32 h-32 md:w-56 md:h-56 border-border shadow-sm rounded-full" 
+          className="w-32 h-32 md:w-56 md:h-56 border-hairline shadow-sm rounded-full" 
         />
       </div>
 
       {/* Name and Username */}
       <div className="flex flex-col">
-        <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-text-primary leading-tight">
+        <h1 className="font-sans text-2xl font-bold tracking-tight text-ink leading-tight">
           {fullNameVal}
         </h1>
-        <span className="font-jetbrains-mono text-base text-text-muted">
+        <span className="font-jetbrains-mono text-base text-body">
           @{user.username}
         </span>
       </div>
@@ -100,7 +100,7 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
       <div className="w-full mt-xxs">
         {isOwnProfile ? (
           <Link href="/settings/profile" passHref className="w-full">
-            <Button suppressHydrationWarning={true} className="bg-base hover:bg-border text-text-primary border border-border w-full py-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+            <Button suppressHydrationWarning={true} className="bg-canvas-soft-2 hover:bg-border text-ink border border-hairline w-full py-xs rounded-sm font-sans font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus">
                Edit profile
             </Button>
           </Link>
@@ -111,17 +111,17 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
             onMouseLeave={() => setIsHovered(false)}
             disabled={isPending}
             suppressHydrationWarning={true}
-            className={`w-full py-xs rounded-sm font-space-grotesk font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+            className={`w-full py-xs rounded-sm font-sans font-semibold text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus ${
               isFollowing
-                ? "bg-surface hover:bg-danger/10 border border-border hover:border-danger text-text-muted hover:text-danger"
-                : "bg-accent hover:bg-accent/90 text-white border border-transparent"
+                ? "bg-canvas-soft hover:bg-error/10 border border-hairline hover:border-error text-body hover:text-error"
+                : "bg-primary hover:bg-primary/90 text-white border border-transparent"
             }`}
           >
             {isFollowing ? (isHovered ? "Unfollow" : "Following") : "Follow"}
           </Button>
         )}
         {error && (
-          <span className="font-inter text-xs text-danger mt-1 block text-center animate-pulse">
+          <span className="font-sans text-xs text-error mt-1 block text-center animate-pulse">
             {error}
           </span>
         )}
@@ -129,28 +129,28 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
 
       {/* Bio */}
       {bioVal && (
-        <p className="font-inter text-text-primary text-xs leading-relaxed max-w-[280px] break-words mt-xs">
+        <p className="font-sans text-ink text-xs leading-relaxed max-w-[280px] break-words mt-xs">
           {bioVal}
         </p>
       )}
 
       {/* Details list */}
-      <div className="flex flex-col gap-xs mt-xs text-xs text-text-muted font-inter">
+      <div className="flex flex-col gap-xs mt-xs text-xs text-body font-sans">
         
         {/* Followers / Following counts */}
-        <div className="flex flex-wrap gap-xs text-[11px] font-semibold text-text-muted mb-xxs">
+        <div className="flex flex-wrap gap-xs text-[11px] font-semibold text-body mb-xxs">
           <Link
             href={`/${user.username}?tab=followers`}
-            className="hover:text-accent outline-none focus-visible:ring-1 focus-visible:ring-accent"
+            className="hover:text-primary outline-none focus-visible:ring-1 focus-visible:ring-primary-focus"
           >
-            👥 <span className="font-bold text-text-primary">{followersCount}</span> followers
+            👥 <span className="font-bold text-ink">{followersCount}</span> followers
           </Link>
           <span>·</span>
           <Link
             href={`/${user.username}?tab=following`}
-            className="hover:text-accent outline-none focus-visible:ring-1 focus-visible:ring-accent"
+            className="hover:text-primary outline-none focus-visible:ring-1 focus-visible:ring-primary-focus"
           >
-            <span className="font-bold text-text-primary">{rawFollowingCount}</span> following
+            <span className="font-bold text-ink">{rawFollowingCount}</span> following
           </Link>
         </div>
 
@@ -166,15 +166,15 @@ export default function ProfileHeader({ user, isOwnProfile }: ProfileHeaderProps
             href={websiteUrlVal.startsWith("http") ? websiteUrlVal : `https://${websiteUrlVal}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-xs hover:text-accent hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-accent truncate max-w-[240px]"
+            className="flex items-center gap-xs hover:text-primary hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-primary-focus truncate max-w-[240px]"
           >
             <LinkIcon className="w-3.5 h-3.5 shrink-0" />
             {websiteUrlVal}
           </a>
         )}
 
-        <div className="text-[10px] text-text-muted font-mono mt-xs border-t border-border pt-xs">
-          Member-Since: <span className="text-text-primary font-bold">{formattedDate()}</span>
+        <div className="text-[10px] text-body font-mono mt-xs border-t border-hairline pt-xs">
+          Member-Since: <span className="text-ink font-bold">{formattedDate()}</span>
         </div>
       </div>
     </div>
@@ -185,21 +185,21 @@ export function ProfileHeaderSkeleton() {
   return (
     <div className="flex flex-col gap-sm animate-pulse w-full">
       {/* Avatar Circle */}
-      <div className="w-32 h-32 md:w-56 md:h-56 rounded-full bg-surface border border-border self-center md:self-start"></div>
+      <div className="w-32 h-32 md:w-56 md:h-56 rounded-full bg-canvas-soft border border-hairline self-center md:self-start"></div>
 
       {/* Info Stack */}
       <div className="flex flex-col gap-xs w-full mt-xs">
-        <div className="h-6 bg-surface border border-border rounded-sm w-44"></div>
-        <div className="h-4 bg-surface border border-border rounded-sm w-28"></div>
+        <div className="h-6 bg-canvas-soft border border-hairline rounded-sm w-44"></div>
+        <div className="h-4 bg-canvas-soft border border-hairline rounded-sm w-28"></div>
       </div>
 
-      <div className="w-full h-8 bg-surface border border-border rounded-sm mt-xs"></div>
+      <div className="w-full h-8 bg-canvas-soft border border-hairline rounded-sm mt-xs"></div>
 
-      <div className="h-10 bg-surface border border-border rounded-sm w-full mt-xs"></div>
+      <div className="h-10 bg-canvas-soft border border-hairline rounded-sm w-full mt-xs"></div>
 
       <div className="flex flex-col gap-xs mt-xs">
-        <div className="h-4 bg-surface border border-border rounded-sm w-36"></div>
-        <div className="h-4 bg-surface border border-border rounded-sm w-32"></div>
+        <div className="h-4 bg-canvas-soft border border-hairline rounded-sm w-36"></div>
+        <div className="h-4 bg-canvas-soft border border-hairline rounded-sm w-32"></div>
       </div>
     </div>
   );

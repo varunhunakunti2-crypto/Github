@@ -155,19 +155,19 @@ export default function GlobalSearchBar() {
           onFocus={() => setShowDropdown(true)}
           onKeyDown={handleKeyDown}
           suppressHydrationWarning={true}
-          className="pl-lg pr-[70px] bg-canvas-soft border-border text-text-primary text-xs h-[36px] focus-visible:outline focus-visible:outline-accent"
+          className="pl-lg pr-[70px] bg-canvas-soft border-hairline text-ink text-xs h-[36px] focus-visible:outline focus-visible:outline-primary"
         />
-        <div className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-text-muted">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-md pointer-events-none text-mute">
           <Search className="w-4 h-4" />
         </div>
 
         {/* Action icons inside input */}
         <div className="absolute inset-y-0 right-0 flex items-center pr-xs gap-xs">
-          {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-text-muted" />}
+          {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-mute" />}
           <button
             type="button"
             onClick={() => setShowHelp(!showHelp)}
-            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-text-muted hover:text-text-primary transition-colors"
+            className="p-xxs rounded-xs hover:bg-canvas-soft-2 text-mute hover:text-ink transition-colors"
             title="Search Qualifier Syntax Help"
           >
             <HelpCircle className="w-4 h-4" />
@@ -177,38 +177,38 @@ export default function GlobalSearchBar() {
 
       {/* Qualifiers Help Box */}
       {showHelp && (
-        <div className="absolute left-0 right-0 mt-xs p-md bg-surface border border-border shadow-xl rounded-sm z-50 font-inter text-xs text-text-primary flex flex-col gap-sm">
-          <div className="font-space-grotesk font-bold text-text-primary border-b border-hairline pb-xs">
+        <div className="absolute left-0 right-0 mt-xs p-md bg-canvas-soft border border-hairline shadow-level-4 rounded-md z-50 font-sans text-xs text-ink flex flex-col gap-sm">
+          <div className="font-sans font-semibold text-[13px] text-ink border-b border-hairline pb-xs">
             Search Qualifiers Help
           </div>
-          <p className="text-text-muted">
+          <p className="text-mute">
             You can filter results using structured search prefixes:
           </p>
-          <div className="grid grid-cols-2 gap-xs font-mono text-[10px] text-text-primary bg-canvas-soft p-xs rounded-sm">
+          <div className="grid grid-cols-2 gap-xs font-mono text-[10px] text-ink bg-canvas-soft-2 p-xs rounded-md">
             <div>language:typescript</div>
-            <div className="text-text-muted">Filter by language</div>
+            <div className="text-mute">Filter by language</div>
             <div>stars:&gt;100</div>
-            <div className="text-text-muted">Filter by star count</div>
+            <div className="text-mute">Filter by star count</div>
             <div>is:open / is:closed</div>
-            <div className="text-text-muted">Filter issues state</div>
+            <div className="text-mute">Filter issues state</div>
             <div>org:acme</div>
-            <div className="text-text-muted">Scope to organization</div>
+            <div className="text-mute">Scope to organization</div>
             <div>user:appi</div>
-            <div className="text-text-muted">Scope to user</div>
+            <div className="text-mute">Scope to user</div>
             <div>repo:my-repo</div>
-            <div className="text-text-muted">Scope to repository name</div>
+            <div className="text-mute">Scope to repository name</div>
           </div>
         </div>
       )}
 
       {/* Search Preview Dropdown */}
       {showDropdown && query.trim().length > 0 && (
-        <div className="absolute left-0 right-0 mt-xs bg-surface border border-border shadow-xl rounded-sm z-50 overflow-hidden">
+        <div className="absolute left-0 right-0 mt-xs bg-canvas-soft border border-hairline shadow-level-4 rounded-md z-50 overflow-hidden">
           <div className="max-h-[360px] overflow-y-auto divide-y divide-hairline">
             {/* Repos Category */}
             {repos.length > 0 && (
               <div className="p-xs">
-                <div className="font-space-grotesk font-bold text-[10px] uppercase tracking-wider text-text-muted px-xs py-xxs">
+                <div className="font-sans font-medium text-[11px] uppercase tracking-[0.4px] text-mute px-xs py-xxs">
                   Repositories
                 </div>
                 {repos.map((r, i) => {
@@ -219,12 +219,12 @@ export default function GlobalSearchBar() {
                     <Link
                       key={r.id}
                       href={`/${owner}/${r.name}`}
-                      className={`flex items-center gap-xs p-xs rounded-xs font-inter text-xs transition-colors ${
-                        isFocused ? "bg-accent-soft text-accent" : "text-text-primary hover:bg-canvas-soft-2"
+                      className={`flex items-center gap-xs p-xs rounded-md font-sans text-xs transition-colors ${
+                        isFocused ? "bg-primary/10 text-primary" : "text-ink hover:bg-canvas-soft-2"
                       }`}
                       onClick={() => setShowDropdown(false)}
                     >
-                      <Folder className="w-4 h-4 shrink-0 text-text-muted" />
+                      <Folder className="w-4 h-4 shrink-0 text-mute" />
                       <span className="truncate">{owner}/{r.name}</span>
                     </Link>
                   );
@@ -235,7 +235,7 @@ export default function GlobalSearchBar() {
             {/* Users Category */}
             {users.length > 0 && (
               <div className="p-xs">
-                <div className="font-space-grotesk font-bold text-[10px] uppercase tracking-wider text-text-muted px-xs py-xxs">
+                <div className="font-sans font-medium text-[11px] uppercase tracking-[0.4px] text-mute px-xs py-xxs">
                   Users
                 </div>
                 {users.map((u, i) => {
@@ -245,12 +245,12 @@ export default function GlobalSearchBar() {
                     <Link
                       key={u.id}
                       href={`/${u.username}`}
-                      className={`flex items-center gap-xs p-xs rounded-xs font-inter text-xs transition-colors ${
-                        isFocused ? "bg-accent-soft text-accent" : "text-text-primary hover:bg-canvas-soft-2"
+                      className={`flex items-center gap-xs p-xs rounded-md font-sans text-xs transition-colors ${
+                        isFocused ? "bg-primary/10 text-primary" : "text-ink hover:bg-canvas-soft-2"
                       }`}
                       onClick={() => setShowDropdown(false)}
                     >
-                      <User className="w-4 h-4 shrink-0 text-text-muted" />
+                      <User className="w-4 h-4 shrink-0 text-mute" />
                       <span className="truncate">@{u.username} ({u.name || "User"})</span>
                     </Link>
                   );
@@ -261,7 +261,7 @@ export default function GlobalSearchBar() {
             {/* Issues Category */}
             {issues.length > 0 && (
               <div className="p-xs">
-                <div className="font-space-grotesk font-bold text-[10px] uppercase tracking-wider text-text-muted px-xs py-xxs">
+                <div className="font-sans font-medium text-[11px] uppercase tracking-[0.4px] text-mute px-xs py-xxs">
                   Issues & PRs
                 </div>
                 {issues.map((issue, i) => {
@@ -272,12 +272,12 @@ export default function GlobalSearchBar() {
                     <Link
                       key={issue.id}
                       href={`/${owner}/${issue.repository.name}/issues/${issue.number}`}
-                      className={`flex items-center gap-xs p-xs rounded-xs font-inter text-xs transition-colors ${
-                        isFocused ? "bg-accent-soft text-accent" : "text-text-primary hover:bg-canvas-soft-2"
+                      className={`flex items-center gap-xs p-xs rounded-xs font-sans text-xs transition-colors ${
+                        isFocused ? "bg-primary-soft text-primary" : "text-ink hover:bg-canvas-soft-2"
                       }`}
                       onClick={() => setShowDropdown(false)}
                     >
-                      <FileText className="w-4 h-4 shrink-0 text-text-muted" />
+                      <FileText className="w-4 h-4 shrink-0 text-mute" />
                       <span className="truncate">
                         #{issue.number} {issue.title}
                       </span>
@@ -288,19 +288,19 @@ export default function GlobalSearchBar() {
             )}
 
             {flatItems.length === 0 && !isLoading && (
-              <div className="p-md text-center text-text-muted font-inter text-xs">
+              <div className="p-md text-center text-mute font-sans text-xs">
                 No preview results for "{query}"
               </div>
             )}
           </div>
 
           {/* Footer actions */}
-          <div className="bg-canvas-soft p-xs flex justify-between items-center text-[11px] font-inter text-text-muted border-t border-hairline">
+          <div className="bg-canvas-soft-2 p-xs flex justify-between items-center text-[11px] font-sans text-mute border-t border-hairline">
             <span>Arrow keys to navigate, Enter to select</span>
             <Link
               href={`/search?q=${encodeURIComponent(query)}`}
-              className={`flex items-center gap-xxs px-xs py-[2px] rounded-xs font-semibold ${
-                focusedIndex === flatItems.length ? "bg-accent text-white" : "hover:text-accent hover:underline"
+              className={`flex items-center gap-xxs px-xs py-[2px] rounded-md font-semibold ${
+                focusedIndex === flatItems.length ? "bg-primary text-on-primary" : "hover:text-primary hover:underline"
               }`}
               onClick={() => setShowDropdown(false)}
             >

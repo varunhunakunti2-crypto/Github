@@ -70,10 +70,10 @@ export default function RepoExplorer({
   };
 
   return (
-    <div className="flex flex-col gap-md text-left text-text-primary font-inter w-full">
+    <div className="flex flex-col gap-md text-left text-ink font-sans w-full">
       
       {/* Branch Select, Path Nav & Clone Dropdown */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm border-b border-border pb-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm border-b border-hairline pb-md">
         
         {/* Branch Selector & Breadcrumbs */}
         <div className="flex flex-wrap items-center gap-xs text-sm font-semibold select-none">
@@ -82,7 +82,7 @@ export default function RepoExplorer({
             <select
               value={branch}
               onChange={(e) => onBranchChange?.(e.target.value)}
-              className="appearance-none pl-sm pr-lg py-[5px] bg-base border border-border rounded-sm text-xs font-semibold font-space-grotesk text-text-primary cursor-pointer hover:bg-surface focus:outline-none focus:ring-1 focus:ring-accent"
+              className="appearance-none pl-sm pr-lg py-[5px] bg-canvas-soft-2 border border-hairline rounded-sm text-xs font-semibold font-sans text-ink cursor-pointer hover:bg-canvas-soft focus:outline-none focus:ring-1 focus:ring-primary-focus"
             >
               {branches.map((b) => (
                 <option key={b} value={b}>
@@ -90,14 +90,14 @@ export default function RepoExplorer({
                 </option>
               ))}
             </select>
-            <GitBranch className="w-3.5 h-3.5 absolute right-xs top-1/2 -translate-y-1/2 pointer-events-none text-text-muted" />
+            <GitBranch className="w-3.5 h-3.5 absolute right-xs top-1/2 -translate-y-1/2 pointer-events-none text-body" />
           </div>
 
           {/* Breadcrumb Navigation */}
-          <div className="flex items-center gap-xxs font-space-grotesk text-xs">
+          <div className="flex items-center gap-xxs font-sans text-xs">
             <Link
               href={`/${owner}/${repoName}`}
-              className="text-accent hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-accent px-xxs py-[2px]"
+              className="text-primary hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-primary-focus px-xxs py-[2px]"
             >
               {repoName}
             </Link>
@@ -106,10 +106,10 @@ export default function RepoExplorer({
               const subPath = pathParts.slice(0, index + 1).join("/");
               return (
                 <React.Fragment key={subPath}>
-                  <span className="text-text-muted">/</span>
+                  <span className="text-body">/</span>
                   <Link
                     href={`/${owner}/${repoName}/tree/${branch}/${subPath}`}
-                    className="text-accent hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-accent px-xxs py-[2px] truncate max-w-[120px]"
+                    className="text-primary hover:underline rounded-xs outline-none focus-visible:ring-1 focus-visible:ring-primary-focus px-xxs py-[2px] truncate max-w-[120px]"
                   >
                     {part}
                   </Link>
@@ -123,23 +123,23 @@ export default function RepoExplorer({
         <div className="relative self-end sm:self-center">
           <Button
             onClick={() => setShowCloneDropdown(!showCloneDropdown)}
-            className="bg-accent hover:bg-accent/90 text-white py-xs px-md rounded-sm font-space-grotesk font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-accent outline-none"
+            className="bg-primary hover:bg-primary/90 text-white py-xs px-md rounded-sm font-sans font-semibold text-xs transition-colors flex items-center gap-xs focus:ring-2 focus:ring-primary-focus outline-none"
           >
             <Code className="w-3.5 h-3.5" />
             Code
           </Button>
 
           {showCloneDropdown && (
-            <Card className="absolute right-0 mt-xs p-md bg-surface border-border shadow-md rounded-sm w-[280px] z-50 flex flex-col gap-sm">
-              <div className="flex items-center justify-between border-b border-border pb-xs">
-                <span className="font-space-grotesk font-bold text-xs">Clone</span>
+            <Card className="absolute right-0 mt-xs p-md bg-canvas-soft border-hairline shadow-md rounded-sm w-[280px] z-50 flex flex-col gap-sm">
+              <div className="flex items-center justify-between border-b border-hairline pb-xs">
+                <span className="font-sans font-bold text-xs">Clone</span>
                 <div className="flex gap-xs">
                   <button
                     onClick={() => setActiveCloneTab("https")}
                     className={`text-[10px] font-bold px-xs py-xxs rounded-xs ${
                       activeCloneTab === "https"
-                        ? "bg-accent/10 text-accent border border-accent/20"
-                        : "text-text-muted border border-transparent hover:text-text-primary"
+                        ? "bg-primary/10 text-primary border border-accent/20"
+                        : "text-body border border-transparent hover:text-ink"
                     }`}
                   >
                     HTTPS
@@ -148,8 +148,8 @@ export default function RepoExplorer({
                     onClick={() => setActiveCloneTab("ssh")}
                     className={`text-[10px] font-bold px-xs py-xxs rounded-xs ${
                       activeCloneTab === "ssh"
-                        ? "bg-accent/10 text-accent border border-accent/20"
-                        : "text-text-muted border border-transparent hover:text-text-primary"
+                        ? "bg-primary/10 text-primary border border-accent/20"
+                        : "text-body border border-transparent hover:text-ink"
                     }`}
                   >
                     SSH
@@ -158,16 +158,16 @@ export default function RepoExplorer({
               </div>
 
               {/* Copy input group */}
-              <div className="flex items-center bg-base border border-border rounded-sm">
+              <div className="flex items-center bg-canvas-soft-2 border border-hairline rounded-sm">
                 <input
                   type="text"
                   readOnly
                   value={activeCloneTab === "https" ? cloneUrlHttps : cloneUrlSsh}
-                  className="bg-transparent border-none text-[10px] font-mono px-xs py-xs flex-1 outline-none text-text-primary truncate select-all"
+                  className="bg-transparent border-none text-[10px] font-mono px-xs py-xs flex-1 outline-none text-ink truncate select-all"
                 />
                 <button
                   onClick={copyCloneUrl}
-                  className="p-xs text-text-muted hover:text-text-primary border-l border-border transition-colors outline-none focus:ring-1 focus:ring-accent"
+                  className="p-xs text-body hover:text-ink border-l border-hairline transition-colors outline-none focus:ring-1 focus:ring-primary-focus"
                 >
                   {copied ? (
                     <Check className="w-3.5 h-3.5 text-success" />
@@ -177,8 +177,8 @@ export default function RepoExplorer({
                 </button>
               </div>
 
-              <div className="text-[9px] text-text-muted font-mono leading-relaxed flex items-start gap-xxs">
-                <Terminal className="w-3.5 h-3.5 shrink-0 text-text-muted" />
+              <div className="text-[9px] text-body font-mono leading-relaxed flex items-start gap-xxs">
+                <Terminal className="w-3.5 h-3.5 shrink-0 text-body" />
                 <span>Use git clone with this address to sync your repository files locally.</span>
               </div>
             </Card>
@@ -188,26 +188,26 @@ export default function RepoExplorer({
       </div>
 
       {/* Main Commit Bar Header */}
-      <div className="border border-border rounded-sm overflow-hidden bg-surface">
+      <div className="border border-hairline rounded-sm overflow-hidden bg-canvas-soft">
         
         {/* Latest Commit Bar */}
-        <div className="bg-base border-b border-border px-md py-sm flex items-center justify-between gap-md text-xs text-text-muted font-inter">
+        <div className="bg-canvas-soft-2 border-b border-hairline px-md py-sm flex items-center justify-between gap-md text-xs text-body font-sans">
           <div className="flex items-center gap-xs min-w-0">
             {/* Mock author circle */}
-            <div className="w-5 h-5 rounded-full bg-accent/20 border border-border text-[9px] flex items-center justify-center font-bold text-accent uppercase shrink-0">
+            <div className="w-5 h-5 rounded-full bg-primary/20 border border-hairline text-[9px] flex items-center justify-center font-bold text-primary uppercase shrink-0">
               {latestCommit.author.slice(0, 2)}
             </div>
             
-            <span className="font-semibold text-text-primary hover:text-accent hover:underline cursor-pointer">
+            <span className="font-semibold text-ink hover:text-primary hover:underline cursor-pointer">
               {latestCommit.author}
             </span>
             
-            <span className="text-text-primary font-medium truncate max-w-[280px] md:max-w-[400px]">
+            <span className="text-ink font-medium truncate max-w-[280px] md:max-w-[400px]">
               {latestCommit.message}
             </span>
           </div>
 
-          <span className="font-mono text-[10px] text-text-muted shrink-0">
+          <span className="font-mono text-[10px] text-body shrink-0">
             {new Date(latestCommit.date).toLocaleDateString()}
           </span>
         </div>
@@ -223,10 +223,10 @@ export default function RepoExplorer({
                   ? `/${owner}/${repoName}`
                   : `/${owner}/${repoName}/tree/${branch}/${pathParts.slice(0, -1).join("/")}`
               }
-              className="px-md py-[10px] text-accent font-semibold text-xs hover:bg-base/30 flex items-center gap-xs border-b border-border outline-none focus:bg-base/50"
+              className="px-md py-[10px] text-primary font-semibold text-xs hover:bg-canvas-soft-2/30 flex items-center gap-xs border-b border-hairline outline-none focus:bg-canvas-soft-2/50"
             >
-              <Folder className="w-4 h-4 shrink-0 text-text-muted" />
-              <span className="font-space-grotesk">..</span>
+              <Folder className="w-4 h-4 shrink-0 text-body" />
+              <span className="font-sans">..</span>
             </Link>
           )}
 
@@ -239,31 +239,31 @@ export default function RepoExplorer({
             return (
               <div
                 key={item.path}
-                className="px-md py-[10px] flex items-center justify-between gap-md text-xs hover:bg-base/30 transition-all font-inter"
+                className="px-md py-[10px] flex items-center justify-between gap-md text-xs hover:bg-canvas-soft-2/30 transition-all font-sans"
               >
                 {/* Left: Icon and Name */}
                 <div className="flex items-center gap-xs min-w-0 flex-1">
                   {isFolder ? (
-                    <Folder className="w-4 h-4 shrink-0 text-accent/80" />
+                    <Folder className="w-4 h-4 shrink-0 text-primary/80" />
                   ) : (
-                    <File className="w-4 h-4 shrink-0 text-text-muted" />
+                    <File className="w-4 h-4 shrink-0 text-body" />
                   )}
                   
                   <Link
                     href={rowLink}
-                    className="font-space-grotesk font-semibold text-text-primary hover:text-accent hover:underline truncate outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-xs"
+                    className="font-sans font-semibold text-ink hover:text-primary hover:underline truncate outline-none focus-visible:ring-1 focus-visible:ring-primary-focus rounded-xs"
                   >
                     {item.name}
                   </Link>
                 </div>
 
                 {/* Center: Latest Commit Message (Desktop only) */}
-                <div className="hidden md:block flex-1 text-text-muted truncate pr-md font-inter text-left">
+                <div className="hidden md:block flex-1 text-body truncate pr-md font-sans text-left">
                   {item.lastCommit?.message || "Update file"}
                 </div>
 
                 {/* Right: Timestamp */}
-                <div className="text-text-muted text-[10px] font-mono shrink-0 text-right select-none">
+                <div className="text-body text-[10px] font-mono shrink-0 text-right select-none">
                   {item.lastCommit
                     ? new Date(item.lastCommit.date).toLocaleDateString()
                     : "Recently"}

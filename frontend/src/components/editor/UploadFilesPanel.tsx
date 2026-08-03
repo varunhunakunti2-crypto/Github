@@ -76,7 +76,7 @@ export function UploadFilesPanel({
   }));
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 font-space-grotesk">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 font-sans">
       <div className="bg-[#14171C] border border-[#232830] rounded-lg w-full max-w-xl p-6 shadow-2xl flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-[#232830] pb-2">
           <h3 className="text-lg font-bold text-gray-200">Upload files</h3>

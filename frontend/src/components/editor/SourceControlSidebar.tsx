@@ -88,7 +88,7 @@ export function SourceControlSidebar({
   };
 
   return (
-    <div className="w-[320px] shrink-0 bg-[#14171C] border border-[#232830] rounded flex flex-col h-[500px] font-space-grotesk overflow-hidden">
+    <div className="w-[320px] shrink-0 bg-[#14171C] border border-[#232830] rounded flex flex-col h-[500px] font-sans overflow-hidden">
       <div className="p-4 border-b border-[#232830] bg-[#0B0D10] flex items-center justify-between">
         <h4 className="text-sm font-bold text-gray-200 uppercase tracking-wider">Source Control</h4>
         <span className="text-xs bg-[#232830] text-[#7C5CFF] px-2 py-0.5 rounded font-mono font-bold">

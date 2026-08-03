@@ -147,8 +147,8 @@ export default function OrgPeoplePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center gap-xs font-sans text-text-muted">
-          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <div className="flex flex-col items-center gap-xs font-sans text-body">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span>Loading members page...</span>
         </div>
       </div>
@@ -159,8 +159,8 @@ export default function OrgPeoplePage() {
     return (
       <div className="min-h-screen bg-canvas p-3xl">
         <div className="max-w-[600px] mx-auto text-center flex flex-col gap-sm items-center">
-          <h2 className="font-space-grotesk text-2xl font-bold text-danger">Error</h2>
-          <p className="font-inter text-text-muted text-sm">{error || "Organization not found"}</p>
+          <h2 className="font-sans text-2xl font-bold text-error">Error</h2>
+          <p className="font-sans text-body text-sm">{error || "Organization not found"}</p>
         </div>
       </div>
     );
@@ -192,7 +192,7 @@ export default function OrgPeoplePage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-lg"
             />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-text-muted">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-body">
               <Search className="w-4 h-4" />
             </div>
           </div>
@@ -211,11 +211,11 @@ export default function OrgPeoplePage() {
 
         {/* Members List */}
         <div className="flex flex-col gap-md">
-          <h2 className="font-space-grotesk text-md font-bold text-text-primary">
+          <h2 className="font-sans text-md font-bold text-ink">
             Members ({filteredMembers.length})
           </h2>
 
-          <Card className="bg-canvas border-border p-xxs rounded-sm">
+          <Card className="bg-canvas border-hairline p-xxs rounded-sm">
             <div className="divide-y divide-hairline">
               {filteredMembers.map((member) => (
                 <div key={member.id} className="flex items-center justify-between p-md hover:bg-canvas-soft-2 transition-colors">
@@ -224,19 +224,19 @@ export default function OrgPeoplePage() {
                       <img
                         src={member.user.avatarUrl}
                         alt={member.user.username}
-                        className="w-10 h-10 rounded-full object-cover border border-border"
+                        className="w-10 h-10 rounded-full object-cover border border-hairline"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-accent-soft text-accent flex items-center justify-center font-bold">
+                      <div className="w-10 h-10 rounded-full bg-accent-soft text-primary flex items-center justify-center font-bold">
                         {member.user.username.slice(0, 2).toUpperCase()}
                       </div>
                     )}
                     
                     <div className="flex flex-col">
-                      <span className="font-sans font-bold text-sm text-text-primary">
+                      <span className="font-sans font-bold text-sm text-ink">
                         {member.user.username}
                       </span>
-                      <span className="font-sans text-xs text-text-muted">
+                      <span className="font-sans text-xs text-body">
                         {member.user.name || member.user.email}
                       </span>
                     </div>
@@ -264,7 +264,7 @@ export default function OrgPeoplePage() {
                       <Button
                         variant="secondary-sm"
                         onClick={() => setMemberToRemove(member)}
-                        className="text-danger hover:border-danger hover:bg-danger/5"
+                        className="text-error hover:border-error hover:bg-error/5"
                         title="Remove member"
                       >
                         <UserMinus className="w-4 h-4" />
@@ -275,7 +275,7 @@ export default function OrgPeoplePage() {
               ))}
 
               {filteredMembers.length === 0 && (
-                <div className="p-xl text-center font-inter text-text-muted text-sm">
+                <div className="p-xl text-center font-sans text-body text-sm">
                   No members found matching "{searchQuery}"
                 </div>
               )}
@@ -285,24 +285,24 @@ export default function OrgPeoplePage() {
 
         {/* Pending Invitations Section */}
         <div className="flex flex-col gap-md mt-lg">
-          <h2 className="font-space-grotesk text-md font-bold text-text-primary">
+          <h2 className="font-sans text-md font-bold text-ink">
             Pending Invitations ({invitations.length})
           </h2>
 
           {invitations.length === 0 ? (
-            <div className="p-lg border border-hairline border-dashed rounded-sm text-center font-inter text-text-muted text-xs">
+            <div className="p-lg border border-hairline border-dashed rounded-sm text-center font-sans text-body text-xs">
               No pending invitations.
             </div>
           ) : (
-            <Card className="bg-canvas border-border p-xxs rounded-sm">
+            <Card className="bg-canvas border-hairline p-xxs rounded-sm">
               <div className="divide-y divide-hairline">
                 {invitations.map((inv) => (
                   <div key={inv.id} className="flex items-center justify-between p-md">
                     <div className="flex flex-col gap-xxs">
-                      <span className="font-sans font-bold text-sm text-text-primary">
+                      <span className="font-sans font-bold text-sm text-ink">
                         {inv.invitedEmail || inv.invitedUser?.username}
                       </span>
-                      <span className="font-sans text-xs text-text-muted">
+                      <span className="font-sans text-xs text-body">
                         Invited by @{inv.invitedBy.username} as {inv.role.toLowerCase()}
                       </span>
                     </div>
@@ -313,7 +313,7 @@ export default function OrgPeoplePage() {
                         <Button
                           variant="secondary-sm"
                           onClick={() => setInviteToRevoke(inv)}
-                          className="text-danger hover:border-danger hover:bg-danger/5"
+                          className="text-error hover:border-error hover:bg-error/5"
                         >
                           Revoke
                         </Button>
@@ -350,7 +350,7 @@ export default function OrgPeoplePage() {
               variant="primary-sm"
               onClick={handleRemoveMember}
               disabled={isRemoving}
-              className="bg-danger text-white hover:bg-danger/90 flex items-center gap-xxs"
+              className="bg-error text-white hover:bg-error/90 flex items-center gap-xxs"
             >
               {isRemoving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Remove member
@@ -358,8 +358,8 @@ export default function OrgPeoplePage() {
           </div>
         }
       >
-        <div className="flex items-start gap-md text-sm leading-relaxed text-text-muted">
-          <ShieldAlert className="w-8 h-8 text-danger shrink-0" />
+        <div className="flex items-start gap-md text-sm leading-relaxed text-body">
+          <ShieldAlert className="w-8 h-8 text-error shrink-0" />
           <div>
             Removing this user will revoke all repository permissions and team memberships they have within the organization. They will no longer be able to access private repositories.
           </div>
@@ -381,7 +381,7 @@ export default function OrgPeoplePage() {
               variant="primary-sm"
               onClick={handleRevokeInvitation}
               disabled={isRevoking}
-              className="bg-danger text-white hover:bg-danger/90 flex items-center gap-xxs"
+              className="bg-error text-white hover:bg-error/90 flex items-center gap-xxs"
             >
               {isRevoking && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Revoke Invite
@@ -389,7 +389,7 @@ export default function OrgPeoplePage() {
           </div>
         }
       >
-        <div className="flex items-start gap-md text-sm leading-relaxed text-text-muted">
+        <div className="flex items-start gap-md text-sm leading-relaxed text-body">
           <AlertTriangle className="w-8 h-8 text-warning shrink-0" />
           <div>
             Revoking this invitation prevents the recipient from using their invitation link to join the organization. You can send a new invitation later if needed.

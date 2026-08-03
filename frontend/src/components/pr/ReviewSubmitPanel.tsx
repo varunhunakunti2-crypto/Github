@@ -62,7 +62,7 @@ export default function ReviewSubmitPanel({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#14171C] border border-[#232830] rounded-lg p-4 flex flex-col gap-4 font-space-grotesk text-xs">
+    <form onSubmit={handleSubmit} className="bg-[#14171C] border border-[#232830] rounded-lg p-4 flex flex-col gap-4 font-sans text-xs">
       <div>
         <span className="font-bold text-gray-300 uppercase tracking-wider">Submit Review</span>
         <p className="text-gray-500 mt-0.5">Provide feedback, approve changes, or request modifications.</p>

@@ -82,8 +82,8 @@ export default function TopicsEditor({
   };
 
   return (
-    <div className="flex flex-col gap-xs text-left text-text-primary font-inter w-full">
-      <h3 className="font-space-grotesk text-xs font-bold text-text-muted uppercase tracking-wider select-none">
+    <div className="flex flex-col gap-xs text-left text-ink font-sans w-full">
+      <h3 className="font-sans text-xs font-bold text-body uppercase tracking-wider select-none">
         Topics
       </h3>
 
@@ -91,14 +91,14 @@ export default function TopicsEditor({
         {topics.map((topic) => (
           <span
             key={topic}
-            className="inline-flex items-center gap-xxs px-xs py-xxs bg-accent/5 border border-accent/15 text-accent text-[10px] font-semibold rounded-full font-space-grotesk"
+            className="inline-flex items-center gap-xxs px-xs py-xxs bg-primary/5 border border-accent/15 text-primary text-[10px] font-semibold rounded-full font-sans"
           >
             <span>{topic}</span>
             {canEdit && (
               <button
                 onClick={() => handleRemoveTopic(topic)}
                 disabled={isSaving}
-                className="hover:text-danger hover:bg-danger/10 p-[1px] rounded-full transition-colors outline-none focus:ring-1 focus:ring-accent"
+                className="hover:text-error hover:bg-error/10 p-[1px] rounded-full transition-colors outline-none focus:ring-1 focus:ring-primary-focus"
                 aria-label={`Remove topic ${topic}`}
               >
                 <X className="w-2.5 h-2.5" />
@@ -108,7 +108,7 @@ export default function TopicsEditor({
         ))}
 
         {topics.length === 0 && !isEditing && (
-          <span className="text-xs text-text-muted italic select-none">
+          <span className="text-xs text-body italic select-none">
             No topics defined
           </span>
         )}
@@ -117,7 +117,7 @@ export default function TopicsEditor({
         {canEdit && !isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-xxs px-xs py-xxs border border-dashed border-border bg-base hover:bg-surface text-text-muted hover:text-text-primary text-[10px] font-semibold rounded-full font-space-grotesk transition-colors outline-none focus:ring-1 focus:ring-accent"
+            className="flex items-center gap-xxs px-xs py-xxs border border-dashed border-hairline bg-canvas-soft-2 hover:bg-canvas-soft text-body hover:text-ink text-[10px] font-semibold rounded-full font-sans transition-colors outline-none focus:ring-1 focus:ring-primary-focus"
           >
             <Plus className="w-2.5 h-2.5" />
             Add topic
@@ -134,14 +134,14 @@ export default function TopicsEditor({
               placeholder="e.g. nextjs"
               value={newTopic}
               onChange={(e) => setNewTopic(e.target.value)}
-              className="bg-base border-border text-text-primary font-space-grotesk text-[10px] py-[3px] px-xs rounded-sm focus:border-accent focus:ring-1 focus:ring-accent flex-1"
+              className="bg-canvas-soft-2 border-hairline text-ink font-sans text-[10px] py-[3px] px-xs rounded-sm focus:border-accent focus:ring-1 focus:ring-primary-focus flex-1"
               disabled={isSaving}
               autoFocus
             />
             <button
               type="submit"
               disabled={isSaving || !newTopic}
-              className="bg-accent hover:bg-accent/90 text-white font-space-grotesk font-semibold text-[10px] px-xs rounded-sm transition-colors cursor-pointer"
+              className="bg-primary hover:bg-primary/90 text-white font-sans font-semibold text-[10px] px-xs rounded-sm transition-colors cursor-pointer"
             >
               Add
             </button>
@@ -152,13 +152,13 @@ export default function TopicsEditor({
                 setNewTopic("");
                 setError("");
               }}
-              className="border border-border bg-base hover:bg-surface text-text-primary font-space-grotesk font-semibold text-[10px] px-xs rounded-sm transition-colors"
+              className="border border-hairline bg-canvas-soft-2 hover:bg-canvas-soft text-ink font-sans font-semibold text-[10px] px-xs rounded-sm transition-colors"
             >
               Cancel
             </button>
           </div>
           {error && (
-            <span className="text-danger text-[9px] font-inter flex items-center gap-xxs">
+            <span className="text-error text-[9px] font-sans flex items-center gap-xxs">
               <AlertCircle className="w-3 h-3 shrink-0" />
               {error}
             </span>

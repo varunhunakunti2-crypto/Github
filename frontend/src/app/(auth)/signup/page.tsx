@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Card, Button, Input, Label } from "@gitforge/ui";
+import { Button, Input, Label } from "@gitforge/ui";
 
 export default function SignupPage() {
   const [username, setUsername] = useState("");
@@ -82,45 +82,35 @@ export default function SignupPage() {
 
   if (isSuccess) {
     return (
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
-          <div>Auth-Step: signup</div>
-          <div>State: verification-sent</div>
-        </div>
-        <h2 className="font-space-grotesk text-2xl font-bold mb-sm text-success">
+      <div className="bg-canvas-soft border border-hairline rounded-lg p-lg w-full">
+        <h2 className="font-sans text-[22px] font-medium tracking-[-0.4px] text-success mb-sm">
           Account Created
         </h2>
-        <p className="font-inter text-text-muted text-sm mb-md">
-          A verification link has been sent to <span className="font-mono text-text-primary">{email}</span>. Please check your inbox and follow the link to activate your account.
+        <p className="font-sans text-[14px] text-body mb-md leading-[1.50]">
+          A verification link has been sent to <span className="font-mono text-ink">{email}</span>. Please check your inbox and follow the link to activate your account.
         </p>
-        <Link href="/login" className="inline-block w-full text-center text-sm font-medium text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-sm">
+        <Link href="/login" className="inline-block w-full text-center text-[14px] font-medium text-primary hover:text-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary-focus rounded-xs">
           Return to Sign In
         </Link>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-      {/* Signature monospace commit trailer block */}
-      <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
-        <div>Auth-Step: signup</div>
-        <div>State: new-account</div>
-      </div>
-
-      <h1 className="font-space-grotesk text-3xl font-bold mb-md tracking-tight">
+    <div className="bg-canvas-soft border border-hairline rounded-lg p-lg w-full">
+      <h1 className="font-sans text-[22px] font-medium tracking-[-0.4px] text-ink mb-lg">
         Create your account
       </h1>
 
       {errors.global && (
-        <div className="mb-md p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+        <div className="mb-md p-sm bg-error/10 border border-error/30 text-error text-[14px] rounded-md font-sans">
           {errors.global}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-md" noValidate>
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="username" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="username" className="text-body font-sans text-[14px] font-medium">
             Username
           </Label>
           <Input
@@ -128,19 +118,18 @@ export default function SignupPage() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
             error={!!errors.username}
             placeholder="e.g. appi"
             disabled={isLoading}
             autoComplete="username"
           />
           {errors.username && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.username}</span>
+            <span className="text-error text-[12px] mt-xxs font-sans">{errors.username}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="email" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="email" className="text-body font-sans text-[14px] font-medium">
             Email address
           </Label>
           <Input
@@ -148,19 +137,18 @@ export default function SignupPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
             error={!!errors.email}
             placeholder="name@example.com"
             disabled={isLoading}
             autoComplete="email"
           />
           {errors.email && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.email}</span>
+            <span className="text-error text-[12px] mt-xxs font-sans">{errors.email}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="password" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="password" className="text-body font-sans text-[14px] font-medium">
             Password
           </Label>
           <Input
@@ -168,19 +156,18 @@ export default function SignupPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
             error={!!errors.password}
             placeholder="••••••••"
             disabled={isLoading}
             autoComplete="new-password"
           />
           {errors.password && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.password}</span>
+            <span className="text-error text-[12px] mt-xxs font-sans">{errors.password}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="confirmPassword" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="confirmPassword" className="text-body font-sans text-[14px] font-medium">
             Confirm Password
           </Label>
           <Input
@@ -188,35 +175,35 @@ export default function SignupPage() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
             error={!!errors.confirmPassword}
             placeholder="••••••••"
             disabled={isLoading}
             autoComplete="new-password"
           />
           {errors.confirmPassword && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.confirmPassword}</span>
+            <span className="text-error text-[12px] mt-xxs font-sans">{errors.confirmPassword}</span>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isLoading}
-          className="bg-accent hover:bg-accent/90 text-white w-full rounded-sm font-space-grotesk font-semibold py-sm mt-xs transition-colors focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base"
+          variant="primary"
+          className="w-full mt-xs"
         >
           {isLoading ? "Creating account..." : "Sign Up"}
         </Button>
       </form>
 
-      <div className="mt-lg text-left text-sm text-text-muted">
+      <div className="mt-lg text-left text-[14px] text-body">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-sm"
+          className="text-primary hover:text-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary-focus rounded-xs"
         >
           Sign In
         </Link>
       </div>
-    </Card>
+    </div>
   );
 }

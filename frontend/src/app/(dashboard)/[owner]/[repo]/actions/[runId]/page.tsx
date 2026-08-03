@@ -158,7 +158,7 @@ export default function WorkflowRunDetailPage() {
     return (
       <div className="p-xl flex items-center justify-center gap-xs text-mute">
         <Loader2 className="w-5 h-5 animate-spin text-link" />
-        <span className="font-inter text-sm">Loading run details...</span>
+        <span className="font-sans text-sm">Loading run details...</span>
       </div>
     );
   }
@@ -166,7 +166,7 @@ export default function WorkflowRunDetailPage() {
   if (!run) {
     return (
       <div className="p-xl text-center text-mute">
-        <p className="font-inter text-sm">Run not found.</p>
+        <p className="font-sans text-sm">Run not found.</p>
         <Link href={`/${owner}/${repo}/actions`} className="text-link hover:underline text-xs mt-xs inline-block">Back to Actions</Link>
       </div>
     );
@@ -184,11 +184,11 @@ export default function WorkflowRunDetailPage() {
             <span>/</span>
             <span>#{run.runNumber}</span>
           </div>
-          <h1 className="font-space-grotesk text-xl font-bold text-ink flex items-center gap-xs">
+          <h1 className="font-sans text-xl font-bold text-ink flex items-center gap-xs">
             {STATUS_ICON[run.status]}
             {run.workflow.name} <span className="text-mute font-mono text-sm">#{run.runNumber}</span>
           </h1>
-          <div className="flex items-center gap-sm text-[10px] text-mute font-inter flex-wrap">
+          <div className="flex items-center gap-sm text-[10px] text-mute font-sans flex-wrap">
             <span className="flex items-center gap-xxs"><GitBranch className="w-3 h-3" /> {run.headBranch}</span>
             <span className="flex items-center gap-xxs"><GitCommit className="w-3 h-3" /> {run.headSha.substring(0, 7)}</span>
             <span>Triggered by: {run.triggerEvent}</span>
@@ -211,7 +211,7 @@ export default function WorkflowRunDetailPage() {
       {/* Jobs */}
       <div className="space-y-xs">
         {run.jobs.map(job => (
-          <div key={job.id} className="bg-surface border border-hairline rounded-sm overflow-hidden">
+          <div key={job.id} className="bg-canvas-soft border border-hairline rounded-sm overflow-hidden">
             {/* Job Header */}
             <button
               onClick={() => toggleJob(job.id)}
@@ -270,7 +270,7 @@ export default function WorkflowRunDetailPage() {
 
       {/* Artifacts */}
       {run.artifacts.length > 0 && (
-        <div className="bg-surface border border-hairline rounded-sm p-sm space-y-xs">
+        <div className="bg-canvas-soft border border-hairline rounded-sm p-sm space-y-xs">
           <h2 className="font-sans font-bold text-sm text-ink flex items-center gap-xs">
             <Package className="w-4 h-4 text-link" /> Artifacts ({run.artifacts.length})
           </h2>

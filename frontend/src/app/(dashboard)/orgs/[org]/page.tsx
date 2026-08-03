@@ -55,8 +55,8 @@ export default function OrgDashboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-canvas flex items-center justify-center">
-        <div className="flex flex-col items-center gap-xs font-sans text-text-muted">
-          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+        <div className="flex flex-col items-center gap-xs font-sans text-body">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span>Loading organization...</span>
         </div>
       </div>
@@ -67,8 +67,8 @@ export default function OrgDashboardPage() {
     return (
       <div className="min-h-screen bg-canvas p-3xl">
         <div className="max-w-[600px] mx-auto text-center flex flex-col gap-sm items-center">
-          <h2 className="font-space-grotesk text-2xl font-bold text-danger">Error</h2>
-          <p className="font-inter text-text-muted text-sm">{error || "Organization not found"}</p>
+          <h2 className="font-sans text-2xl font-bold text-error">Error</h2>
+          <p className="font-sans text-body text-sm">{error || "Organization not found"}</p>
           <Button variant="secondary" onClick={fetchData}>
             Try again
           </Button>
@@ -92,7 +92,7 @@ export default function OrgDashboardPage() {
       <main className="max-w-[1200px] w-full mx-auto py-xl px-lg flex-1 flex flex-col gap-lg">
         {/* Actions bar */}
         <div className="flex justify-between items-center">
-          <h2 className="font-space-grotesk text-lg font-bold text-text-primary">
+          <h2 className="font-sans text-lg font-bold text-ink">
             Repositories
           </h2>
           {isOwner && (
@@ -107,12 +107,12 @@ export default function OrgDashboardPage() {
 
         {/* Repositories grid */}
         {repos.length === 0 ? (
-          <Card className="bg-surface border-border p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[220px]">
-            <BuildingIcon className="w-8 h-8 text-text-muted mb-sm" />
-            <h3 className="font-space-grotesk text-md font-semibold mb-xs text-text-primary">
+          <Card className="bg-canvas-soft border-hairline p-3xl rounded-sm text-center flex flex-col items-center justify-center border-dashed min-h-[220px]">
+            <BuildingIcon className="w-8 h-8 text-body mb-sm" />
+            <h3 className="font-sans text-md font-semibold mb-xs text-ink">
               No repositories yet
             </h3>
-            <p className="font-inter text-text-muted text-xs max-w-[340px] mb-md leading-relaxed">
+            <p className="font-sans text-body text-xs max-w-[340px] mb-md leading-relaxed">
               This organization doesn't have any repositories. Repositories created inside this organization will show up here.
             </p>
             {isOwner && (
@@ -128,30 +128,30 @@ export default function OrgDashboardPage() {
             {repos.map((repo) => (
               <Card
                 key={repo.id}
-                className="bg-canvas border-border p-md rounded-sm flex flex-col justify-between hover:border-accent/40 transition-all group"
+                className="bg-canvas border-hairline p-md rounded-sm flex flex-col justify-between hover:border-accent/40 transition-all group"
               >
                 <div className="flex flex-col gap-xs">
                   <div className="flex items-center justify-between gap-sm">
                     <Link
                       href={`/${org.slug}/${repo.name}`}
-                      className="font-space-grotesk font-bold text-sm text-text-primary hover:text-accent hover:underline break-all"
+                      className="font-sans font-bold text-sm text-ink hover:text-primary hover:underline break-all"
                     >
                       {repo.name}
                     </Link>
-                    <span className="flex items-center gap-xxs px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-text-muted rounded-full font-mono uppercase">
+                    <span className="flex items-center gap-xxs px-xs py-[2px] bg-canvas-soft border border-hairline text-[10px] text-body rounded-full font-mono uppercase">
                       {repo.isPrivate ? <Lock className="w-2.5 h-2.5" /> : <Globe className="w-2.5 h-2.5" />}
                       {repo.isPrivate ? "Private" : "Public"}
                     </span>
                   </div>
 
                   {repo.description && (
-                    <p className="font-inter text-text-muted text-xs leading-relaxed line-clamp-2 min-h-[36px]">
+                    <p className="font-sans text-body text-xs leading-relaxed line-clamp-2 min-h-[36px]">
                       {repo.description}
                     </p>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between mt-md pt-xs border-t border-hairline font-mono text-[11px] text-text-muted">
+                <div className="flex items-center justify-between mt-md pt-xs border-t border-hairline font-mono text-[11px] text-body">
                   <div className="flex items-center gap-md">
                     <span className="flex items-center gap-xs">
                       <Star className="w-3.5 h-3.5" />

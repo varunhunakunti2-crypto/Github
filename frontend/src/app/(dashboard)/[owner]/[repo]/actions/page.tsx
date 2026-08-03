@@ -86,7 +86,7 @@ export default function ActionsPage() {
     return (
       <div className="p-xl flex items-center justify-center gap-xs text-mute">
         <Loader2 className="w-5 h-5 animate-spin text-link" />
-        <span className="font-inter text-sm">Loading workflows...</span>
+        <span className="font-sans text-sm">Loading workflows...</span>
       </div>
     );
   }
@@ -96,11 +96,11 @@ export default function ActionsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-sm">
         <div>
-          <h1 className="font-space-grotesk text-xl font-bold text-ink flex items-center gap-xs">
+          <h1 className="font-sans text-xl font-bold text-ink flex items-center gap-xs">
             <Zap className="w-5 h-5 text-link" />
             Actions
           </h1>
-          <p className="font-inter text-xs text-mute mt-xxs">
+          <p className="font-sans text-xs text-mute mt-xxs">
             {workflows.length} workflow{workflows.length !== 1 ? "s" : ""} · {runs.length} run{runs.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -142,7 +142,7 @@ export default function ActionsPage() {
       {filteredRuns.length === 0 ? (
         <div className="text-center py-xl space-y-xs">
           <AlertTriangle className="w-8 h-8 text-mute mx-auto" />
-          <p className="font-inter text-sm text-mute">
+          <p className="font-sans text-sm text-mute">
             {runs.length === 0 ? "No workflow runs yet." : "No runs match this filter."}
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function ActionsPage() {
               <Link
                 key={run.id}
                 href={`/${owner}/${repo}/actions/${run.id}`}
-                className="flex items-center gap-sm p-sm bg-surface border border-hairline rounded-sm hover:border-hairline-strong transition-colors group"
+                className="flex items-center gap-sm p-sm bg-canvas-soft border border-hairline rounded-sm hover:border-hairline-strong transition-colors group"
               >
                 {/* Status Icon */}
                 <div className={`p-xs rounded-xs ${cfg.bg} ${cfg.color}`}>
@@ -169,7 +169,7 @@ export default function ActionsPage() {
                     </span>
                     <span className="font-mono text-[10px] text-mute">#{run.runNumber}</span>
                   </div>
-                  <div className="flex items-center gap-sm mt-xxs text-[10px] text-mute font-inter">
+                  <div className="flex items-center gap-sm mt-xxs text-[10px] text-mute font-sans">
                     <span className="flex items-center gap-xxs">
                       <GitBranch className="w-3 h-3" /> {run.headBranch}
                     </span>

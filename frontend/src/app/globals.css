@@ -1,14 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @import "tailwindcss";
+
+/* ── Linear Design System – Frontend Overrides ─────────────────── */
 
 :root {
   --theme-canvas: #010102;
   --theme-canvas-soft: #0f1011;
   --theme-canvas-soft-2: #141516;
   --theme-ink: #f7f8f8;
-  --theme-body: #f7f8f8;
-  --theme-mute: #d0d6e0;
+  --theme-body: #d0d6e0;
+  --theme-mute: #8a8f98;
   --theme-hairline: #23252a;
   --theme-hairline-strong: #34343a;
   --theme-primary: #5e6ad2;
@@ -21,6 +23,7 @@
 @theme {
   --color-base: #010102;
   --color-surface: #0f1011;
+  --color-surface-3: #18191a;
   --color-border: #23252a;
   --color-text-primary: #f7f8f8;
   --color-text-muted: #d0d6e0;
@@ -28,7 +31,7 @@
   --color-success: #27a644;
   --color-danger: #f0554c;
 
-  --font-space-grotesk: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-space-grotesk: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, "SF Mono", monospace;
 }
@@ -39,3 +42,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* Selection styling */
+::selection {
+  background-color: #5e6ad2;
+  color: #ffffff;
+}

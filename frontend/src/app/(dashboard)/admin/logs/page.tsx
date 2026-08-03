@@ -147,11 +147,11 @@ export default function AdminLogsPage() {
       {isLoading ? (
         <div className="text-center py-xl text-gray-400">Loading audit logs...</div>
       ) : error ? (
-        <div className="p-md bg-danger/10 border border-danger text-danger text-sm rounded-sm">{error}</div>
+        <div className="p-md bg-error/10 border border-error text-error text-sm rounded-sm">{error}</div>
       ) : logs.length === 0 ? (
         <Card className="bg-[#161B22] border-[#30363D] p-xl rounded-sm text-center">
           <span className="text-3xl">📝</span>
-          <h3 className="font-space-grotesk text-lg font-bold text-white mt-sm">No logs recorded</h3>
+          <h3 className="font-sans text-lg font-bold text-white mt-sm">No logs recorded</h3>
           <p className="text-gray-400 text-xs mt-xxs">No audit logs matching this search filter were found.</p>
         </Card>
       ) : (
@@ -196,14 +196,14 @@ export default function AdminLogsPage() {
             <Button
               disabled={historyCursors.length === 0}
               onClick={handlePrevPage}
-              className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm disabled:opacity-50"
+              className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm disabled:opacity-50"
             >
               Previous
             </Button>
             <Button
               disabled={!nextCursor}
               onClick={handleNextPage}
-              className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-border rounded-sm disabled:opacity-50"
+              className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-sm py-xxs border border-hairline rounded-sm disabled:opacity-50"
             >
               Next
             </Button>

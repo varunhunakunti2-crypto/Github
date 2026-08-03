@@ -75,18 +75,18 @@ function ResetPasswordContent() {
 
   if (hasTokenError) {
     return (
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+        <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
           <div>Auth-Step: reset-password</div>
           <div>State: invalid-request</div>
         </div>
-        <h2 className="font-space-grotesk text-2xl font-bold mb-sm text-danger">
+        <h2 className="font-sans text-2xl font-bold mb-sm text-error">
           Invalid Reset Link
         </h2>
-        <p className="font-inter text-text-muted text-sm mb-md">
+        <p className="font-sans text-body text-sm mb-md">
           The password reset link is missing a valid token. Please request a new password reset link.
         </p>
-        <Link href="/forgot-password" className="inline-block w-full text-center text-sm font-medium text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-sm">
+        <Link href="/forgot-password" className="inline-block w-full text-center text-sm font-medium text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary-focus rounded-sm">
           Request new reset link
         </Link>
       </Card>
@@ -95,18 +95,18 @@ function ResetPasswordContent() {
 
   if (isSuccess) {
     return (
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+        <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
           <div>Auth-Step: reset-password</div>
           <div>State: completed</div>
         </div>
-        <h2 className="font-space-grotesk text-2xl font-bold mb-sm text-success">
+        <h2 className="font-sans text-2xl font-bold mb-sm text-success">
           Password Updated
         </h2>
-        <p className="font-inter text-text-muted text-sm mb-md">
+        <p className="font-sans text-body text-sm mb-md">
           Your password has been successfully updated. You can now log in using your new credentials.
         </p>
-        <Link href="/login" className="inline-block w-full text-center text-sm font-medium text-accent hover:underline focus:outline-none focus:ring-1 focus:ring-accent rounded-sm">
+        <Link href="/login" className="inline-block w-full text-center text-sm font-medium text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary-focus rounded-sm">
           Sign In
         </Link>
       </Card>
@@ -114,25 +114,25 @@ function ResetPasswordContent() {
   }
 
   return (
-    <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-      <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+    <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+      <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
         <div>Auth-Step: reset-password</div>
         <div>State: pending</div>
       </div>
 
-      <h1 className="font-space-grotesk text-3xl font-bold mb-md tracking-tight">
+      <h1 className="font-sans text-3xl font-bold mb-md tracking-tight">
         Choose new password
       </h1>
 
       {errors.global && (
-        <div className="mb-md p-sm bg-danger/10 border border-danger text-danger text-sm rounded-sm font-inter">
+        <div className="mb-md p-sm bg-error/10 border border-error text-error text-sm rounded-sm font-sans">
           {errors.global}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-md" noValidate>
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="password" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="password" className="text-body font-sans">
             New Password
           </Label>
           <Input
@@ -140,19 +140,19 @@ function ResetPasswordContent() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
+            className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm"
             error={!!errors.password}
             placeholder="••••••••"
             disabled={isLoading}
             autoComplete="new-password"
           />
           {errors.password && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.password}</span>
+            <span className="text-error text-xs mt-1 font-sans">{errors.password}</span>
           )}
         </div>
 
         <div className="flex flex-col gap-xs">
-          <Label htmlFor="confirmPassword" className="text-text-muted font-space-grotesk">
+          <Label htmlFor="confirmPassword" className="text-body font-sans">
             Confirm New Password
           </Label>
           <Input
@@ -160,21 +160,21 @@ function ResetPasswordContent() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="bg-base border-border text-text-primary placeholder:text-text-muted/40 focus:border-accent focus:ring-1 focus:ring-accent rounded-sm"
+            className="bg-canvas-soft-2 border-hairline text-ink placeholder:text-body/40 focus:border-accent focus:ring-1 focus:ring-primary-focus rounded-sm"
             error={!!errors.confirmPassword}
             placeholder="••••••••"
             disabled={isLoading}
             autoComplete="new-password"
           />
           {errors.confirmPassword && (
-            <span className="text-danger text-xs mt-1 font-inter">{errors.confirmPassword}</span>
+            <span className="text-error text-xs mt-1 font-sans">{errors.confirmPassword}</span>
           )}
         </div>
 
         <Button
           type="submit"
           disabled={isLoading}
-          className="bg-accent hover:bg-accent/90 text-white w-full rounded-sm font-space-grotesk font-semibold py-sm mt-xs transition-colors focus:ring-2 focus:ring-accent"
+          className="bg-primary hover:bg-primary/90 text-white w-full rounded-sm font-sans font-semibold py-sm mt-xs transition-colors focus:ring-2 focus:ring-primary-focus"
         >
           {isLoading ? "Updating password..." : "Reset password"}
         </Button>
@@ -186,12 +186,12 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
-      <Card className="bg-surface border-border text-text-primary p-lg rounded-sm shadow-none">
-        <div className="mb-md font-mono text-[12px] text-text-muted border border-border bg-base p-xs rounded-sm">
+      <Card className="bg-canvas-soft border-hairline text-ink p-lg rounded-sm shadow-none">
+        <div className="mb-md font-mono text-[12px] text-body border border-hairline bg-canvas-soft-2 p-xs rounded-sm">
           <div>Auth-Step: reset-password</div>
           <div>State: loading</div>
         </div>
-        <h1 className="font-space-grotesk text-3xl font-bold mb-sm tracking-tight">Loading...</h1>
+        <h1 className="font-sans text-3xl font-bold mb-sm tracking-tight">Loading...</h1>
       </Card>
     }>
       <ResetPasswordContent />

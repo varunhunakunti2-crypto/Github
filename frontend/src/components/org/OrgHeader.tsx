@@ -67,7 +67,7 @@ export default function OrgHeader({
   };
 
   return (
-    <div className="border-b border-border bg-canvas pt-xl px-lg">
+    <div className="border-b border-hairline bg-canvas pt-xl px-lg">
       <div className="max-w-[1200px] mx-auto flex flex-col gap-lg">
         {/* Main Header Row */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
@@ -76,17 +76,17 @@ export default function OrgHeader({
               <img
                 src={org.avatarUrl}
                 alt={org.name}
-                className="w-16 h-16 rounded-md object-cover border border-border"
+                className="w-16 h-16 rounded-md object-cover border border-hairline"
               />
             ) : (
-              <div className="w-16 h-16 rounded-md bg-accent-soft border border-hairline flex items-center justify-center text-accent">
+              <div className="w-16 h-16 rounded-md bg-primary-soft border border-hairline flex items-center justify-center text-primary">
                 <Building className="w-8 h-8" />
               </div>
             )}
             
             <div className="flex flex-col gap-xxs">
               <div className="flex items-center gap-xs">
-                <h1 className="font-space-grotesk text-2xl font-bold tracking-tight text-text-primary">
+                <h1 className="font-sans text-2xl font-bold tracking-tight text-ink">
                   {org.name}
                 </h1>
                 {org.myRole && (
@@ -96,20 +96,20 @@ export default function OrgHeader({
                   </Badge>
                 )}
               </div>
-              <span className="font-mono text-xs text-text-muted">
+              <span className="font-mono text-xs text-body">
                 gitforge.dev/orgs/{org.slug}
               </span>
             </div>
           </div>
 
           {/* Org stats */}
-          <div className="flex items-center gap-md text-xs font-mono text-text-muted">
+          <div className="flex items-center gap-md text-xs font-mono text-body">
             <div className="flex items-center gap-xs">
-              <GitFork className="w-4 h-4 text-text-muted" />
+              <GitFork className="w-4 h-4 text-body" />
               <span>{repoCount} Repositories</span>
             </div>
             <div className="flex items-center gap-xs">
-              <Users className="w-4 h-4 text-text-muted" />
+              <Users className="w-4 h-4 text-body" />
               <span>{memberCount} Members</span>
             </div>
           </div>
@@ -154,13 +154,13 @@ export default function OrgHeader({
             </div>
           ) : (
             <div className="flex items-start gap-xs group">
-              <p className="font-inter text-sm text-text-muted leading-relaxed">
+              <p className="font-sans text-sm text-body leading-relaxed">
                 {org.description || "No description provided."}
               </p>
               {isOwner && (
                 <button
                   onClick={() => setIsEditingDesc(true)}
-                  className="p-xxs rounded-xs hover:bg-canvas-soft text-text-muted hover:text-text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  className="p-xxs rounded-xs hover:bg-canvas-soft text-body hover:text-ink transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
                   aria-label="Edit description"
                 >
                   <Pencil className="w-3.5 h-3.5" />
@@ -176,8 +176,8 @@ export default function OrgHeader({
             href={`/orgs/${org.slug}`}
             className={`font-sans text-sm font-medium px-md h-[40px] flex items-center justify-center border-b-2 transition-all ${
               activeTab === "overview"
-                ? "border-accent text-accent font-semibold"
-                : "border-transparent text-text-muted hover:text-text-primary hover:border-border"
+                ? "border-accent text-primary font-semibold"
+                : "border-transparent text-body hover:text-ink hover:border-hairline"
             }`}
           >
             <GitFork className="w-4 h-4 mr-xs shrink-0" />
@@ -188,8 +188,8 @@ export default function OrgHeader({
             href={`/orgs/${org.slug}/people`}
             className={`font-sans text-sm font-medium px-md h-[40px] flex items-center justify-center border-b-2 transition-all ${
               activeTab === "people"
-                ? "border-accent text-accent font-semibold"
-                : "border-transparent text-text-muted hover:text-text-primary hover:border-border"
+                ? "border-accent text-primary font-semibold"
+                : "border-transparent text-body hover:text-ink hover:border-hairline"
             }`}
           >
             <Users className="w-4 h-4 mr-xs shrink-0" />
@@ -200,8 +200,8 @@ export default function OrgHeader({
             href={`/orgs/${org.slug}/teams`}
             className={`font-sans text-sm font-medium px-md h-[40px] flex items-center justify-center border-b-2 transition-all ${
               activeTab === "teams"
-                ? "border-accent text-accent font-semibold"
-                : "border-transparent text-text-muted hover:text-text-primary hover:border-border"
+                ? "border-accent text-primary font-semibold"
+                : "border-transparent text-body hover:text-ink hover:border-hairline"
             }`}
           >
             <Users2 className="w-4 h-4 mr-xs shrink-0" />
@@ -213,8 +213,8 @@ export default function OrgHeader({
               href={`/orgs/${org.slug}/settings`}
               className={`font-sans text-sm font-medium px-md h-[40px] flex items-center justify-center border-b-2 transition-all ${
                 activeTab === "settings"
-                  ? "border-accent text-accent font-semibold"
-                  : "border-transparent text-text-muted hover:text-text-primary hover:border-border"
+                  ? "border-accent text-primary font-semibold"
+                  : "border-transparent text-body hover:text-ink hover:border-hairline"
               }`}
             >
               <Settings className="w-4 h-4 mr-xs shrink-0" />
