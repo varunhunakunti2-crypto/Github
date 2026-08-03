@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import GlobalSearchBar from "@/components/search/GlobalSearchBar";
 import NotificationBell from "@/components/notifications/NotificationBell";
-import { GitBranch, Settings, Plus, LayoutDashboard } from "lucide-react";
+import { Github, Settings, Plus, LayoutDashboard } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -17,9 +17,10 @@ export default function DashboardLayout({
           {/* Logo & Brand */}
           <div className="flex items-center gap-md">
             <Link href="/" className="flex items-center gap-xs font-space-grotesk font-bold text-sm tracking-wider text-accent">
-              <GitBranch className="w-5 h-5" />
+              <Github className="w-5 h-5" />
               <span>GITFORGE</span>
             </Link>
+
             
             {/* Main Nav Links */}
             <nav className="hidden md:flex items-center gap-sm">

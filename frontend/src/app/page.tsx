@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Button, Card } from "@gitforge/ui";
 import {
+  Github,
   GitBranch,
   GitPullRequest,
   Shield,
@@ -16,13 +17,12 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 w-full h-[64px] border-b border-hairline bg-canvas/80 backdrop-blur-md px-6 md:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* Logo Symbol */}
-          <div className="w-6 h-6 bg-primary rounded-xs flex items-center justify-center text-on-primary font-mono text-[14px] font-bold">
-            F
-          </div>
+          <Github className="w-6 h-6 text-accent" />
           <span className="font-sans font-semibold text-[16px] tracking-tight">
             GitForge
           </span>
         </div>
+
         <nav className="hidden md:flex items-center gap-6">
           <a
             href="#"
