@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 import { Server, ClientInfo, AuthContext } from 'ssh2';
 import { GitCommandRunner } from '../utils/git-command-runner';
 import { AuthService, UserContext } from '../services/auth.service';
+import { prisma } from '@gitforge/database';
 
 export class SshServer {
   private server: Server;
@@ -42,28 +43,36 @@ export class SshServer {
     client.on('authentication', async (ctx: AuthContext) => {
       try {
         if (ctx.method === 'publickey') {
-          // Verify public key fingerprint
           const presentedKey = ctx.key.data;
-          
-          // Phase 10: In a real system, we'd hash the presented key and lookup against PostgreSQL `SshKey` table
-          // using Prisma. For this mock, we accept if it matches a hardcoded fingerprint or just accept generic 'appi'
           
           const fingerprint = crypto.createHash('sha256').update(presentedKey).digest('base64').replace(/=$/, '');
           console.log(`[SSH] Auth attempt with key fingerprint SHA256:${fingerprint}`);
 
-          // Mock mapping key to user
+          // Query the SshKey table
+          const dbKey = await prisma.sshKey.findUnique({
+            where: { fingerprint },
+            include: { user: true }
+          });
+
+          if (!dbKey) {
+            console.warn(`[SSH] Rejected unregistered key fingerprint: SHA256:${fingerprint}`);
+            return ctx.reject(['publickey']);
+          }
+
+          if (dbKey.keyType === 'signing') {
+            console.warn(`[SSH] Rejected signing key fingerprint: SHA256:${fingerprint}`);
+            return ctx.reject(['publickey']);
+          }
+
           authenticatedUser = {
-            id: 'user_1',
-            username: 'appi',
-            roles: ['Admin']
+            id: dbKey.user.id,
+            username: dbKey.user.username,
+            roles: ['User']
           };
 
           if (ctx.signature) {
-            // If signature exists, we verify it against the public key we looked up.
-            // ssh2 package handles the cryptographic verification natively if we just call accept()
             return ctx.accept();
           } else {
-            // If no signature, the client is just querying if the key is acceptable
             return ctx.accept();
           }
         }

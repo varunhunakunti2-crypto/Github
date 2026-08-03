@@ -2,8 +2,40 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SshServer } from './ssh/ssh-server';
+import * as fs from 'fs';
+import * as path from 'path';
+import { RepoInitService } from './services/repo-init.service';
+
+function installHooksOnExistingRepos() {
+  const dataBasePath = process.env.GIT_DATA_PATH || path.join(process.cwd(), 'data', 'repos');
+  if (!fs.existsSync(dataBasePath)) return;
+
+  const repoInit = new RepoInitService();
+
+  try {
+    const owners = fs.readdirSync(dataBasePath);
+    for (const owner of owners) {
+      const ownerPath = path.join(dataBasePath, owner);
+      if (!fs.statSync(ownerPath).isDirectory()) continue;
+
+      const repos = fs.readdirSync(ownerPath);
+      for (const repo of repos) {
+        const repoPath = path.join(ownerPath, repo);
+        if (fs.statSync(repoPath).isDirectory() && repo.endsWith('.git')) {
+          console.log(`[BOOTSTRAP] Injecting hooks for existing repo: ${owner}/${repo}`);
+          repoInit.writeHooks(repoPath);
+        }
+      }
+    }
+  } catch (err) {
+    console.error("[BOOTSTRAP] Failed to process existing repository hooks:", err);
+  }
+}
 
 async function bootstrap() {
+  // Update hooks on existing repos on boot
+  installHooksOnExistingRepos();
+
   const app = await NestFactory.create(AppModule);
   
   // Set up standard express body parser for LFS and API, 

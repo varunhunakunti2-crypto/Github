@@ -4,6 +4,8 @@ import { JobService } from "../../services/actions/job.service";
 import { ArtifactService } from "../../services/actions/artifact.service";
 import { SecretService } from "../../services/actions/secret.service";
 import { AuthGuard } from "../../common/guards/auth.guard";
+import { ScopeGuard } from "../../common/guards/scope.guard";
+import { Scopes } from "../../common/decorators/scopes.decorator";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { Response } from "express";
 
@@ -89,18 +91,22 @@ export class WorkflowsController {
   // ── Secrets ──────────────────────────────────────────────────────────
 
   @Get("secrets")
+  @UseGuards(AuthGuard, ScopeGuard)
+  @Scopes("repo")
   listSecrets(@Param("owner") owner: string, @Param("repo") repo: string) {
     return this.secretService.listSecrets(owner, repo);
   }
 
   @Post("secrets")
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, ScopeGuard)
+  @Scopes("repo")
   createSecret(@Param("owner") owner: string, @Param("repo") repo: string, @Body() body: { name: string; value: string }) {
     return this.secretService.createSecret(owner, repo, body.name, body.value);
   }
 
   @Delete("secrets/:secretId")
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, ScopeGuard)
+  @Scopes("repo")
   deleteSecret(@Param("owner") owner: string, @Param("repo") repo: string, @Param("secretId") secretId: string) {
     return this.secretService.deleteSecret(owner, repo, secretId);
   }

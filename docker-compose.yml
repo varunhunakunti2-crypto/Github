@@ -1,0 +1,147 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gitforge-postgres
+    environment:
+      POSTGRES_DB: gitforge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root_password_change_me
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gitforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: gitforge-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:RELEASE.2024-01-28T22-35-53Z
+    container_name: gitforge-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio_root
+      MINIO_ROOT_PASSWORD: minio_password_change_me
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: gitforge-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:root_password_change_me@postgres:5432/gitforge?schema=public
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minio_root
+      MINIO_SECRET_KEY: minio_password_change_me
+      MINIO_BUCKET: gitforge-assets
+      JWT_SECRET: super_jwt_secret_change_me
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  git-daemon:
+    build:
+      context: .
+      dockerfile: backend/git-daemon/Dockerfile
+    container_name: gitforge-git-daemon
+    environment:
+      DATABASE_URL: postgresql://postgres:root_password_change_me@postgres:5432/gitforge?schema=public
+      PORT: 3002
+      GIT_DATA_PATH: /git-data
+    volumes:
+      - git-data:/git-data
+    ports:
+      - "3002:3002"
+      - "2222:2222"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: gitforge-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://backend:3001
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: gitforge-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - certs-data:/etc/letsencrypt
+    depends_on:
+      - frontend
+      - backend
+      - git-daemon
+
+  # Placeholder for Actions Runner Isolation Fleet (Phase 25)
+  actions-runner:
+    image: docker:dind
+    container_name: gitforge-actions-runner
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - runner-work:/runner-work
+    deploy:
+      replicas: 0 # Scaled down by default, enabled on active runner fleet host setups
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  git-data:
+  certs-data:
+  runner-work:

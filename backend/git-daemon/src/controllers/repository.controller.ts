@@ -86,10 +86,13 @@ export class RepositoryController {
     @Param('owner') owner: string,
     @Param('repo') repo: string,
     @Param('hash') hash: string,
-    @Req() req: Request
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ) {
     await this.authorize(owner, repo, req);
     const content = await this.gitOps.getBlobContent(owner, repo, hash);
+    // Blob hash represents a specific, immutable git object
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     return { content };
   }
 
@@ -133,6 +136,13 @@ export class RepositoryController {
       res.setHeader('Content-Security-Policy', "default-src 'none';");
       res.setHeader('Content-Disposition', `${disposition}; filename="${filePath.split('/').pop()}"`);
       
+      // Fixed 40-character git commit hashes are immutable
+      if (ref && /^[0-9a-f]{40}$/i.test(ref)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else {
+        res.setHeader('Cache-Control', 'no-cache');
+      }
+
       res.send(content);
     } catch (err: any) {
       if (err.message?.includes('fatal: not a valid object name')) {
@@ -142,6 +152,7 @@ export class RepositoryController {
       }
     }
   }
+
 
   @Get(':owner/:repo/diff')
   async getDiff(
@@ -214,11 +225,12 @@ export class RepositoryController {
   async performMerge(
     @Param('owner') owner: string,
     @Param('repo') repo: string,
-    @Body() dto: { base: string, head: string, strategy?: 'merge' | 'squash' | 'rebase', message?: string },
+    @Body() dto: { base: string, head: string, strategy?: 'merge' | 'squash' | 'rebase', message?: string, isPrMerge?: boolean },
     @Req() req: Request
   ) {
     const user = await this.authorize(owner, repo, req);
     await this.authService.checkRepositoryPermission(user, owner, repo, 'write');
+    await this.authService.checkBranchProtection(owner, repo, dto.base, !!dto.isPrMerge, user);
     return this.gitOps.performMerge(owner, repo, dto.base, dto.head, dto.strategy, dto.message);
   }
 }

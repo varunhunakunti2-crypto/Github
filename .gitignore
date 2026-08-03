@@ -33,11 +33,15 @@ dist/
 backend/git-daemon/keys/id_rsa*
 backend/git-daemon/keys/ssh_host*
 
-# Local IDE Agent configurations
+# IDE
 .agents/
 .claude/
 .kilocode/
 skills/
 skills-lock.json
+
+# Test data
+backend/git-daemon/data/
+
 
 

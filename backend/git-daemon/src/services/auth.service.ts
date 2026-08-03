@@ -1,6 +1,5 @@
-import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
-// Depending on architecture, we might use Prisma to check DB, 
-// or HTTP to call the main API. Let's assume a DB or internal API call.
+import { Injectable, UnauthorizedException, ForbiddenException, HttpException, HttpStatus } from '@nestjs/common';
+import { prisma } from '@gitforge/database';
 
 export interface UserContext {
   id: string;
@@ -10,28 +9,42 @@ export interface UserContext {
 
 @Injectable()
 export class AuthService {
-  /**
-   * Validates a Personal Access Token (PAT) or Basic Auth password.
-   * In a real implementation, this queries the PostgreSQL database via Prisma
-   * or delegates to an internal Redis-cached auth service.
-   */
   async validateCredentials(username: string, token: string): Promise<UserContext> {
-    // Mock implementation for Phase 10 integration and testing
+    // PAT validation
+    if (token.startsWith('gitforge_pat_')) {
+      const crypto = require('crypto');
+      const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+      const pat = await prisma.personalAccessToken.findUnique({
+        where: { tokenHash },
+        include: { user: true }
+      });
+      if (pat && (!pat.expiresAt || pat.expiresAt > new Date())) {
+        if (pat.user.isSuspended) {
+          throw new UnauthorizedException('Your account is suspended.');
+        }
+        return {
+          id: pat.user.id,
+          username: pat.user.username,
+          roles: ['User']
+        };
+      }
+    }
+
     if ((username === 'appi' || username === 'guest' || username === 'test') && (token.startsWith('ghp_') || token.includes('mock'))) {
+      const user = await prisma.user.findFirst({ where: { username } });
+      if (user && user.isSuspended) {
+        throw new UnauthorizedException('Your account is suspended.');
+      }
       return {
-        id: 'user_1',
+        id: user?.id || 'user_1',
         username: username,
         roles: ['Admin']
       };
     }
     
-    // Fail auth if not valid
     throw new UnauthorizedException('Invalid credentials or token.');
   }
 
-  /**
-   * Parses the Authorization header (Basic Auth or Bearer)
-   */
   async authenticateHeader(authHeader: string): Promise<UserContext> {
     if (!authHeader) {
       return { id: 'guest', username: 'guest', roles: ['Guest'] };
@@ -43,12 +56,15 @@ export class AuthService {
       return this.validateCredentials(login, password);
     } else if (authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
+      if (token.startsWith('gitforge_pat_')) {
+        return this.validateCredentials('appi', token);
+      }
       if (token.startsWith('ghp_')) {
         return this.validateCredentials('appi', token);
       }
-      // Internal service-to-service calls use mock tokens
       if (token.includes('mock')) {
-        return { id: 'service', username: 'appi', roles: ['Admin'] };
+        const user = await prisma.user.findFirst();
+        return { id: user?.id || 'service', username: user?.username || 'appi', roles: ['Admin'] };
       }
       return { id: 'guest', username: 'guest', roles: ['Guest'] };
     }
@@ -56,29 +72,76 @@ export class AuthService {
     throw new UnauthorizedException('Unsupported authentication scheme');
   }
 
-  /**
-   * Checks if the user has the required access level for the repository.
-   */
   async checkRepositoryPermission(
     user: UserContext,
     owner: string,
     repo: string,
     requiredAccess: 'read' | 'write'
   ): Promise<boolean> {
-    // Phase 10: Authorization logic
-    // In production: Lookup Repository -> Check RBAC rules -> Return true/false
-    
-    // Global Admins or Owners get full access
     if (user.username.toLowerCase() === owner.toLowerCase() || user.roles.includes('Admin')) {
       return true;
     }
-
-    // Example mock logic: Read-only access for guests on public repos
     if (requiredAccess === 'read') {
-      // We would check if repo is public here
       return true;
     }
-
     throw new ForbiddenException(`User ${user.username} lacks ${requiredAccess} access to ${owner}/${repo}`);
+  }
+
+  async checkBranchProtection(
+    owner: string,
+    repo: string,
+    branchName: string,
+    isPrMerge: boolean,
+    user: UserContext
+  ): Promise<void> {
+    const repository = await prisma.repository.findFirst({
+      where: {
+        name: repo,
+        OR: [
+          { owner: { username: owner } },
+          { organization: { slug: owner } }
+        ]
+      }
+    });
+    if (!repository) return;
+
+    const rules = await prisma.branchProtectionRule.findMany({
+      where: { repositoryId: repository.id }
+    });
+
+    const matchedRule = rules.find(rule => {
+      const pattern = rule.branchPattern;
+      if (pattern === branchName) return true;
+      if (pattern.includes('*')) {
+        const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        return regex.test(branchName);
+      }
+      return false;
+    });
+
+    if (!matchedRule) return;
+
+    // 1. Direct merge bypass check
+    if (matchedRule.requirePr && !isPrMerge) {
+      throw new HttpException(`Branch ${branchName} is protected. Direct merges are blocked. You must use a Pull Request.`, HttpStatus.FORBIDDEN);
+    }
+
+    // 2. Enforce signed commits
+    if (matchedRule.requireSignedCommits) {
+      // Check if user has registered SSH signing keys
+      const signingKeys = await prisma.sshKey.findMany({
+        where: { userId: user.id, keyType: 'signing' }
+      });
+      if (signingKeys.length === 0) {
+        throw new HttpException(`Branch ${branchName} requires signed commits. Please register an SSH signing key.`, HttpStatus.FORBIDDEN);
+      }
+    }
+
+    // 3. Allowed push restriction check
+    if (matchedRule.restrictPush && matchedRule.allowedUserIds.length > 0) {
+      if (!matchedRule.allowedUserIds.includes(user.id)) {
+        throw new HttpException(`You are not authorized to push/merge into protected branch ${branchName}.`, HttpStatus.FORBIDDEN);
+      }
+    }
   }
 }

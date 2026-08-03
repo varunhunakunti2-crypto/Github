@@ -8,6 +8,39 @@ export function RepoHeader({ owner, repo }: { owner: string; repo: string }) {
   const pathname = usePathname();
   const [cloneUrl, setCloneUrl] = useState(`https://github.com/${owner}/${repo}.git`);
   const [protocol, setProtocol] = useState<'HTTPS' | 'SSH'>('HTTPS');
+  
+  // Reporting states
+  const [isReporting, setIsReporting] = useState(false);
+  const [reportReason, setReportReason] = useState("spam");
+  const [reportDescription, setReportDescription] = useState("");
+
+  const submitReport = async () => {
+    try {
+      const response = await fetch("/api/v1/reports", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        body: JSON.stringify({
+          reportedType: "repository",
+          reportedId: `${owner}/${repo}`,
+          reason: reportReason,
+          description: reportDescription,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit report.");
+      }
+
+      alert("Repository reported successfully. An administrator will review your report.");
+      setIsReporting(false);
+      setReportDescription("");
+    } catch (e: any) {
+      alert(e.message);
+    }
+  };
 
   const tabs = [
     { name: 'Code', href: `/${owner}/${repo}`, icon: '📝' },
@@ -48,7 +81,68 @@ export function RepoHeader({ owner, repo }: { owner: string; repo: string }) {
               <span>⭐</span> Star
               <span className="px-2 py-0.5 ml-1 text-xs bg-[#14171C] rounded-full">128</span>
             </button>
+
+            <button
+              onClick={() => setIsReporting(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-[#F85149] bg-[#232830] border border-gray-600 rounded-md hover:bg-gray-700"
+            >
+              <span>🚩</span> Report
+            </button>
           </div>
+
+          {isReporting && (
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+              <div className="bg-[#161B22] border border-[#30363D] p-6 max-w-md w-full rounded-md text-left flex flex-col gap-4 font-sans text-gray-200">
+                <h3 className="text-lg font-bold text-white">Report Repository</h3>
+                <p className="text-xs text-gray-400">
+                  Submit a report for {owner}/{repo}. Administrators will review this report.
+                </p>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold">Reason:</label>
+                  <select
+                    value={reportReason}
+                    onChange={(e) => setReportReason(e.target.value)}
+                    className="bg-[#0D1117] border border-[#30363D] text-white text-xs px-2 py-1.5 rounded-md"
+                  >
+                    <option value="spam">Spam / Advertising</option>
+                    <option value="abuse">Harassment / Abuse</option>
+                    <option value="copyright">Copyright Violation</option>
+                    <option value="malware">Malware / Phishing</option>
+                    <option value="other">Other Violation</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold">Description:</label>
+                  <textarea
+                    placeholder="Provide details about the policy violation..."
+                    value={reportDescription}
+                    onChange={(e) => setReportDescription(e.target.value)}
+                    className="bg-[#0D1117] border border-[#30363D] text-white text-xs px-3 py-2 rounded-md h-20 resize-none"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 mt-2">
+                  <button
+                    onClick={() => {
+                      setIsReporting(false);
+                      setReportDescription("");
+                    }}
+                    className="bg-transparent hover:bg-gray-800 text-gray-300 text-xs px-4 py-2 border border-[#30363D] rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitReport}
+                    className="bg-[#F85149] hover:bg-[#D9383A] text-white text-xs px-4 py-2 rounded-md font-semibold"
+                  >
+                    Submit Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <nav className="flex gap-4 overflow-x-auto">

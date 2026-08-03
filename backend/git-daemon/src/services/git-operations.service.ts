@@ -7,6 +7,26 @@ import * as fs from 'fs';
 @Injectable()
 export class GitOperationsService {
   private readonly dataBasePath = process.env.GIT_DATA_PATH || path.join(process.cwd(), 'data', 'repos');
+  private redis: any = null;
+  private memoryCache: Map<string, { data: any; expires: number }> = new Map();
+
+  constructor() {
+    const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+    try {
+      const Redis = require('ioredis');
+      this.redis = new Redis(redisUrl, {
+        maxRetriesPerRequest: 1,
+        showFriendlyErrorStack: true,
+        lazyConnect: true
+      });
+      this.redis.on("error", (err: any) => {
+        console.warn("[GIT-DAEMON] Cache Redis unavailable, using memory fallback");
+        this.redis = null;
+      });
+    } catch (e) {
+      this.redis = null;
+    }
+  }
 
   private getRepoPath(owner: string, repo: string): string {
     return GitCommandRunner.buildRepoPath(this.dataBasePath, owner, repo);
@@ -141,6 +161,21 @@ export class GitOperationsService {
    * File Operations
    */
   async getTree(owner: string, repo: string, ref: string = 'HEAD', dirPath: string = ''): Promise<FileNodeDto[]> {
+    const cacheKey = `repo:${owner}:${repo}:tree:${ref}:${dirPath}`;
+
+    // 1. Attempt reading from cache
+    if (this.redis) {
+      try {
+        const cached = await this.redis.get(cacheKey);
+        if (cached) return JSON.parse(cached);
+      } catch (e) {}
+    } else {
+      const mem = this.memoryCache.get(cacheKey);
+      if (mem && Date.now() < mem.expires) {
+        return mem.data;
+      }
+    }
+
     const repoPath = this.getRepoPath(owner, repo);
     try {
       // Use ls-tree to list contents
@@ -191,6 +226,18 @@ export class GitOperationsService {
         if (a.type !== 'tree' && b.type === 'tree') return 1;
         return a.name.localeCompare(b.name);
       });
+
+      // 2. Cache the computed result for 5 minutes (300 seconds)
+      if (this.redis) {
+        try {
+          await this.redis.set(cacheKey, JSON.stringify(entries), "EX", 300);
+        } catch (e) {}
+      } else {
+        this.memoryCache.set(cacheKey, {
+          data: entries,
+          expires: Date.now() + 300 * 1000
+        });
+      }
 
       return entries;
     } catch (err) {
@@ -568,5 +615,23 @@ export class GitOperationsService {
         try { fs.unlinkSync(tempIndex); } catch (e) {}
       }
     }
+  }
+
+  async invalidateRepoCache(owner: string, repo: string) {
+    const prefix = `repo:${owner}:${repo}:`;
+    if (this.redis) {
+      try {
+        const keys = await this.redis.keys(`${prefix}*`);
+        if (keys.length > 0) {
+          await this.redis.del(...keys);
+        }
+      } catch (e) {}
+    }
+    for (const key of this.memoryCache.keys()) {
+      if (key.startsWith(prefix)) {
+        this.memoryCache.delete(key);
+      }
+    }
+    console.log(`[CACHE] Invalidated git tree caches for ${owner}/${repo}`);
   }
 }

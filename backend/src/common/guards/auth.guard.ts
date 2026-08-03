@@ -1,5 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { prisma } from "@gitforge/database";
+import * as crypto from "crypto";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -8,9 +9,34 @@ export class AuthGuard implements CanActivate {
     let username: string | undefined;
 
     const authHeader = request.headers.authorization || request.headers.Authorization;
+    let token = '';
     if (authHeader && typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
-      if (token.startsWith('mock_token_for_')) {
+      token = authHeader.substring(7);
+    } else if (request.query && typeof request.query.token === 'string') {
+      token = request.query.token;
+    }
+
+    if (token) {
+      if (token.startsWith('gitforge_pat_')) {
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        const pat = await prisma.personalAccessToken.findUnique({
+          where: { tokenHash },
+          include: { user: true }
+        });
+        if (pat) {
+          if (!pat.expiresAt || pat.expiresAt > new Date()) {
+            // Update lastUsedAt asynchronously
+            prisma.personalAccessToken.update({
+              where: { id: pat.id },
+              data: { lastUsedAt: new Date() }
+            }).catch(err => console.error("Failed to update lastUsedAt:", err));
+
+            request.user = pat.user;
+            request.pat = pat;
+            return true;
+          }
+        }
+      } else if (token.startsWith('mock_token_for_')) {
         username = token.replace('mock_token_for_', '');
       } else if (token === 'mock_access_token') {
         username = 'appi';
@@ -36,6 +62,10 @@ export class AuthGuard implements CanActivate {
     });
 
     if (user) {
+      if (user.isSuspended) {
+        const { ForbiddenException } = require("@nestjs/common");
+        throw new ForbiddenException("Your account is suspended");
+      }
       request.user = user;
     }
     return true;

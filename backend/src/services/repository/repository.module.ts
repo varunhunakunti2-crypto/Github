@@ -11,9 +11,10 @@ import { ProjectService } from "./project.service";
 import { WikiService } from "./wiki.service";
 
 import { NotificationServiceModule } from "../notification/notification.module";
+import { SecurityServiceModule } from "../security/security.module";
 
 @Module({
-  imports: [NotificationServiceModule],
+  imports: [NotificationServiceModule, SecurityServiceModule],
   providers: [
     RepositoryService,
     BranchService,

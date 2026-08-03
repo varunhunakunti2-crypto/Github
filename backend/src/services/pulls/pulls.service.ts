@@ -275,7 +275,8 @@ export class PullsService {
         base: pr.baseBranch,
         head: pr.compareBranch,
         strategy,
-        message: commitMessage
+        message: commitMessage,
+        isPrMerge: true
       })
     });
 

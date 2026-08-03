@@ -51,6 +51,8 @@ export class RepoInitService {
         'true'
       ], { cwd: repoPath });
 
+      this.writeHooks(repoPath);
+
       return { path: repoPath };
     } catch (err) {
       // Cleanup partially created directory on failure
@@ -67,5 +69,107 @@ export class RepoInitService {
       }
       throw err;
     }
+  }
+
+  public writeHooks(repoPath: string) {
+    const hooksDir = path.join(repoPath, 'hooks');
+    if (!fs.existsSync(hooksDir)) {
+      fs.mkdirSync(hooksDir, { recursive: true });
+    }
+
+    const preReceiveContent = `#!/usr/bin/env node
+const fs = require('fs');
+const http = require('http');
+
+const input = fs.readFileSync(0, 'utf-8').trim();
+if (!input) process.exit(0);
+
+const lines = input.split('\\n');
+const payload = {
+  repoPath: process.cwd(),
+  changes: lines.map(line => {
+    const [oldSha, newSha, refName] = line.split(' ');
+    return { oldSha, newSha, refName };
+  })
+};
+
+const reqData = JSON.stringify(payload);
+const req = http.request({
+  hostname: 'localhost',
+  port: 3002,
+  path: '/api/v1/internal/pre-receive',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(reqData)
+  }
+}, (res) => {
+  let body = '';
+  res.on('data', chunk => body += chunk);
+  res.on('end', () => {
+    if (res.statusCode >= 400) {
+      try {
+        const parsed = JSON.parse(body);
+        console.error('\\n==================================================');
+        console.error('GitForge Push Protection Blocked:');
+        console.error(parsed.message || body);
+        console.error('==================================================\\n');
+      } catch (e) {
+        console.error('\\nGitForge Push Protection Blocked:\\n' + body);
+      }
+      process.exit(1);
+    } else {
+      process.exit(0);
+    }
+  });
+});
+
+req.on('error', (err) => {
+  console.error('GitForge pre-receive hook error connecting to daemon:', err.message);
+  process.exit(0);
+});
+
+req.write(reqData);
+req.end();
+`;
+
+    const postReceiveContent = `#!/usr/bin/env node
+const fs = require('fs');
+const http = require('http');
+
+const input = fs.readFileSync(0, 'utf-8').trim();
+if (!input) process.exit(0);
+
+const lines = input.split('\\n');
+const payload = {
+  repoPath: process.cwd(),
+  changes: lines.map(line => {
+    const [oldSha, newSha, refName] = line.split(' ');
+    return { oldSha, newSha, refName };
+  })
+};
+
+const reqData = JSON.stringify(payload);
+const req = http.request({
+  hostname: 'localhost',
+  port: 3002,
+  path: '/api/v1/internal/post-receive',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(reqData)
+  }
+}, (res) => {
+  res.on('data', () => {});
+  res.on('end', () => process.exit(0));
+});
+
+req.on('error', () => process.exit(0));
+req.write(reqData);
+req.end();
+`;
+
+    fs.writeFileSync(path.join(hooksDir, 'pre-receive'), preReceiveContent, { mode: 0o755 });
+    fs.writeFileSync(path.join(hooksDir, 'post-receive'), postReceiveContent, { mode: 0o755 });
   }
 }

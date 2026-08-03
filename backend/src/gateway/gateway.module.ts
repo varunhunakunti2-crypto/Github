@@ -17,6 +17,8 @@ import { SecurityController } from "./controllers/security.controller";
 import { SearchController } from "./controllers/search.controller";
 import { ActivityController } from "./controllers/activity.controller";
 import { WikiController } from "./controllers/wiki.controller";
+import { AdminController, UserReportController } from "./controllers/admin.controller";
+import { HealthController } from "./controllers/health.controller";
 
 import { AuthServiceModule } from "../services/auth/auth.module";
 import { UsersServiceModule } from "../services/users/users.module";
@@ -76,6 +78,9 @@ import { PypiRegistryController } from "./controllers/pypi-registry.controller";
     DockerRegistryController,
     MavenRegistryController,
     PypiRegistryController,
+    AdminController,
+    UserReportController,
+    HealthController,
   ],
   providers: [PullsService, NotificationGateway],
 })

@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Block sensitive and authenticated pages
+Disallow: /admin/
+Disallow: /settings/
+Disallow: /notifications/
+Disallow: /reset-password
+Disallow: /forgot-password
+
+# Block repo-specific settings, creation and edit paths
+Disallow: /*/*/settings/
+Disallow: /*/*/pulls/new
+Disallow: /*/*/issues/new
+Disallow: /*/*/edit/
+Disallow: /*/*/compare/
+Disallow: /*/*/wiki/*/edit

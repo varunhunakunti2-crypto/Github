@@ -73,6 +73,15 @@ export default function CodeEditor({ value, onChange, filename, readOnly = false
         theme="gitforge-dark"
         onChange={(val) => onChange && onChange(val || '')}
         loading={<EditorSkeleton />}
+        onMount={(editor, monaco) => {
+          editor.onKeyDown((e) => {
+            if (e.keyCode === monaco.KeyCode.Escape) {
+              // Unfocus editor and focus document body
+              editor.blur();
+              document.body.focus();
+            }
+          });
+        }}
         options={{
           readOnly,
           minimap: { enabled: true },

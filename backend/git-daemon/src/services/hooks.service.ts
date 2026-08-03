@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import * as http from 'http';
+import { GitOperationsService } from './git-operations.service';
 
 @Injectable()
 export class HooksService {
+  constructor(private readonly gitOps: GitOperationsService) {}
+
   /**
    * Called by the internal git update / post-receive hook when a push occurs.
    * This triggers background indexing and webhook dispatch.
    */
   async triggerPostReceive(owner: string, repo: string, refName: string, oldSha: string, newSha: string) {
     console.log(`[HOOKS] Received post-receive for ${owner}/${repo} on ${refName}`);
+    
+    // Invalidate git tree cache immediately
+    await this.gitOps.invalidateRepoCache(owner, repo);
     
     // 1. Background Indexing (Triggering Search Engine update)
     this.queueBackgroundIndexing(owner, repo, newSha);
