@@ -3,38 +3,39 @@
 @import "tailwindcss";
 
 :root {
-  --theme-canvas: #ffffff;
-  --theme-canvas-soft: #f6f8fa;
-  --theme-canvas-soft-2: #f6f8fa;
-  --theme-ink: #1f2328;
-  --theme-body: #1f2328;
-  --theme-mute: #59636e;
-  --theme-hairline: #d1d9e0;
-  --theme-hairline-strong: #8c959f;
-  --theme-primary: #1f883d;
+  --theme-canvas: #010102;
+  --theme-canvas-soft: #0f1011;
+  --theme-canvas-soft-2: #141516;
+  --theme-ink: #f7f8f8;
+  --theme-body: #f7f8f8;
+  --theme-mute: #d0d6e0;
+  --theme-hairline: #23252a;
+  --theme-hairline-strong: #34343a;
+  --theme-primary: #5e6ad2;
   --theme-on-primary: #ffffff;
-  --theme-link: #0969da;
-  --theme-success: #1a7f37;
-  --theme-error: #cf222e;
+  --theme-link: #5e6ad2;
+  --theme-success: #27a644;
+  --theme-error: #f0554c;
 }
 
 @theme {
-  --color-base: #f6f8fa;
-  --color-surface: #ffffff;
-  --color-border: #d1d9e0;
-  --color-text-primary: #1f2328;
-  --color-text-muted: #59636e;
-  --color-accent: #0969da;
-  --color-success: #1a7f37;
-  --color-danger: #cf222e;
+  --color-base: #010102;
+  --color-surface: #0f1011;
+  --color-border: #23252a;
+  --color-text-primary: #f7f8f8;
+  --color-text-muted: #d0d6e0;
+  --color-accent: #5e6ad2;
+  --color-success: #27a644;
+  --color-danger: #f0554c;
 
-  --font-space-grotesk: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-inter: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-jetbrains-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-space-grotesk: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, "SF Mono", monospace;
 }
 
 body {
-  background-color: #f6f8fa;
-  color: #1f2328;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: #010102;
+  color: #f7f8f8;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+
