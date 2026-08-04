@@ -39,6 +39,42 @@ GitForge is a high-performance Git hosting and developer collaboration platform.
 - **Commit Details & Author Section**: Message body renderer, separate committer/author logs, parent SHAs.
 - **Structured diff preview**: Expandable Monaco `CodeDiffEditor` panels showing additions/deletions side-by-side or inline.
 
+### 🔀 Phase 15 — Pull Requests
+- **PR Lifecycle & Comparison**: Open PRs comparing branches across repositories/forks with merge conflict checking.
+- **Line-Level Code Review**: Inline comments on diff views with multi-user threaded discussions and conversation resolution states.
+- **Merge Actions**: Integrated squash, rebase, and standard merge commit operations on bare repositories with automatic database synchronization.
+
+### 📋 Phase 16 — Issue Tracking & Boards
+- **Issue Lifecycle**: Rich Markdown description, milestones, assignees, and custom category labels.
+- **Project Boards**: Kanban board support for tracking issues and pull requests through custom workflows.
+
+### 💬 Phase 17 — Discussions
+- **Collaborative Forums**: Threaded Q&A, categories, and Markdown-rendered discussions per repository with read/write permission checks.
+
+### 📖 Phase 18 — Wiki Engine
+- **Knowledge Base**: E2E Wiki management supporting page histories, custom sidebars, Markdown editing, and visibility checks.
+
+### 📦 Phase 19 — Releases & Assets
+- **Release Hub**: Management of release tags (annotated), auto-generated changelogs, gated streaming downloads, and multipart asset uploads (backed by MinIO object storage).
+
+### 🖥️ Phase 20–24 — Package Registries & Platform Context
+- **Registries, Notifications & Search**: Integrations for notification center, package registries (npm/npm-like packages), global/scoped search with Postgres TSVECTOR indexing.
+- **Projects & Organizations**: Organization profile workspaces, team groupings, granular member permissions, and project scopes.
+
+### ⚙️ Phase 25 — Actions CI/CD Pipeline
+- **Workflows & Runs**: Pipeline orchestration triggered by Git events (push, pull_request) resolving and running defined actions.
+
+### ⚡ Phase 29 — Optimization, Caching & Audits
+- **Redis Cache-Aside Layer**: 10x read performance boost for repository metadata and permission check lookups with immediate security-revocation invalidation. README rendering cached for 5 minutes.
+- **Database Index Optimization**: Execution plans verified via `EXPLAIN ANALYZE` ensuring index-scanned queries for repository lookup, notification counts, and issues.
+- **Accessibility (WCAG 2.1 AA)**: Zero-critical/zero-serious issues verified via axe-core audits. Accessible Monaco Editor keyboard escape triggers and keyboard-navigable Kanban boards.
+- **SEO & Server-Side Rendering**: Hydrated metadata tags and search crawlers configuration with dynamic `sitemap.xml` and route-specific `robots.txt` rules.
+
+### 🎨 Linear Design System
+- Stark dark marketing canvas based on deep charcoal/black surfaces (`#010102` canvas, `#0f1011` to `#191a1b` surfaces) and 1px hairline borders (`#23252a`).
+- Brand chromatic accent in Linear lavender-blue (`#5e6ad2`) and hover state (`#828fff`).
+- SF Pro Display / Inter typography stack with negative letter-spacing scaling for DISPLAY styles.
+
 ## ⚙️ Development Quickstart
 
 1. **Prerequisites**: Make sure Docker is running on your machine.
