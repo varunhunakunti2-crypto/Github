@@ -129,11 +129,9 @@ export class SecretScannerService {
 
       // Write findings to DB
       if (findings.length > 0) {
-        for (const finding of findings) {
-          await prisma.secretScanFinding.create({
-            data: finding
-          });
-        }
+        await prisma.secretScanFinding.createMany({
+          data: findings
+        });
 
         // Notify repo admins
         const ownerName = repoPath.replace(/\\/g, '/').split('/').slice(-2, -1)[0];
@@ -184,21 +182,23 @@ export class SecretScannerService {
       }
     }
 
-    for (const adminId of adminIds) {
-      await prisma.notification.create({
-        data: {
-          recipientId: adminId,
-          senderId: adminId, // System self-notification
-          repositoryId: repositoryId,
-          notifiableType: 'Organization',
-          notifiableId: repositoryId,
-          reason: 'SUBSCRIBED',
-          title,
-          body,
-          url,
-          isRead: false
-        }
-      }).catch(err => console.error("Failed to write admin notification:", err));
+    if (adminIds.size > 0) {
+      const notificationsData = Array.from(adminIds).map(adminId => ({
+        recipientId: adminId,
+        senderId: adminId, // System self-notification
+        repositoryId: repositoryId,
+        notifiableType: 'Organization',
+        notifiableId: repositoryId,
+        reason: 'SUBSCRIBED',
+        title,
+        body,
+        url,
+        isRead: false
+      }));
+
+      await prisma.notification.createMany({
+        data: notificationsData
+      }).catch(err => console.error("Failed to write admin notifications:", err));
     }
   }
 

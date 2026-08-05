@@ -55,7 +55,7 @@ describe("Design System Component Suite", () => {
       render(<CardMarketing>Marketing Content</CardMarketing>);
       const card = screen.getByText("Marketing Content");
       expect(card.className).toContain("shadow-level-3");
-      expect(card.className).toContain("rounded-md");
+      expect(card.className).toContain("rounded-lg");
     });
   });
 

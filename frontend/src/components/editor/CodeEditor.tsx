@@ -74,7 +74,7 @@ export default function CodeEditor({ value, onChange, filename, readOnly = false
         onChange={(val) => onChange && onChange(val || '')}
         loading={<EditorSkeleton />}
         onMount={(editor, monaco) => {
-          editor.onKeyDown((e) => {
+          editor.onKeyDown((e: any) => {
             if (e.keyCode === monaco.KeyCode.Escape) {
               // Unfocus editor and focus document body
               editor.blur();

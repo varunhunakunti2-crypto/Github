@@ -134,22 +134,29 @@ export class DependencyScannerService {
 
     // Save alerts to DB (auto-de-duplicate)
     if (alerts.length > 0) {
-      for (const alert of alerts) {
-        const existing = await prisma.dependencyAlert.findFirst({
-          where: {
-            repositoryId: alert.repositoryId,
-            packageName: alert.packageName,
-            cveId: alert.cveId,
-            status: 'open'
-          }
+      const packageNames = Array.from(new Set(alerts.map(a => a.packageName)));
+      const existingAlerts = await prisma.dependencyAlert.findMany({
+        where: {
+          repositoryId: repositoryId,
+          packageName: { in: packageNames },
+          status: 'open'
+        }
+      });
+
+      const newAlerts = alerts.filter(alert => {
+        return !existingAlerts.some(existing => 
+          existing.packageName === alert.packageName &&
+          existing.cveId === alert.cveId
+        );
+      });
+
+      if (newAlerts.length > 0) {
+        await prisma.dependencyAlert.createMany({
+          data: newAlerts
         });
 
-        if (!existing) {
-          await prisma.dependencyAlert.create({
-            data: alert
-          });
-
-          // Notify repo admins
+        // Notify repo admins
+        for (const alert of newAlerts) {
           const ownerName = repoPath.replace(/\\/g, '/').split('/').slice(-2, -1)[0];
           const repoName = repoPath.replace(/\\/g, '/').split('/').slice(-1)[0].replace(/\.git$/, '');
           const isUrgent = alert.severity === 'critical' || alert.severity === 'high';
@@ -196,21 +203,23 @@ export class DependencyScannerService {
       }
     }
 
-    for (const adminId of adminIds) {
-      await prisma.notification.create({
-        data: {
-          recipientId: adminId,
-          senderId: adminId,
-          repositoryId: repositoryId,
-          notifiableType: 'Organization',
-          notifiableId: repositoryId,
-          reason: 'SUBSCRIBED',
-          title,
-          body,
-          url,
-          isRead: false
-        }
-      }).catch(err => console.error("Failed to write admin notification:", err));
+    if (adminIds.size > 0) {
+      const notificationsData = Array.from(adminIds).map(adminId => ({
+        recipientId: adminId,
+        senderId: adminId,
+        repositoryId: repositoryId,
+        notifiableType: 'Organization',
+        notifiableId: repositoryId,
+        reason: 'SUBSCRIBED',
+        title,
+        body,
+        url,
+        isRead: false
+      }));
+
+      await prisma.notification.createMany({
+        data: notificationsData
+      }).catch(err => console.error("Failed to write admin notifications:", err));
     }
   }
 
